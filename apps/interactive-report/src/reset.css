@@ -1,0 +1,73 @@
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Allow percentage-based heights in the application */
+html,
+body {
+  height: 100%;
+}
+
+/* Improve text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+/* Make media easier to work with */
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Remove spacing between cells in tables */
+table {
+  border-collapse: collapse;
+}

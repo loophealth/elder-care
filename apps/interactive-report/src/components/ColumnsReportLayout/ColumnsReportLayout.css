@@ -1,0 +1,13 @@
+.ColumnsReportLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-s);
+  max-width: calc(5 * var(--space-3xl));
+  padding: 0 var(--space-m);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ColumnsReportLayout__RangedMeasurementTile {
+  grid-column: span 2;
+}

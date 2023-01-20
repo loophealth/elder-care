@@ -1,0 +1,52 @@
+.CategoryTile {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius--l);
+  background-color: var(--color--gray--dark);
+  padding: var(--space-s);
+  transition: background-color 0.1s ease-in-out;
+  aspect-ratio: 1.5;
+}
+
+.CategoryTile:hover {
+  background-color: var(--color--gray);
+}
+
+.CategoryTile__StatusContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: var(--space-m);
+}
+
+.StatusIndicator {
+  display: inline-block;
+  width: var(--space-2xs);
+  height: var(--space-2xs);
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.StatusIndicator--Ok {
+  background-color: var(--color--ok);
+}
+
+.StatusIndicator--Warning {
+  background-color: var(--color--warning);
+}
+
+.StatusIndicator--Danger {
+  background-color: var(--color--danger);
+}
+
+.CategoryTileIcon {
+  width: var(--space-l);
+}
+
+@media (min-width: 768px) {
+  .CategoryTileIcon {
+    width: var(--space-xl);
+  }
+}

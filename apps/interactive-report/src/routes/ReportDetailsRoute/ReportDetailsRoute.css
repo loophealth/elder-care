@@ -1,0 +1,33 @@
+.ReportDetailsRoute {
+  padding-top: var(--space-l);
+  padding-bottom: var(--space-l);
+  overflow-y: scroll;
+}
+
+@media (min-width: 768px) {
+  .ReportDetailsRoute {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+}
+
+.ReportDetailsRoute__Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-m) var(--space-m) 0 var(--space-m);
+}
+
+@media (min-width: 768px) {
+  .ReportDetailsRoute__Header {
+    padding: var(--space-m) var(--space-3xl);
+  }
+}
+
+.ReportDetailsRoute__Header__Title {
+  font-size: var(--step-2);
+}
+
+.ReportDetailsRoute__Header__Button {
+  width: var(--space-xl);
+}

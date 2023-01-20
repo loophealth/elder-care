@@ -1,0 +1,1 @@
+export { IconTextTile } from "./IconTextTile";

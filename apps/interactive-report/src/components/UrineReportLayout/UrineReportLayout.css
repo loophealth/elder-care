@@ -1,0 +1,27 @@
+.UrineReportLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  padding: 0 var(--space-m);
+}
+
+@media (min-width: 768px) {
+  .UrineReportLayout {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-m);
+    padding: 0;
+  }
+}
+
+.UrineReportLayout__SectionTitle {
+  margin-bottom: var(--space-s);
+}
+
+.UrineReportLayout__Section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-s);
+}

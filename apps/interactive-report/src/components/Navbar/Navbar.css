@@ -1,0 +1,54 @@
+.Navbar {
+  border-bottom: solid 1px var(--color--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  max-width: 100vw;
+}
+
+.Navbar ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  padding: 0rem var(--space-m);
+  margin: 0;
+  gap: var(--space-2xl);
+
+  overflow-x: scroll;
+
+  /* For Internet Explorer, Edge */
+  -ms-overflow-style: none;
+  /* For Firefox */
+  scrollbar-width: none;
+}
+
+/* For Chrome, Safari, and Opera */
+.Navbar ul::-webkit-scrollbar {
+  display: none;
+}
+
+.Navbar ul li {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-s);
+  border-bottom: solid 4px transparent;
+}
+
+.Navbar ul li:has(a.active) {
+  border-bottom-color: var(--color--white);
+}
+
+.Navbar a {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color--gray);
+
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-s);
+  border-bottom: solid 4px transparent;
+}
+
+.Navbar a.active {
+  color: inherit;
+}

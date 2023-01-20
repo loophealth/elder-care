@@ -1,0 +1,13 @@
+.AdminRoute {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.AdminRoute__ButtonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  width: calc(4 * var(--space-2xl));
+}

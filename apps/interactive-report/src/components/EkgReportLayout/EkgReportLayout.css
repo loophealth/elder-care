@@ -1,0 +1,42 @@
+.EkgReportLayout__Measurements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-s);
+  max-width: calc(5 * var(--space-3xl));
+  padding: 0 var(--space-m);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: var(--space-l);
+}
+
+@media (min-width: 768px) {
+  .EkgReportLayout__Measurements {
+    margin-bottom: var(--space-xl);
+  }
+}
+
+.EkgReportLayout__Determination__Container {
+  grid-column: span 2;
+}
+
+.EkgReportLayout__Determination {
+  aspect-ratio: 3 / 1;
+}
+
+.EkgReportLayout__Ekg {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  padding: 0 var(--space-m);
+  margin-left: auto;
+  margin-right: auto;
+  gap: var(--space-s);
+}
+
+@media (min-width: 768px) {
+  .EkgReportLayout__Ekg {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    max-width: 95%;
+    padding: 0;
+  }
+}

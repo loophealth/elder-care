@@ -1,0 +1,17 @@
+.SimpleMeasurementTile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-m);
+  border-radius: var(--border-radius--l);
+  padding: var(--space-xs);
+  background-color: var(--color--gray--dark);
+  aspect-ratio: 1.75;
+}
+
+@media (min-width: 768px) {
+  .SimpleMeasurementTile {
+    padding: var(--space-s);
+    aspect-ratio: 3;
+  }
+}

@@ -1,0 +1,34 @@
+.IconTextTile {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-s);
+}
+
+.IconTextTile__Tile {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.IconTextTile__Tile__Icon {
+  width: var(--space-m);
+}
+
+.IconTextTile__Tile__TextContent__Title {
+  margin-bottom: var(--space-3xs);
+  line-height: 1.25;
+}
+
+.IconTextTile__Tile__TextContent__Details {
+  font-size: var(--step--1);
+  color: var(--color--gray--light);
+  line-height: 1.25;
+}
+
+.IconTextTile__ButtonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

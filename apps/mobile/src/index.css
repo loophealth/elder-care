@@ -1,0 +1,30 @@
+@import-normalize;
+
+:root {
+  --color--black: #222222;
+  --color--white: #ffffff;
+  --color--primary: #01604b;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+input {
+  font-size: 1.25rem;
+  font-family: sans-serif;
+}
+
+body {
+  padding: 2.5rem 1.25rem;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.25;
+  color: var(--color--black);
+}

@@ -1,0 +1,7 @@
+.FilePicker input[type="file"] {
+  display: none;
+}
+
+.FilePicker button {
+  width: 100%;
+}

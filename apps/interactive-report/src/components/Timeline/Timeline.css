@@ -1,0 +1,97 @@
+.Timeline {
+  width: 100%;
+  height: 100%;
+  margin-top: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .Timeline {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-top: 0;
+  }
+}
+
+.TimelineTicks {
+  position: absolute;
+  background-image: url("/public/img/tick-horizontal.svg");
+  background-repeat: repeat-y;
+  width: var(--space-s);
+  height: 100%;
+  left: var(--space-s);
+  top: var(--space-3xl);
+}
+
+@media (min-width: 768px) {
+  .TimelineTicks {
+    width: 100%;
+    height: auto;
+    left: 0;
+    top: -0.25rem;
+    background-image: url("/public/img/tick-vertical.svg");
+    height: 1.5rem;
+    background-repeat: repeat-x;
+  }
+}
+
+.TimelineEvents {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 var(--space-s);
+  gap: var(--space-l);
+}
+
+@media (min-width: 768px) {
+  .TimelineEvents {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    padding: 0 var(--space-l);
+    gap: var(--space-l);
+  }
+}
+
+.TimelineEvent {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-s);
+}
+
+@media (min-width: 768px) {
+  .TimelineEvent {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.TimelineEvent__TextContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.TimelineEvent__Dot {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: #fbc01f;
+  margin-bottom: var(--space-s);
+  z-index: 1;
+}
+
+.TimelineEvent__Date {
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--color--gray--light);
+  font-weight: 500;
+  font-size: var(--step--1);
+}
+
+.TimelineEvent__Event {
+  font-size: var(--step-0);
+  line-height: 1.25;
+}

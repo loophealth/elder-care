@@ -1,0 +1,83 @@
+.SummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  background-color: var(--color--gray--dark);
+  aspect-ratio: 0.55;
+  border-radius: var(--border-radius--xl);
+  border: solid 1px var(--color--brown--dark);
+  padding: var(--space-m) var(--space-s);
+  overscroll-behavior: contain;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none; /* for Firefox */
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+}
+
+.SummaryCard::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .SummaryCard {
+    width: calc(var(--space-l) * 12);
+    aspect-ratio: 0.7;
+  }
+}
+
+.SummaryCard--Dummy {
+  display: none;
+
+  cursor: pointer;
+  transform: scale(0.9);
+  transition: transform 0.1s ease-in-out;
+  background-color: var(--color--gray--darker);
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .SummaryCard--Dummy {
+    display: flex;
+  }
+}
+
+.SummaryCard--Dummy:hover {
+  background-color: var(--color--gray--dark);
+  transform: scale(0.95);
+}
+
+.SummaryCard--Dummy__Icon {
+  width: var(--space-2xl);
+  transition: transform 0.1s ease-in-out;
+}
+
+.SummaryCard--Dummy:hover .SummaryCard--Dummy__Icon {
+  transform: scale(1.25);
+}
+
+.SummaryCard__Title {
+  font-size: var(--step-1);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.SummaryCard__Details {
+  font-size: var(--step-0);
+  line-height: 1.35;
+  color: var(--color--gray--light);
+  margin-bottom: var(--space-s);
+}
+
+.SummaryCard__MeasurementTile {
+  background-color: var(--color--brown--dark);
+}
+
+.SummaryCard__MeasurementTile .ValuePill {
+  background-color: var(--color--gray--dark);
+}
+
+.SummaryCard__MeasurementTile .ValuePill__Arrow {
+  border-top: var(--space-xs) solid var(--color--gray--dark);
+}

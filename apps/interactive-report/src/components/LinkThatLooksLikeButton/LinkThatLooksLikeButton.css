@@ -1,0 +1,25 @@
+.LinkThatLooksLikeButton {
+  display: flex;
+  align-items: center;
+
+  background-color: var(--color--primary);
+  padding: var(--space-xs);
+  border-radius: var(--border-radius--l);
+  font-weight: 700;
+  text-align: center;
+  color: var(--color--black);
+  text-decoration: none;
+}
+
+.LinkThatLooksLikeButton:hover {
+  filter: brightness(1.1);
+}
+
+.LinkThatLooksLikeButton:active {
+  filter: brightness(2);
+}
+
+.LinkThatLooksLikeButton__Label {
+  text-align: center;
+  flex-grow: 1;
+}

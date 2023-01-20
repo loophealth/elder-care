@@ -1,0 +1,14 @@
+.LoginRoute {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-m);
+  grid-row: span 2;
+  align-self: center;
+}
+
+.LoginRoute__Form {
+  padding: var(--space-m);
+  background-color: var(--color--gray--dark);
+  border-radius: var(--border-radius--l);
+  min-width: calc(8 * var(--space-xl));
+}

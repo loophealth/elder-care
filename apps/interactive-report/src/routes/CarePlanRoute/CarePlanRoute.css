@@ -1,0 +1,36 @@
+.CarePlanRoute {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--space-l) var(--space-m);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+
+@media (min-width: 768px) {
+  .CarePlanRoute {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+
+    margin-top: var(--space-xl);
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: var(--space-l);
+  }
+}
+
+.CarePlanRoute__CategoryList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+  .CarePlanRoute__CategoryList__CategoryTitle {
+    margin-bottom: var(--space-2xs);
+  }
+}
