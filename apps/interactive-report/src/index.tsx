@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import { App } from "App";
 import reportWebVitals from "reportWebVitals";
-import { AuthProvider } from "lib/AuthProvider";
+import { AuthProvider } from "@loophealth/api";
 import { PatientProvider } from "lib/PatientProvider";
 
 const root = ReactDOM.createRoot(

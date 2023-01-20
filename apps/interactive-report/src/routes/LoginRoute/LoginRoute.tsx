@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { auth } from "lib/firebaseHelpers";
-import { IRequestStatus, useAuth } from "lib/AuthProvider";
+import { IRequestStatus, useAuth } from "@loophealth/api";
 
 import "./LoginRoute.css";
 

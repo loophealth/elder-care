@@ -1,12 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { User } from "firebase/auth";
 
-export enum IRequestStatus {
-  Idle,
-  Loading,
-  Loaded,
-  Error,
-}
+import { IRequestStatus } from "../types";
 
 interface IAuthContextValue {
   requestStatus: IRequestStatus;

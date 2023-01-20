@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Navigate } from "react-router-dom";
 
-import { IRequestStatus, useAuth } from "lib/AuthProvider";
+import { IRequestStatus, useAuth } from "@loophealth/api";
 
 export const ProtectedRoute = ({ component }: { component: ReactElement }) => {
   const { user, requestStatus } = useAuth();

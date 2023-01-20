@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "react-scripts build",
+    "build": "craco build",
     "eject": "react-scripts eject",
-    "start": "PORT=3001 react-scripts start",
-    "test": "react-scripts test"
+    "start": "PORT=3001 craco start",
+    "test": "craco test"
   },
   "browserslist": {
     "production": [
@@ -27,6 +27,8 @@
     ]
   },
   "dependencies": {
+    "@loophealth/api": "*",
+    "@loophealth/craco-shared-config": "*",
     "@types/lodash": "^4.14.191",
     "lodash": "^4.17.21",
     "slugify": "^1.6.5",

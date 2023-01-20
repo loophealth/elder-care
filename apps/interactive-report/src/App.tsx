@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { router } from "router";
-import { IRequestStatus, useAuth } from "lib/AuthProvider";
+import { IRequestStatus, useAuth } from "@loophealth/api";
 import { auth } from "lib/firebaseHelpers";
 
 import "reset.css";
