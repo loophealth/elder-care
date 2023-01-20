@@ -1,3 +1,5 @@
 {
-  "name": "@loophealth/api"
+  "name": "@loophealth/api",
+  "version": "0.0.1",
+  "private": true
 }
