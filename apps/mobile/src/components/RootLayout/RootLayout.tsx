@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 import logo from "static/img/logo.svg";
 
-export const Root = () => {
+export const RootLayout = () => {
   return (
     <>
       <header>

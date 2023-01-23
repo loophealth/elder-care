@@ -2,26 +2,21 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { ProtectedRoute } from "@loophealth/api";
 
-import { Root } from "routes/Root";
-import { Home } from "routes/Home";
-import { Login } from "routes/Login/Login";
-import { Protected } from "routes/Protected";
+import { HomeRoute } from "routes/HomeRoute";
+import { LoginRoute } from "routes/LoginRoute";
+import { RootLayout } from "components/RootLayout";
 
 export const router = createBrowserRouter([
   {
-    element: <Root />,
+    element: <RootLayout />,
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <ProtectedRoute component={<HomeRoute />} />,
       },
       {
         path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/protected",
-        element: <ProtectedRoute component={<Protected />} />,
+        element: <LoginRoute />,
       },
     ],
   },

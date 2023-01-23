@@ -44,6 +44,12 @@ export const getCurrentUser = (): Promise<User | null> =>
     );
   });
 
+/**
+ * Use the native SDK to verify the user's phone number. This is the primary
+ * reason we need the native SDK and the Capacitor plugin. Most things can be
+ * done with the Web SDK, but signing in with a phone number requires the native
+ * SDK.
+ */
 const verifyPhoneNumberNative = async (
   phoneNumber: string
 ): Promise<string | null> => {
@@ -92,6 +98,11 @@ export const verifyPhoneNumber = async (
   return verifyPhoneNumberWeb(phoneNumber, recaptchaContainerId);
 };
 
+/**
+ * Sign in with a phone number on the web layer. We never use the native layer
+ * for anything except verifying the phone number, so we don't need to worry
+ * about signing in with the native layer.
+ */
 export const signIn = async (
   verificationId: string,
   verificationCode: string

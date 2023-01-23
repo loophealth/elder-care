@@ -7,14 +7,14 @@ import { IRequestStatus, useAuth } from "@loophealth/api";
 import { Button } from "components/Button/Button";
 import { Input } from "components/Input/Input";
 
-import "./Login.css";
+import "./LoginRoute.css";
 
 enum LoginStep {
   PhoneNumber,
   VerificationCode,
 }
 
-export const Login = () => {
+export const LoginRoute = () => {
   const { user, requestStatus } = useAuth();
   const navigate = useNavigate();
 
