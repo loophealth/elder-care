@@ -1,11 +1,8 @@
-import { FormEvent, useCallback, useState } from "react";
-import {
-  isLoggedIn,
-  signIn,
-  useCurrentUser,
-  verifyPhoneNumber,
-} from "lib/firebaseHelpers";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { signIn, verifyPhoneNumber } from "lib/firebaseHelpers";
+import { Navigate, useNavigate } from "react-router-dom";
+
+import { IRequestStatus, useAuth } from "@loophealth/api";
 
 import { Button } from "components/Button/Button";
 import { Input } from "components/Input/Input";
@@ -18,9 +15,8 @@ enum LoginStep {
 }
 
 export const Login = () => {
+  const { user, requestStatus } = useAuth();
   const navigate = useNavigate();
-
-  const user = useCurrentUser();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,40 +25,34 @@ export const Login = () => {
   const [verificationCode, setVerificationCode] = useState("");
 
   let loginStep = LoginStep.PhoneNumber;
-  if (isLoggedIn(user)) {
-    navigate("/protected");
+  if (requestStatus === IRequestStatus.Loaded && user !== null) {
+    return <Navigate to="/" />;
   } else if (verificationId.length > 0) {
     loginStep = LoginStep.VerificationCode;
   }
 
-  const onSubmitPhoneNumber = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      try {
-        const id = await verifyPhoneNumber(phoneNumber);
-        if (!id) {
-          throw new Error("Firebase did not return a verification ID");
-        }
-        setVerificationId(id);
-      } catch (e) {
-        console.error(e);
+  const onSubmitPhoneNumber = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const id = await verifyPhoneNumber(phoneNumber);
+      if (!id) {
+        throw new Error("Firebase did not return a verification ID");
       }
-    },
-    [phoneNumber]
-  );
+      setVerificationId(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-  const onSubmitVerificationCode = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      try {
-        await signIn(verificationId, verificationCode);
-        navigate("/protected");
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [verificationId, verificationCode, navigate]
-  );
+  const onSubmitVerificationCode = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await signIn(verificationId, verificationCode);
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>

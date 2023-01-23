@@ -1,10 +1,12 @@
 import { useCallback } from "react";
-import { signOut, useCurrentUser } from "lib/firebaseHelpers";
+import { signOut } from "lib/firebaseHelpers";
 import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "@loophealth/api";
 
 export const Protected = () => {
   const navigate = useNavigate();
-  const user = useCurrentUser();
+  const { user } = useAuth();
 
   const onSignOut = useCallback(async () => {
     try {

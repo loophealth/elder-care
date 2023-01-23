@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "react-scripts build",
+    "build": "craco build",
     "eject": "react-scripts eject",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
+    "start": "craco start",
+    "test": "craco test"
   },
   "browserslist": {
     "production": [
@@ -31,6 +31,8 @@
     "@capacitor/android": "^4.5.0",
     "@capacitor/cli": "^4.5.0",
     "@capacitor/core": "^4.5.0",
-    "@capacitor/ios": "^4.5.0"
+    "@capacitor/ios": "^4.5.0",
+    "@loophealth/api": "*",
+    "@loophealth/craco-shared-config": "*"
   }
 }

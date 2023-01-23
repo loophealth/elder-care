@@ -12,7 +12,7 @@ import { AdminRoute } from "routes/AdminRoute";
 import { EditTimelineRoute } from "routes/EditTimelineRoute";
 import { EditCarePlanRoute } from "routes/EditCarePlanRoute";
 
-import { ProtectedRoute } from "components/ProtectedRoute";
+import { ProtectedRoute } from "@loophealth/api";
 import { RequirePatientRoute } from "components/RequirePatientRoute";
 
 export const router = createBrowserRouter([

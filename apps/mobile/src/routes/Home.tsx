@@ -1,8 +1,8 @@
-import { useCurrentUser } from "lib/firebaseHelpers";
+import { useAuth } from "@loophealth/api";
 import { Link } from "react-router-dom";
 
 export const Home = () => {
-  const user = useCurrentUser();
+  const { user } = useAuth();
 
   return (
     <>

@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import { ProtectedRoute } from "@loophealth/api";
+
 import { Root } from "routes/Root";
 import { Home } from "routes/Home";
 import { Login } from "routes/Login/Login";
 import { Protected } from "routes/Protected";
-import { authLoader } from "lib/firebaseHelpers";
 
 export const router = createBrowserRouter([
   {
@@ -19,13 +20,8 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        loader: authLoader,
-        children: [
-          {
-            path: "/protected",
-            element: <Protected />,
-          },
-        ],
+        path: "/protected",
+        element: <ProtectedRoute component={<Protected />} />,
       },
     ],
   },

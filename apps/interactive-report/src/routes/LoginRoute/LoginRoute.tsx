@@ -2,10 +2,11 @@ import { FormEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { IRequestStatus, useAuth } from "@loophealth/api";
+
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { auth } from "lib/firebaseHelpers";
-import { IRequestStatus, useAuth } from "@loophealth/api";
 
 import "./LoginRoute.css";
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import {
   Auth,
@@ -14,15 +13,14 @@ import {
 } from "firebase/auth";
 import { Capacitor } from "@capacitor/core";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
-import { redirect } from "react-router-dom";
 
 import { firebaseConfig } from "lib/firebaseConfig";
 
 // Initialize Firebase.
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Auth.
-let auth: Auth;
+export let auth: Auth;
 if (Capacitor.isNativePlatform()) {
   auth = initializeAuth(app, {
     persistence: indexedDBLocalPersistence,
@@ -45,35 +43,6 @@ export const getCurrentUser = (): Promise<User | null> =>
       reject
     );
   });
-
-export const isLoggedIn = (user: User | null) => {
-  return user !== null;
-};
-
-export const useCurrentUser = (): User | null => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await getCurrentUser();
-      setUser(user);
-    };
-
-    getUser();
-  }, []);
-
-  return user;
-};
-
-export const authLoader = async () => {
-  const user = await getCurrentUser();
-
-  if (!isLoggedIn(user)) {
-    return redirect("/login");
-  } else {
-    return user;
-  }
-};
 
 const verifyPhoneNumberNative = async (
   phoneNumber: string
