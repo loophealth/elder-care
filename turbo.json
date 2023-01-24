@@ -7,6 +7,9 @@
     },
     "start": {
       "cache": false
+    },
+    "@loophealth/mobile#capacitor_live_server": {
+      "cache": false
     }
   }
 }

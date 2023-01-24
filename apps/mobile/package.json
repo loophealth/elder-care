@@ -6,7 +6,8 @@
     "build": "craco build",
     "eject": "react-scripts eject",
     "start": "HOST=0.0.0.0 craco start",
-    "test": "craco test"
+    "test": "craco test",
+    "capacitor_live_server": "node bin/capacitor_live_server.js"
   },
   "browserslist": {
     "production": [
