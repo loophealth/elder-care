@@ -8,6 +8,7 @@ import { router } from "router";
 import { auth } from "lib/firebaseHelpers";
 
 import "fonts/ApercuPro/ApercuPro.css";
+import "utopia.css";
 import "index.css";
 
 export const App = () => {
