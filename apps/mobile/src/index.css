@@ -1,13 +1,39 @@
 @import-normalize;
 
 :root {
-  --color--black: #222222;
-  --color--white: #ffffff;
-  --color--primary: #01604b;
+  --color-black: #121212;
+  --color-white: #ffffff;
+  --color-gray: #5d5d5d;
+
+  --gradient-bg: radial-gradient(
+      216.41% 100% at 50% 100%,
+      #f9ecdd 0%,
+      #fff9f1 33.33%,
+      #fcf9f2 66.67%,
+      #fcfbf7 100%
+    ),
+    #fbf8f2;
+  --gradient-debug: radial-gradient(
+      216.41% 100% at 50% 100%,
+      #c300ff 0%,
+      #ff9100 33.33%,
+      #005eff 66.67%,
+      #eeff00 100%
+    ),
+    #ff004c;
+
+  --border-radius-m: 16px;
+}
+
+html {
+  width: 100%;
+  height: 100%;
 }
 
 body {
   font-family: "Apercu Pro", system-ui;
+  font-size: 87.5%;
+  color: var(--color-gray);
 }
 
 body,
@@ -17,4 +43,18 @@ body,
 
   width: 100%;
   height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-black);
+}
+
+h1 {
+  font-size: var(--step-5);
+  font-weight: 700;
 }

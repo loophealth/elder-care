@@ -1,9 +1,9 @@
 .Button {
   all: unset;
-  color: var(--color--white);
-  background-color: var(--color--primary);
+  color: var(--color-white);
+  background-color: var(--color-black);
   font-weight: 700;
-  font-size: 1rem;
-  padding: 0.875rem;
+  padding: var(--space-s);
   text-align: center;
+  border-radius: var(--border-radius-m);
 }

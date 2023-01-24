@@ -55,16 +55,24 @@ export const LoginRoute = () => {
   };
 
   return (
-    <>
+    <div className="LoginRoute">
       <h1 className="LoginRoute__Heading">Login</h1>
 
       {loginStep === LoginStep.PhoneNumber && (
         <form className="LoginRoute__Form" onSubmit={onSubmitPhoneNumber}>
+          <label htmlFor="phoneNumber">
+            Enter your 10-digit phone number to login.
+          </label>
           <Input
+            id="phoneNumber"
             type="tel"
             placeholder="Enter phone number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            minLength={10}
+            maxLength={10}
+            pattern="[0-9]*"
+            required
           />
 
           <Button type="submit" disabled={isLoading}>
@@ -88,6 +96,6 @@ export const LoginRoute = () => {
           </Button>
         </form>
       )}
-    </>
+    </div>
   );
 };
