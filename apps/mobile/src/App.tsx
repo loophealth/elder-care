@@ -12,6 +12,9 @@ import "./index.css";
 export const App = () => {
   const { setUser, setRequestStatus } = useAuth();
 
+  // Handle auth state changes. Doing it here lets us call sign in and sign out
+  // from anywhere else in the app, and be sure that any components that depend
+  // on the auth state will get re-rendered.
   useEffect(() => {
     setRequestStatus(IRequestStatus.Loading);
     onAuthStateChanged(auth, (user) => {

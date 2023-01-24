@@ -116,4 +116,8 @@ export const signIn = async (
   return userCredential.user;
 };
 
+/**
+ * Sign out of Firebase on the web layer. We never sign into the native layer,
+ * so we don't need to sign out of it.
+ */
 export const signOut = () => signOutWeb(auth);
