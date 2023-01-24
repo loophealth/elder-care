@@ -6,6 +6,10 @@
   --color--primary: #01604b;
 }
 
+body {
+  font-family: "Apercu Pro", system-ui;
+}
+
 body,
 #root {
   margin: 0;

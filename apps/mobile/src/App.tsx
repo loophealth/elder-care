@@ -7,7 +7,8 @@ import { IRequestStatus, useAuth } from "@loophealth/api";
 import { router } from "router";
 import { auth } from "lib/firebaseHelpers";
 
-import "./index.css";
+import "fonts/ApercuPro/ApercuPro.css";
+import "index.css";
 
 export const App = () => {
   const { setUser, setRequestStatus } = useAuth();
