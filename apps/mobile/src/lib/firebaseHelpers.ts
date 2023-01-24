@@ -85,8 +85,10 @@ export const verifyPhoneNumber = async (
   phoneNumber: string,
   recaptchaContainerId?: string
 ): Promise<string | null> => {
+  const phoneNumberWithCountryCode = `+91${phoneNumber}`;
+
   if (Capacitor.isNativePlatform()) {
-    return verifyPhoneNumberNative(phoneNumber);
+    return verifyPhoneNumberNative(phoneNumberWithCountryCode);
   }
 
   if (!recaptchaContainerId) {
@@ -95,7 +97,7 @@ export const verifyPhoneNumber = async (
     );
   }
 
-  return verifyPhoneNumberWeb(phoneNumber, recaptchaContainerId);
+  return verifyPhoneNumberWeb(phoneNumberWithCountryCode, recaptchaContainerId);
 };
 
 /**
