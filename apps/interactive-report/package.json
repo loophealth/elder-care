@@ -5,7 +5,7 @@
   "scripts": {
     "build": "craco build",
     "eject": "react-scripts eject",
-    "start": "PORT=3001 craco start",
+    "start": "HOST=0.0.0.0 PORT=3001 craco start",
     "test": "craco test"
   },
   "browserslist": {

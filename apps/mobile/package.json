@@ -5,7 +5,7 @@
   "scripts": {
     "build": "craco build",
     "eject": "react-scripts eject",
-    "start": "craco start",
+    "start": "HOST=0.0.0.0 craco start",
     "test": "craco test"
   },
   "browserslist": {
@@ -33,6 +33,7 @@
     "@capacitor/core": "^4.5.0",
     "@capacitor/ios": "^4.5.0",
     "@loophealth/api": "*",
-    "@loophealth/craco-shared-config": "*"
+    "@loophealth/craco-shared-config": "*",
+    "address": "^1.2.2"
   }
 }
