@@ -1,9 +1,4 @@
-.Login__Heading {
-  margin-top: 4.5rem;
-  margin-bottom: 3rem;
-}
-
-.Login__form {
+.LoginRoute__Form {
   display: flex;
   flex-direction: column;
   gap: 1rem;

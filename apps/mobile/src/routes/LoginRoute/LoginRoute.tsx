@@ -56,10 +56,10 @@ export const LoginRoute = () => {
 
   return (
     <>
-      <h1 className="Login__Heading">Login</h1>
+      <h1 className="LoginRoute__Heading">Login</h1>
 
       {loginStep === LoginStep.PhoneNumber && (
-        <form className="Login__form" onSubmit={onSubmitPhoneNumber}>
+        <form className="LoginRoute__Form" onSubmit={onSubmitPhoneNumber}>
           <Input
             type="tel"
             placeholder="Enter phone number"
@@ -74,7 +74,7 @@ export const LoginRoute = () => {
       )}
 
       {loginStep === LoginStep.VerificationCode && (
-        <form className="Login__form" onSubmit={onSubmitVerificationCode}>
+        <form className="LoginRoute__Form" onSubmit={onSubmitVerificationCode}>
           <label htmlFor="verificationCode">Verification code: </label>
           <Input
             type="text"
