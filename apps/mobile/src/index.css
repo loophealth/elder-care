@@ -1,5 +1,5 @@
 :root {
-  --color-black: #121212;
+  --color-black: #050505;
   --color-white: #ffffff;
   --color-gray: #5d5d5d;
 
@@ -56,7 +56,7 @@ h6 {
 }
 
 h1 {
-  font-size: var(--step-5);
+  font-size: var(--step-2);
   font-weight: 700;
 }
 

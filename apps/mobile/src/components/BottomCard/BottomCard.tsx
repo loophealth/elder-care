@@ -1,10 +1,19 @@
+import { ReactNode } from "react";
+
 import "./BottomCard.css";
 
-export const BottomCard = () => {
-  return (
-    <div className="BottomCard">
-      <h1>Hi I am Bottom Card</h1>
-      <p>This is some text.</p>
-    </div>
-  );
+interface BottomCardProps {
+  isOpen: boolean;
+  renderContent: () => ReactNode;
+}
+
+export const BottomCard = ({
+  isOpen = true,
+  renderContent,
+}: BottomCardProps) => {
+  if (!isOpen) {
+    return null;
+  }
+
+  return <div className="BottomCard Prose">{renderContent()}</div>;
 };

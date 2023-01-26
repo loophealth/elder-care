@@ -5,10 +5,11 @@ import "./Button.css";
 
 interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   children: React.ReactNode;
+  className?: string;
 }
 
-export const Button = ({ children, ...props }: ButtonProps) => {
-  const appliedClasses = clsx("Button");
+export const Button = ({ children, className, ...props }: ButtonProps) => {
+  const appliedClasses = clsx("Button", className);
 
   return (
     <button className={appliedClasses} {...props}>
