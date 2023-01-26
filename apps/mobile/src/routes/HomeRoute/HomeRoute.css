@@ -1,0 +1,10 @@
+.HomeRoute__BottomCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.HomeRoute__BottomCardContent__Header {
+  display: flex;
+  justify-content: flex-end;
+}

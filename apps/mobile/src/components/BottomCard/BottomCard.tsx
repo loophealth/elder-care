@@ -15,5 +15,5 @@ export const BottomCard = ({
     return null;
   }
 
-  return <div className="BottomCard Prose">{renderContent()}</div>;
+  return <div className="BottomCard">{renderContent()}</div>;
 };

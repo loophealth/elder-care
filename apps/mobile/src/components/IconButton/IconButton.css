@@ -1,0 +1,4 @@
+.IconButton {
+  all: unset;
+  width: var(--space-m);
+}

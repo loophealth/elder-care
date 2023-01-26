@@ -3,7 +3,10 @@ import { useAuth } from "@loophealth/api";
 
 import { BottomCard } from "components/BottomCard";
 import { Button } from "components/Button";
+import { IconButton } from "components/IconButton";
 import { signOut } from "lib/firebaseHelpers";
+
+import "./HomeRoute.css";
 
 export const HomeRoute = () => {
   const { user } = useAuth();
@@ -29,7 +32,14 @@ export const HomeRoute = () => {
 
 const BottomCardContent = ({ onClose }: { onClose: () => void }) => {
   return (
-    <div className="Prose">
+    <div className="HomeRoute__BottomCardContent">
+      <div className="HomeRoute__BottomCardContent__Header">
+        <IconButton
+          iconPath="/img/close.svg"
+          alt="Close modal dialog"
+          onClick={onClose}
+        />
+      </div>
       <h1>Your past, present, and future health — all in one place</h1>
       <p>
         Loop automatically imports reports, consultations and prescriptions and

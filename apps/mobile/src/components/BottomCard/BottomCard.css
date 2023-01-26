@@ -11,7 +11,4 @@
 
   border: solid 4px #faf1e9;
   border-bottom: none;
-
-  display: flex;
-  flex-direction: column;
 }
