@@ -10,6 +10,7 @@ import { router } from "router";
 import { auth } from "lib/firebaseHelpers";
 
 import "fonts/ApercuPro/ApercuPro.css";
+import "utils.css";
 import "index.css";
 
 export const App = () => {
