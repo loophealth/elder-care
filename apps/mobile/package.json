@@ -35,6 +35,7 @@
     "@capacitor/ios": "^4.5.0",
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
+    "@loophealth/ui": "*",
     "address": "^1.2.2"
   }
 }

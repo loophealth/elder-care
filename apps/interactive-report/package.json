@@ -29,6 +29,7 @@
   "dependencies": {
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
+    "@loophealth/ui": "*",
     "@types/lodash": "^4.14.191",
     "lodash": "^4.17.21",
     "slugify": "^1.6.5",

@@ -1,5 +1,3 @@
-@import-normalize;
-
 :root {
   --color-black: #121212;
   --color-white: #ffffff;
@@ -22,12 +20,19 @@
     ),
     #ff004c;
 
-  --border-radius-m: 16px;
-}
+  /* This gradient uses a rotation that is not supported by CSS and may not
+    behave as expected. It appears fine in Figma, though. */
+  --gradient-bottom-card: radial-gradient(
+      90.16% 143.01% at 15.32% 21.04%,
+      rgba(255, 218, 198, 0.1) 0%,
+      rgba(251, 183, 145, 0.16) 44.79%,
+      rgba(179, 113, 245, 0.04) 75.52%,
+      rgba(167, 70, 213, 0) 100%
+    )
+    #fffaf2;
 
-html {
-  width: 100%;
-  height: 100%;
+  --border-radius-m: 16px;
+  --border-radius-l: 24px;
 }
 
 body {
@@ -36,11 +41,7 @@ body {
   color: var(--color-gray);
 }
 
-body,
 #root {
-  margin: 0;
-  padding: 0;
-
   width: 100%;
   height: 100%;
 }
@@ -57,4 +58,9 @@ h6 {
 h1 {
   font-size: var(--step-5);
   font-weight: 700;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }

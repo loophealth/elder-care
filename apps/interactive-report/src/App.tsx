@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { router } from "router";
 import { IRequestStatus, useAuth } from "@loophealth/api";
+import "@loophealth/ui/src/styles/reset.css";
+import "@loophealth/ui/src/styles/utopia.css";
+
+import { router } from "router";
 import { auth } from "lib/firebaseHelpers";
 
-import "reset.css";
-import "utopia.css";
 import "globals.css";
 import "utils.css";
 import "fonts/ApercuPro/ApercuPro.css";

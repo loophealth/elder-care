@@ -1,4 +1,6 @@
 import { useAuth } from "@loophealth/api";
+
+import { BottomCard } from "components/BottomCard";
 import { signOut } from "lib/firebaseHelpers";
 
 export const HomeRoute = () => {
@@ -10,9 +12,9 @@ export const HomeRoute = () => {
 
   return (
     <>
-      <h2>Home</h2>
       <p>You are currently logged in as: {user?.phoneNumber ?? "unknown"}</p>
       <button onClick={onLogOut}>Log Out</button>
+      <BottomCard />
     </>
   );
 };

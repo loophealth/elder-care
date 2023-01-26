@@ -2,8 +2,8 @@
   "name": "@loophealth/ui",
   "version": "0.0.0",
   "private": true,
-  "main": "./index.tsx",
-  "types": "./index.tsx",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
   "scripts": {},
   "devDependencies": {}
 }

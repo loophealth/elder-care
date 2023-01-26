@@ -1,0 +1,11 @@
+.BottomCard {
+  position: absolute;
+  bottom: 0;
+  margin-left: var(--space-s);
+  margin-right: var(--space-s);
+  min-height: 90%;
+  border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
+  padding: var(--space-m);
+
+  background: var(--gradient-bottom-card);
+}
