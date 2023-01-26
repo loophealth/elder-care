@@ -61,12 +61,12 @@ export const LoginRoute = () => {
       {loginStep === LoginStep.PhoneNumber && (
         <form className="LoginRoute__Form" onSubmit={onSubmitPhoneNumber}>
           <label htmlFor="phoneNumber">
-            Enter your 10-digit phone number to login.
+            Enter your 10-digit mobile number to login.
           </label>
           <Input
             id="phoneNumber"
             type="tel"
-            placeholder="Enter phone number"
+            placeholder="Enter mobile number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             minLength={10}
@@ -83,7 +83,10 @@ export const LoginRoute = () => {
 
       {loginStep === LoginStep.VerificationCode && (
         <form className="LoginRoute__Form" onSubmit={onSubmitVerificationCode}>
-          <label htmlFor="verificationCode">Verification code: </label>
+          <label htmlFor="verificationCode">
+            Enter the verification code that was sent to your phone as an SMS
+            message.
+          </label>
           <Input
             type="text"
             placeholder="Enter verification code"
