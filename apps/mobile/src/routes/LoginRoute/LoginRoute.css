@@ -4,6 +4,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 0 var(--space-s);
+  gap: var(--space-xs);
 }
 
 .LoginRoute__Form {

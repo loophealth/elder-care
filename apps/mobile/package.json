@@ -36,6 +36,7 @@
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
     "@loophealth/ui": "*",
-    "address": "^1.2.2"
+    "address": "^1.2.2",
+    "capacitor-plugin-safe-area": "^1.0.1"
   }
 }
