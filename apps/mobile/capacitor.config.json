@@ -3,15 +3,10 @@
   "appName": "loopnext",
   "webDir": "build",
   "bundledWebRuntime": false,
-  "ios": {
-    "contentInset": "automatic"
-  },
   "plugins": {
     "FirebaseAuthentication": {
       "skipNativeAuth": true,
-      "providers": [
-        "phone"
-      ]
+      "providers": ["phone"]
     }
   }
 }
