@@ -16,7 +16,7 @@ export const TimelineList = ({ items }: { items: TimelineListItem[] }) => {
     <div className="TimelineList">
       {items.map((item) => {
         return (
-          <div className="TimelineList__Item">
+          <div className="TimelineList__Item" key={item.label}>
             <img
               className="TimelineList__Item__When"
               src={ITEM_IMAGES[item.when]}
