@@ -28,7 +28,39 @@
   color: var(--color-sepia-dark);
 }
 
-.Navbar__Item img {
-  stroke: currentColor;
-  fill: currentColor;
+.Navbar__Item__Icon {
+  width: var(--space-m);
+  height: var(--space-m);
+}
+
+.Navbar__Item__Icon--Home {
+  background: url("~/public/img/home.svg") no-repeat;
+}
+
+.Navbar__Item--Active .Navbar__Item__Icon--Home {
+  background: url("~/public/img/home-orange.svg") no-repeat;
+}
+
+.Navbar__Item__Icon--Care {
+  background: url("~/public/img/stethoscope.svg") no-repeat;
+}
+
+.Navbar__Item--Active .Navbar__Item__Icon--Care {
+  background: url("~/public/img/stethoscope-orange.svg") no-repeat;
+}
+
+.Navbar__Item__Icon--Insurance {
+  background: url("~/public/img/shield.svg") no-repeat;
+}
+
+.Navbar__Item--Active .Navbar__Item__Icon--Insurance {
+  background: url("~/public/img/shield-orange.svg") no-repeat;
+}
+
+.Navbar__Item__Icon--You {
+  background: url("~/public/img/user.svg") no-repeat;
+}
+
+.Navbar__Item--Active .Navbar__Item__Icon--You {
+  background: url("~/public/img/user-orange.svg") no-repeat;
 }

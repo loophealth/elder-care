@@ -18,6 +18,18 @@ export const router = createBrowserRouter([
         path: "/login",
         element: <LoginRoute />,
       },
+      {
+        path: "/care",
+        element: <ProtectedRoute component={<h1>Care</h1>} />,
+      },
+      {
+        path: "/insurance",
+        element: <ProtectedRoute component={<h1>Insurance</h1>} />,
+      },
+      {
+        path: "/you",
+        element: <ProtectedRoute component={<h1>You</h1>} />,
+      },
     ],
   },
 ]);
