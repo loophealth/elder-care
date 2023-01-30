@@ -8,3 +8,7 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.HomeRoute__BottomCardContent__Button {
+  margin-top: var(--space-xl);
+}

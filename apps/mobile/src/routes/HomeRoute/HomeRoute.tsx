@@ -71,7 +71,12 @@ const BottomCardContent = ({ onClose }: { onClose: () => void }) => {
         ]}
       />
 
-      <Button onClick={onClose}>Go to Timeline</Button>
+      <Button
+        className="HomeRoute__BottomCardContent__Button"
+        onClick={onClose}
+      >
+        Go to Timeline
+      </Button>
     </div>
   );
 };
