@@ -11,4 +11,6 @@
 
   border: solid 4px #faf1e9;
   border-bottom: none;
+
+  z-index: var(--z-index-modal);
 }
