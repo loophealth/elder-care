@@ -8,15 +8,15 @@ import { RootLayout } from "components/RootLayout";
 
 export const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <LoginRoute />,
+  },
+  {
     element: <RootLayout />,
     children: [
       {
         path: "/",
         element: <ProtectedRoute component={<HomeRoute />} />,
-      },
-      {
-        path: "/login",
-        element: <LoginRoute />,
       },
       {
         path: "/care",
