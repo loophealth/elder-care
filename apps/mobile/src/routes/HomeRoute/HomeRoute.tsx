@@ -7,6 +7,7 @@ import { IconButton } from "components/IconButton";
 import { TimelineList } from "components/TimelineList";
 import { signOut } from "lib/firebaseHelpers";
 import { useSafeArea } from "lib/useSafeArea";
+import { useLocalStorage } from "lib/useLocalStorage";
 
 import "./HomeRoute.css";
 
@@ -15,8 +16,18 @@ export const HomeRoute = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const { isLoadingSafeAreaInsets, safeAreaInsets } = useSafeArea();
 
+  const [didShowFirstRunModal, setDidShowFirstRunModal] = useLocalStorage(
+    "didShowFirstRunModal",
+    false
+  );
+
   const onLogOut = async () => {
     await signOut();
+  };
+
+  const onCloseFirstRunModal = () => {
+    setIsModalOpen(false);
+    setDidShowFirstRunModal(true);
   };
 
   if (isLoadingSafeAreaInsets) {
@@ -30,12 +41,14 @@ export const HomeRoute = () => {
     >
       <p>You are currently logged in as: {user?.phoneNumber ?? "unknown"}</p>
       <button onClick={onLogOut}>Log Out</button>
-      <BottomCard
-        isOpen={isModalOpen}
-        renderContent={() => (
-          <BottomCardContent onClose={() => setIsModalOpen(false)} />
-        )}
-      />
+      {didShowFirstRunModal ? null : (
+        <BottomCard
+          isOpen={isModalOpen}
+          renderContent={() => (
+            <BottomCardContent onClose={onCloseFirstRunModal} />
+          )}
+        />
+      )}
     </div>
   );
 };
