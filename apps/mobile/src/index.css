@@ -36,6 +36,9 @@
   --border-radius-s: 12px;
   --border-radius-m: 16px;
   --border-radius-l: 24px;
+
+  --z-index-modal: 100;
+  --z-index-navigation: 50;
 }
 
 body {
