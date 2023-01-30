@@ -2,6 +2,8 @@
   --color-black: #050505;
   --color-white: #ffffff;
   --color-gray: #5d5d5d;
+  --color-sepia: #ffebde;
+  --color-sepia-dark: #e06900;
 
   --gradient-bg: radial-gradient(
       216.41% 100% at 50% 100%,
@@ -31,6 +33,7 @@
     )
     #fffaf2;
 
+  --border-radius-s: 12px;
   --border-radius-m: 16px;
   --border-radius-l: 24px;
 }

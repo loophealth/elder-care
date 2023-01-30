@@ -1,0 +1,34 @@
+.Navbar {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--color-white);
+  padding: var(--space-xs) var(--space-s);
+  border-radius: var(--border-radius-s);
+  left: 4%;
+  right: 4%;
+  box-shadow: 0px 2px 2px var(--color-sepia);
+}
+
+.Navbar__Item {
+  padding: var(--space-3xs) var(--space-m);
+  border-radius: var(--border-radius-s);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: var(--step--1);
+  gap: var(--space-3xs);
+  color: var(--color-gray);
+}
+
+.Navbar__Item--Active {
+  background-color: var(--color-sepia);
+  color: var(--color-sepia-dark);
+}
+
+.Navbar__Item img {
+  stroke: currentColor;
+  fill: currentColor;
+}
