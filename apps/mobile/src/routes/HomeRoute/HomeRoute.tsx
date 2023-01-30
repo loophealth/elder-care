@@ -4,6 +4,7 @@ import { useAuth } from "@loophealth/api";
 import { BottomCard } from "components/BottomCard";
 import { Button } from "components/Button";
 import { IconButton } from "components/IconButton";
+import { TimelineList } from "components/TimelineList";
 import { signOut } from "lib/firebaseHelpers";
 import { useSafeArea } from "lib/useSafeArea";
 
@@ -59,6 +60,16 @@ const BottomCardContent = ({ onClose }: { onClose: () => void }) => {
         Now you can prevent serious conditions even before they present any
         signs.
       </p>
+
+      <TimelineList
+        items={[
+          { label: "Past reports", when: "past" },
+          { label: "Current checkup", when: "past" },
+          { label: "Current care plan", when: "present" },
+          { label: "Follow-up scheduled", when: "future" },
+          { label: "Future health forecast", when: "future" },
+        ]}
+      />
 
       <Button onClick={onClose}>Go to Timeline</Button>
     </div>
