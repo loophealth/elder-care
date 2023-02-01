@@ -9,13 +9,13 @@ import {
   where,
 } from "firebase/firestore";
 
-import { db } from "lib/firebaseHelpers";
-import { CarePlan, HealthReport, UserProfile } from "lib/commonTypes";
+import { db } from "./firebaseEntities";
+import { CarePlan, HealthReport, UserProfile } from "./types";
 import {
   ExcelHealthReport,
   toHealthReport,
   toUserProfile,
-} from "lib/ExcelHealthReport";
+} from "./ExcelHealthReport";
 
 /**
  * A numerical code represeting an error type in our API calls.

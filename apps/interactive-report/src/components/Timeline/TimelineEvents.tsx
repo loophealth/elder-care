@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { onSnapshot } from "firebase/firestore";
 
-import { usePatient } from "lib/PatientProvider";
-import { HealthTimelineEvent } from "lib/commonTypes";
+import { usePatient, HealthTimelineEvent } from "@loophealth/api";
+
 import { TimelineEvent } from "./TimelineEvent";
 
 export const TimelineEvents = () => {

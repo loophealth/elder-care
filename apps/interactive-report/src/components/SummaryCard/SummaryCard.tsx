@@ -1,7 +1,7 @@
+import { SummaryItem, usePatient } from "@loophealth/api";
+
 import { MeasurementTile } from "components/MeasurementTile";
-import { SummaryItem } from "lib/commonTypes";
 import { findMeasurementByName } from "lib/measurement";
-import { usePatient } from "lib/PatientProvider";
 
 import "./SummaryCard.css";
 

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { onSnapshot } from "firebase/firestore";
 
+import {
+  CarePlan,
+  CarePlanCategory,
+  CarePlanItem,
+  usePatient,
+} from "@loophealth/api";
+
 import { Navbar } from "components/Navbar";
 import { IconTextTile } from "components/IconTextTile";
-import { CarePlan, CarePlanCategory, CarePlanItem } from "lib/commonTypes";
-import { usePatient } from "lib/PatientProvider";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./CarePlanRoute.css";

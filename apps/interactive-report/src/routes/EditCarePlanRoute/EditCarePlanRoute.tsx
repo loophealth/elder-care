@@ -1,15 +1,15 @@
 import { FormEvent, useEffect, useState } from "react";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 
+import { usePatient, CarePlan, CarePlanCategory } from "@loophealth/api";
+
 import { AdminEditorLayout } from "components/AdminEditorLayout";
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { Select } from "components/Select";
 import { TextArea } from "components/TextArea";
 import { IconTextTile } from "components/IconTextTile";
-import { usePatient } from "lib/PatientProvider";
 import { CATEGORY_ICONS } from "lib/carePlan";
-import { CarePlan, CarePlanCategory } from "lib/commonTypes";
 
 import "./EditCarePlanRoute.css";
 

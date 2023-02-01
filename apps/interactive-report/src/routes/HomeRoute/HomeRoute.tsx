@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { ZodError } from "zod";
 import { FirebaseError } from "firebase/app";
 
+import {
+  Patient,
+  usePatient,
+  ExcelHealthReportParseError,
+  parseExcelHealthReport,
+  isApiError,
+  createHealthReportAndUserProfile,
+} from "@loophealth/api";
+
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { FilePicker } from "components/FilePicker";
-import { Patient } from "lib/Patient";
-import { usePatient } from "lib/PatientProvider";
-import { createHealthReportAndUserProfile, isApiError } from "lib/api";
-import {
-  ExcelHealthReportParseError,
-  parseExcelHealthReport,
-} from "lib/ExcelHealthReport";
 
 import "./HomeRoute.css";
 

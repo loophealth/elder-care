@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
-import { slugifyCategoryName } from "lib/measurement";
 import {
   MeasurementCategory,
   MeasurementCategoryStatus,
-} from "lib/commonTypes";
+} from "@loophealth/api";
+
+import { slugifyCategoryName } from "lib/measurement";
 
 import "./CategoryTile.css";
 

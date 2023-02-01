@@ -1,5 +1,6 @@
+import { Measurement } from "@loophealth/api";
+
 import { SimpleMeasurementTile } from "components/SimpleMeasurementTile";
-import { Measurement } from "lib/commonTypes";
 import { findMeasurementByName } from "lib/measurement";
 
 import "./EkgReportLayout.css";

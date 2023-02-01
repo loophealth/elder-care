@@ -3,7 +3,7 @@ import { isNull } from "lodash";
 import { read } from "xlsx";
 import { z } from "zod";
 
-import { HealthReport, UserProfile } from "lib/commonTypes";
+import { HealthReport, UserProfile } from "./commonTypes";
 
 export const parseExcelHealthReport = async (
   file: File

@@ -1,6 +1,7 @@
+import { Measurement } from "@loophealth/api";
+
 import { RangedMeasurementTile } from "components/RangedMeasurementTile";
 import { SimpleMeasurementTile } from "components/SimpleMeasurementTile";
-import { Measurement } from "lib/commonTypes";
 import { isRangedMeasurement } from "lib/measurement";
 
 export const MeasurementTile = ({

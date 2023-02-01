@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
-import { Patient } from "lib/Patient";
+import { Patient } from "./Patient";
 
 interface PatientContextValue {
   patient: Patient | null;

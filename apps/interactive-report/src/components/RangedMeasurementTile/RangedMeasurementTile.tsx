@@ -1,7 +1,8 @@
 import clsx from "clsx";
 
+import { Measurement } from "@loophealth/api";
+
 import { ValuePill } from "components/ValuePill";
-import { Measurement } from "lib/commonTypes";
 
 import "./RangedMeasurementTile.css";
 

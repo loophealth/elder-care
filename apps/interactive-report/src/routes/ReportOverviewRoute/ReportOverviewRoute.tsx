@@ -1,6 +1,7 @@
+import { usePatient } from "@loophealth/api";
+
 import { CategoryTile } from "components/CategoryTile";
 import { Navbar } from "components/Navbar";
-import { usePatient } from "lib/PatientProvider";
 
 import "./ReportOverviewRoute.css";
 

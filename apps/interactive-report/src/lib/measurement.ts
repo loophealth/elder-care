@@ -1,6 +1,6 @@
 import slugify from "slugify";
 
-import { Measurement } from "lib/commonTypes";
+import { Measurement } from "@loophealth/api";
 
 export const RANGED_TILE_CATEGORIES = new Set([
   "Blood",

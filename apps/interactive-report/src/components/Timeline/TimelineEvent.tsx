@@ -1,4 +1,4 @@
-import { HealthTimelineEvent as TimelineEventType } from "lib/commonTypes";
+import { HealthTimelineEvent as TimelineEventType } from "@loophealth/api";
 
 export const TimelineEvent = ({ event }: { event: TimelineEventType }) => {
   return (

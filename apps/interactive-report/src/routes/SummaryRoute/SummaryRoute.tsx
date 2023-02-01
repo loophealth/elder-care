@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-import { usePatient } from "lib/PatientProvider";
+import { usePatient } from "@loophealth/api";
+
 import { SummaryCard } from "components/SummaryCard";
+import { Navbar } from "components/Navbar";
 
 import "./SummaryRoute.css";
-import { Navbar } from "components/Navbar";
 
 export const SummaryRoute = () => {
   const { patient } = usePatient();

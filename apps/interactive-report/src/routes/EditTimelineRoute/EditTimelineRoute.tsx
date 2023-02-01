@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 
+import { usePatient, HealthTimelineEvent } from "@loophealth/api";
+
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { AdminEditorLayout } from "components/AdminEditorLayout";
 import { IconTextTile } from "components/IconTextTile";
-import { usePatient } from "lib/PatientProvider";
-import { HealthTimelineEvent } from "lib/commonTypes";
 
 import "./EditTimelineRoute.css";
 

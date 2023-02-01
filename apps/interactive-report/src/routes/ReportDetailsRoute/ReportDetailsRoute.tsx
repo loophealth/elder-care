@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 
+import { usePatient } from "@loophealth/api";
+
 import { ColumnsReportLayout } from "components/ColumnsReportLayout";
 import { EkgReportLayout } from "components/EkgReportLayout";
 import { UrineReportLayout } from "components/UrineReportLayout";
 import { findMeasurementsByCategorySlug } from "lib/measurement";
-import { usePatient } from "lib/PatientProvider";
 
 import "./ReportDetailsRoute.css";
 
