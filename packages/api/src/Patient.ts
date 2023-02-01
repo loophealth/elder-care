@@ -1,6 +1,6 @@
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
-import { CarePlan, HealthReport, UserProfile } from "./commonTypes";
+import { CarePlan, HealthReport, UserProfile } from "./types";
 import { findHealthReport, findOrCreateCarePlan, findUserProfile } from "./api";
 
 export class Patient {
