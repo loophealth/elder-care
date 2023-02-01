@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { AuthProvider } from "@loophealth/api";
+import { AuthProvider, PatientProvider } from "@loophealth/api";
 
 import { App } from "App";
 import reportWebVitals from "reportWebVitals";
@@ -12,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <App />
+      <PatientProvider>
+        <App />
+      </PatientProvider>
     </AuthProvider>
   </React.StrictMode>
 );
