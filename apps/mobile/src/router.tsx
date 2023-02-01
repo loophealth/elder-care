@@ -8,11 +8,16 @@ import { RootLayout } from "components/RootLayout";
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginRoute />,
+    element: <RootLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginRoute />,
+      },
+    ],
   },
   {
-    element: <RootLayout />,
+    element: <RootLayout shouldShowNavbar={true} />,
     children: [
       {
         path: "/",
