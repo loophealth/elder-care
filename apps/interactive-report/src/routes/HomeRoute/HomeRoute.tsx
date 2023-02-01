@@ -57,7 +57,10 @@ const OpenReportTile = () => {
     setIsSearching(true);
 
     try {
-      const newPatient = await Patient.fromPhoneNumber(phoneNumber);
+      const phoneNumberWithCountryCode = `+91${phoneNumber}`;
+      const newPatient = await Patient.fromPhoneNumber(
+        phoneNumberWithCountryCode
+      );
       setFoundPatient(newPatient);
     } catch (e: any) {
       const message = isApiError(e)

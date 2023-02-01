@@ -3,7 +3,7 @@ import { isNull } from "lodash";
 import { read } from "xlsx";
 import { z } from "zod";
 
-import { HealthReport, UserProfile } from "./commonTypes";
+import { HealthReport, UserProfile } from "./types";
 
 export const parseExcelHealthReport = async (
   file: File
@@ -33,7 +33,11 @@ export const parseExcelHealthReport = async (
   const createdOn = basicInformationWorksheet["B1"].v || new Date();
   const fullName = basicInformationWorksheet["B2"].v;
   const age = basicInformationWorksheet["B3"].v;
-  const phoneNumber = String(basicInformationWorksheet["B4"].v);
+
+  let phoneNumber = String(basicInformationWorksheet["B4"].v);
+  if (!phoneNumber.startsWith("+91")) {
+    phoneNumber = `+91${phoneNumber}`;
+  }
 
   // Parse statuses for measurement categories.
   const categories = [];
@@ -126,7 +130,7 @@ const ExcelHealthReportSchema = z.object({
   createdOn: z.date(),
   fullName: z.string(),
   age: z.number(),
-  phoneNumber: z.string().length(10),
+  phoneNumber: z.string().length(13),
   categories: z.array(
     z.object({
       name: z.string(),
