@@ -6,8 +6,8 @@
   background-color: var(--color-white);
   padding: var(--space-xs) var(--space-s);
   border-radius: var(--border-radius-s);
-  left: 4%;
-  right: 4%;
+  left: 8%;
+  right: 8%;
   box-shadow: 0px 2px 2px var(--color-sepia);
 }
 
@@ -20,7 +20,7 @@
   justify-content: center;
   text-decoration: none;
   font-size: var(--step--1);
-  gap: var(--space-3xs);
+  gap: var(--space-2xs);
   color: var(--color-gray);
   -webkit-tap-highlight-color: transparent;
 }
@@ -33,36 +33,31 @@
 .Navbar__Item__Icon {
   width: var(--space-m);
   height: var(--space-m);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .Navbar__Item__Icon--Home {
-  background: url("~/public/img/home.svg") no-repeat;
+  background-image: url("~/public/img/home.svg");
 }
 
 .Navbar__Item--Active .Navbar__Item__Icon--Home {
-  background: url("~/public/img/home-orange.svg") no-repeat;
+  background-image: url("~/public/img/home-orange.svg");
 }
 
 .Navbar__Item__Icon--Care {
-  background: url("~/public/img/stethoscope.svg") no-repeat;
+  background-image: url("~/public/img/stethoscope.svg");
 }
 
 .Navbar__Item--Active .Navbar__Item__Icon--Care {
-  background: url("~/public/img/stethoscope-orange.svg") no-repeat;
-}
-
-.Navbar__Item__Icon--Insurance {
-  background: url("~/public/img/shield.svg") no-repeat;
-}
-
-.Navbar__Item--Active .Navbar__Item__Icon--Insurance {
-  background: url("~/public/img/shield-orange.svg") no-repeat;
+  background-image: url("~/public/img/stethoscope-orange.svg");
 }
 
 .Navbar__Item__Icon--You {
-  background: url("~/public/img/user.svg") no-repeat;
+  background-image: url("~/public/img/user.svg");
 }
 
 .Navbar__Item--Active .Navbar__Item__Icon--You {
-  background: url("~/public/img/user-orange.svg") no-repeat;
+  background-image: url("~/public/img/user-orange.svg");
 }
