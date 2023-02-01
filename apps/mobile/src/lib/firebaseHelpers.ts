@@ -1,9 +1,4 @@
-import { initializeApp } from "firebase/app";
 import {
-  Auth,
-  getAuth,
-  indexedDBLocalPersistence,
-  initializeAuth,
   onAuthStateChanged,
   PhoneAuthProvider,
   RecaptchaVerifier,
@@ -14,20 +9,7 @@ import {
 import { Capacitor } from "@capacitor/core";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
-import { firebaseConfig } from "lib/firebaseConfig";
-
-// Initialize Firebase.
-export const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Auth.
-export let auth: Auth;
-if (Capacitor.isNativePlatform()) {
-  auth = initializeAuth(app, {
-    persistence: indexedDBLocalPersistence,
-  });
-} else {
-  auth = getAuth(app);
-}
+import { auth } from "@loophealth/api";
 
 /**
  * Get currently logged-in user from the Web SDK.

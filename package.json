@@ -11,6 +11,10 @@
     "dev": "turbo run dev --parallel"
   },
   "dependencies": {
+    "@capacitor/android": "^4.5.0",
+    "@capacitor/cli": "^4.5.0",
+    "@capacitor/core": "^4.5.0",
+    "@capacitor/ios": "^4.5.0",
     "@craco/craco": "^7.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
