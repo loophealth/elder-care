@@ -1,6 +1,7 @@
 .ReportOverviewRoute {
   padding: var(--space-l) var(--space-m);
   overflow-y: scroll;
+  position: relative;
 }
 
 @media (min-width: 768px) {
@@ -26,6 +27,7 @@
     display: flex;
     position: absolute;
     left: var(--space-l);
+    top: var(--space-xl);
     flex-direction: column;
     gap: var(--space-l);
   }
