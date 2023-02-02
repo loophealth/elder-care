@@ -1,0 +1,11 @@
+.ReportOverviewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-s);
+}
+
+@media (min-width: 768px) {
+  .ReportOverviewGrid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}

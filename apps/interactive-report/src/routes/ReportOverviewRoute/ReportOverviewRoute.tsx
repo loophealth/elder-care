@@ -1,7 +1,7 @@
 import { usePatient } from "@loophealth/api";
 
-import { CategoryTile } from "components/CategoryTile";
 import { Navbar } from "components/Navbar";
+import { ReportOverviewGrid } from "components/ReportOverviewGrid";
 
 import "./ReportOverviewRoute.css";
 
@@ -12,9 +12,7 @@ export const ReportOverviewRoute = () => {
     <>
       <Navbar />
       <main className="ReportOverviewRoute">
-        {patient?.report.categories.map((category) => (
-          <CategoryTile key={category.name} category={category} />
-        ))}
+        <ReportOverviewGrid className="ReportOverviewRoute__ReportOverviewGrid" />
         <ReportOverviewRouteBasicInfo
           name={patient?.profile.fullName || "Unknown"}
           age={patient?.profile.age || "Unknown"}

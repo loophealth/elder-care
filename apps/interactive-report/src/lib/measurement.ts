@@ -1,6 +1,5 @@
-import slugify from "slugify";
-
 import { Measurement } from "@loophealth/api";
+import { slugifyCategoryName } from "@loophealth/ui";
 
 export const RANGED_TILE_CATEGORIES = new Set([
   "Blood",
@@ -32,8 +31,4 @@ export const findMeasurementsByCategorySlug = (
   return measurements.filter(
     (m) => slugifyCategoryName(m.category) === slugToFind
   );
-};
-
-export const slugifyCategoryName = (name: string) => {
-  return slugify(name, { lower: true, strict: true, trim: true });
 };

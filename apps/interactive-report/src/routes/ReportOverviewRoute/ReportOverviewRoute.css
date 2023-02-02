@@ -1,22 +1,19 @@
 .ReportOverviewRoute {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-s);
-  padding: 0 var(--space-m);
-  padding-top: var(--space-l);
-  padding-bottom: var(--space-l);
+  padding: var(--space-l) var(--space-m);
   overflow-y: scroll;
-  height: fit-content;
 }
 
 @media (min-width: 768px) {
   .ReportOverviewRoute {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: var(--space-xl) 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .ReportOverviewRoute__ReportOverviewGrid {
     max-width: calc(8 * var(--space-3xl));
     margin-left: auto;
     margin-right: auto;
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-xl);
   }
 }
 
