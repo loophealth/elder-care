@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { IRequestStatus, useAuth, auth } from "@loophealth/api";
 import "@loophealth/ui/src/styles/reset.css";
 import "@loophealth/ui/src/styles/utopia.css";
+import "@loophealth/ui/src/styles/globals.css";
 
 import { router } from "router";
 
