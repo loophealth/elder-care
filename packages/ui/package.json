@@ -5,5 +5,7 @@
   "main": "src/index.tsx",
   "types": "src/index.tsx",
   "scripts": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@loophealth/api": "*"
+  }
 }
