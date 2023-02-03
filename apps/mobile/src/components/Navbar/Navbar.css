@@ -1,6 +1,6 @@
 .Navbar {
   z-index: var(--z-index-navigation);
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: space-between;
   background-color: var(--color-white);
