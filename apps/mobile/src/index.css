@@ -42,6 +42,11 @@
   --shadow-sepia-m: 0px 2px 2px var(--color-sepia);
 }
 
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
 body {
   font-family: "Apercu Pro", system-ui;
   font-size: 87.5%;

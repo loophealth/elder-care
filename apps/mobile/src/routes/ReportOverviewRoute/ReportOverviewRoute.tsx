@@ -1,6 +1,8 @@
 import { usePatient } from "@loophealth/api";
 import { ColorTheme, ReportOverviewGrid } from "@loophealth/ui";
 
+import { PageHeader } from "components/PageHeader";
+
 import "./ReportOverviewRoute.css";
 
 export const ReportOverviewRoute = () => {
@@ -8,6 +10,7 @@ export const ReportOverviewRoute = () => {
 
   return (
     <main className="ReportOverviewRoute">
+      <PageHeader label="Your Health" />
       <ReportOverviewGrid
         colorTheme={ColorTheme.Light}
         categories={patient?.report.categories || []}

@@ -1,0 +1,14 @@
+.PageHeader {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;
+  background: #fefaf7;
+  border-bottom: 2px solid #faf1e9;
+  padding-top: calc(var(--space-2xs) + var(--safe-area-inset-top));
+  padding-bottom: var(--space-xs);
+  font-weight: bold;
+  color: var(--color-black);
+  font-size: var(--step-0);
+}
