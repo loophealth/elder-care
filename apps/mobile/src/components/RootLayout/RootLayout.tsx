@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import clsx from "clsx";
 
 import { Navbar } from "components/Navbar";
 
@@ -13,8 +14,12 @@ export const RootLayout = ({
   shouldShowNavbar,
   shouldShowHeader,
 }: RootLayoutProps) => {
+  const appliedClassNames = clsx("RootLayout", {
+    "RootLayout--WithNavbar": shouldShowNavbar,
+  });
+
   return (
-    <div className="RootLayout">
+    <div className={appliedClassNames}>
       {shouldShowHeader ? <div>Header</div> : null}
       <Outlet />
       {shouldShowNavbar ? <Navbar /> : null}

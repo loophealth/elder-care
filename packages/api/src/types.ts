@@ -1,11 +1,11 @@
+import { Timestamp } from "firebase/firestore";
+
 export enum IRequestStatus {
   Idle,
   Loading,
   Loaded,
   Error,
 }
-
-import { Timestamp } from "firebase/firestore";
 
 /**
  * An event on this patient's global health timeline.

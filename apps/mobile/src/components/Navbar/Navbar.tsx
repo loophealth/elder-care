@@ -22,7 +22,7 @@ export const Navbar = () => {
         <div className="Navbar__Item__Icon Navbar__Item__Icon--Care" />
         <div className="Navbar__Item__Label">Care</div>
       </NavbarLink>
-      <NavbarLink to="/you">
+      <NavbarLink to="/report">
         <div className="Navbar__Item__Icon Navbar__Item__Icon--You" />
         <div className="Navbar__Item__Label">You</div>
       </NavbarLink>

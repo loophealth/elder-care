@@ -7,31 +7,41 @@ import {
 } from "@loophealth/api";
 
 import { slugifyCategoryName } from "../../lib/slugify_category_name";
+import { ColorTheme } from "../../types";
 
-import hypertensionIcon from "../../images/hypertension.svg";
-import measurementIcon from "../../images/measurement.svg";
-import bloodIcon from "../../images/blood.svg";
-import kidneysIcon from "../../images/kidneys.svg";
-import sugarIcon from "../../images/sugar.svg";
-import heartIcon from "../../images/heart.svg";
-import electrolytesIcon from "../../images/electrolytes.svg";
-import thyroidIcon from "../../images/thyroid.svg";
-import liverIcon from "../../images/liver.svg";
-import vitaminsIcon from "../../images/vitamins.svg";
-import ironIcon from "../../images/iron.svg";
-import urineIcon from "../../images/urine.svg";
-import ekgIcon from "../../images/ekg.svg";
+import { ReactComponent as HypertensionIcon } from "../../images/hypertension.svg";
+import { ReactComponent as MeasurementIcon } from "../../images/measurement.svg";
+import { ReactComponent as BloodIcon } from "../../images/blood.svg";
+import { ReactComponent as KidneysIcon } from "../../images/kidneys.svg";
+import { ReactComponent as SugarIcon } from "../../images/sugar.svg";
+import { ReactComponent as HeartIcon } from "../../images/heart.svg";
+import { ReactComponent as ElectrolytesIcon } from "../../images/electrolytes.svg";
+import { ReactComponent as ThyroidIcon } from "../../images/thyroid.svg";
+import { ReactComponent as LiverIcon } from "../../images/liver.svg";
+import { ReactComponent as VitaminsIcon } from "../../images/vitamins.svg";
+import { ReactComponent as IronIcon } from "../../images/iron.svg";
+import { ReactComponent as UrineIcon } from "../../images/urine.svg";
+import { ReactComponent as EkgIcon } from "../../images/ekg.svg";
 
 import "./CategoryTile.css";
 
+interface CategoryTileProps {
+  category: MeasurementCategory;
+  colorTheme?: ColorTheme;
+}
+
 export const CategoryTile = ({
   category,
-}: {
-  category: MeasurementCategory;
-}) => {
+  colorTheme = ColorTheme.Dark,
+}: CategoryTileProps) => {
   const slug = slugifyCategoryName(category.name);
+  const appliedClassName = clsx("CategoryTile", {
+    "CategoryTile--Light": colorTheme === ColorTheme.Light,
+    "CategoryTile--Dark": colorTheme === ColorTheme.Dark,
+  });
+
   return (
-    <Link className="CategoryTile" to={`/report/${slug}`}>
+    <Link className={appliedClassName} to={`/report/${slug}`}>
       <div className="CategoryTile__StatusContainer">
         <CategoryTileIcon name={category.name} slug={slug} />
         <StatusIndicator status={category.status} />
@@ -52,27 +62,27 @@ const StatusIndicator = ({ status }: { status: MeasurementCategoryStatus }) => {
 };
 
 const categoryIcons = new Map([
-  ["vitals", hypertensionIcon],
-  ["measurements", measurementIcon],
-  ["blood", bloodIcon],
-  ["kidney-function", kidneysIcon],
-  ["sugar", sugarIcon],
-  ["lipid-profile", heartIcon],
-  ["electrolytes", electrolytesIcon],
-  ["thyroid-function", thyroidIcon],
-  ["liver-function", liverIcon],
-  ["vitamins", vitaminsIcon],
-  ["iron-profile", ironIcon],
-  ["urine-routine", urineIcon],
-  ["6-lead-ekg", ekgIcon],
+  ["vitals", HypertensionIcon],
+  ["measurements", MeasurementIcon],
+  ["blood", BloodIcon],
+  ["kidney-function", KidneysIcon],
+  ["sugar", SugarIcon],
+  ["lipid-profile", HeartIcon],
+  ["electrolytes", ElectrolytesIcon],
+  ["thyroid-function", ThyroidIcon],
+  ["liver-function", LiverIcon],
+  ["vitamins", VitaminsIcon],
+  ["iron-profile", IronIcon],
+  ["urine-routine", UrineIcon],
+  ["6-lead-ekg", EkgIcon],
 ]);
 
 const CategoryTileIcon = ({ name, slug }: { name: string; slug: string }) => {
-  const iconPath = categoryIcons.get(slug) || measurementIcon;
+  const IconElt = categoryIcons.get(slug) || MeasurementIcon;
 
   return (
     <div className="CategoryTileIcon">
-      <img src={iconPath} alt={`Icon for report category "${name}"`} />
+      <IconElt />
     </div>
   );
 };

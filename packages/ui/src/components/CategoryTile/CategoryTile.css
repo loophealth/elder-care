@@ -7,18 +7,34 @@
   background-color: var(--color-gray-dark);
   padding: var(--space-s);
   transition: background-color 0.1s ease-in-out;
-  aspect-ratio: 1.5;
 }
 
 .CategoryTile:hover {
   background-color: var(--color-gray);
 }
 
+.CategoryTile--Light {
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-sepia-m);
+  color: var(--color-black);
+}
+
+.CategoryTile--Light:hover {
+  background-color: var(--color-sepia-dark);
+  color: var(--color-white);
+}
+
 .CategoryTile__StatusContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: var(--space-m);
+  margin-bottom: var(--space-2xs);
+}
+
+@media (min-width: 768px) {
+  .CategoryTile__StatusContainer {
+    margin-bottom: var(--space-m);
+  }
 }
 
 .StatusIndicator {
@@ -42,11 +58,15 @@
 }
 
 .CategoryTileIcon {
-  width: var(--space-l);
+  width: var(--space-xl);
 }
 
 @media (min-width: 768px) {
   .CategoryTileIcon {
     width: var(--space-xl);
   }
+}
+
+.CategoryTile--Light .CategoryTileIcon {
+  color: var(--color-gray-dark);
 }

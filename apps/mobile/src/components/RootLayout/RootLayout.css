@@ -4,3 +4,7 @@
   background: var(--gradient-bg);
   overflow-y: scroll;
 }
+
+.RootLayout--WithNavbar {
+  padding-bottom: calc(2 * var(--space-2xl));
+}

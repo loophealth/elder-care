@@ -1,5 +1,6 @@
 :root {
   --color-gray: #5d5d5d;
+  --color-gray-dark: #333333;
   --color-sepia: #ffebde;
   --color-sepia-dark: #e06900;
 
@@ -37,6 +38,8 @@
 
   --z-index-modal: 100;
   --z-index-navigation: 50;
+
+  --shadow-sepia-m: 0px 2px 2px var(--color-sepia);
 }
 
 body {

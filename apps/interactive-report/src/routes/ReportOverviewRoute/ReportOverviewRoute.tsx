@@ -1,7 +1,7 @@
 import { usePatient } from "@loophealth/api";
+import { ReportOverviewGrid } from "@loophealth/ui";
 
 import { Navbar } from "components/Navbar";
-import { ReportOverviewGrid } from "components/ReportOverviewGrid";
 
 import "./ReportOverviewRoute.css";
 
@@ -12,7 +12,10 @@ export const ReportOverviewRoute = () => {
     <>
       <Navbar />
       <main className="ReportOverviewRoute">
-        <ReportOverviewGrid className="ReportOverviewRoute__ReportOverviewGrid" />
+        <ReportOverviewGrid
+          categories={patient?.report.categories || []}
+          className="ReportOverviewRoute__ReportOverviewGrid"
+        />
         <ReportOverviewRouteBasicInfo
           name={patient?.profile.fullName || "Unknown"}
           age={patient?.profile.age || "Unknown"}
