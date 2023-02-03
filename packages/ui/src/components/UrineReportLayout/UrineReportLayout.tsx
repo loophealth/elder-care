@@ -1,7 +1,5 @@
-import { Measurement } from "@loophealth/api";
-
-import { SimpleMeasurementTile } from "components/SimpleMeasurementTile";
-import { findMeasurementByName } from "lib/measurement";
+import { findMeasurementByName, Measurement } from "@loophealth/api";
+import { SimpleMeasurementTile } from "@loophealth/ui";
 
 import "./UrineReportLayout.css";
 

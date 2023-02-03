@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { findMeasurementsByCategorySlug, usePatient } from "@loophealth/api";
 import {
@@ -26,16 +26,5 @@ export const ReportDetailsRoute = () => {
     layoutElt = <ColumnsReportLayout slug={slug} measurements={measurements} />;
   }
 
-  return (
-    <>
-      <div className="ReportDetailsRoute__Header">
-        <Link className="ReportDetailsRoute__Header__Button" to="/report">
-          <img src="/img/back.svg" alt="Back button" />
-        </Link>
-        <h1 className="ReportDetailsRoute__Header__Title">{categoryName}</h1>
-        <div className="ReportDetailsRoute__Header__Button" />
-      </div>
-      <main className="ReportDetailsRoute">{layoutElt}</main>
-    </>
-  );
+  return layoutElt;
 };

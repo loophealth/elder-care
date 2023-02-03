@@ -5,3 +5,4 @@ export * from "./PatientProvider";
 export * from "./firebaseEntities";
 export * from "./ExcelHealthReport";
 export * from "./api";
+export * from "./measurement";

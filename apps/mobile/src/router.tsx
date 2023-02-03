@@ -6,6 +6,7 @@ import { RootLayout } from "components/RootLayout";
 import { HomeRoute } from "routes/HomeRoute";
 import { LoginRoute } from "routes/LoginRoute";
 import { ReportOverviewRoute } from "routes/ReportOverviewRoute";
+import { ReportDetailsRoute } from "routes/ReportDetailsRoute";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "/report",
         element: <ProtectedRoute component={<ReportOverviewRoute />} />,
+      },
+      {
+        path: "/report/:slug",
+        element: <ProtectedRoute component={<ReportDetailsRoute />} />,
       },
     ],
   },

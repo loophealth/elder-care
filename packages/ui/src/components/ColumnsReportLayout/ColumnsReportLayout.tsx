@@ -1,7 +1,6 @@
-import { Measurement } from "@loophealth/api";
+import { isRangedMeasurement, Measurement } from "@loophealth/api";
 
-import { MeasurementTile } from "components/MeasurementTile";
-import { isRangedMeasurement } from "lib/measurement";
+import { MeasurementTile } from "../MeasurementTile";
 
 import "./ColumnsReportLayout.css";
 
