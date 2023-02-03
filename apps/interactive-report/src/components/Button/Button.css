@@ -2,8 +2,8 @@
   all: unset;
   cursor: pointer;
   padding: var(--space-xs);
-  background-color: var(--color--gray);
-  border-radius: var(--border-radius--l);
+  background-color: var(--color-gray);
+  border-radius: var(--border-radius-l);
   font-weight: 700;
   text-align: center;
 }
@@ -13,14 +13,14 @@
 }
 
 .Button:disabled {
-  background-color: var(--color--gray--light);
-  color: var(--color--gray);
+  background-color: var(--color-gray-light);
+  color: var(--color-gray);
   cursor: not-allowed;
 }
 
 .Button--Primary:disabled {
-  background-color: var(--color--primary--light);
-  color: var(--color--gray);
+  background-color: var(--color-primary-light);
+  color: var(--color-gray);
 }
 
 .Button:active {
@@ -28,6 +28,6 @@
 }
 
 .Button--Primary {
-  background-color: var(--color--primary);
-  color: var(--color--black);
+  background-color: var(--color-primary);
+  color: var(--color-black);
 }

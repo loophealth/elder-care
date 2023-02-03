@@ -2,12 +2,12 @@
   display: flex;
   align-items: center;
 
-  background-color: var(--color--primary);
+  background-color: var(--color-primary);
   padding: var(--space-xs);
-  border-radius: var(--border-radius--l);
+  border-radius: var(--border-radius-l);
   font-weight: 700;
   text-align: center;
-  color: var(--color--black);
+  color: var(--color-black);
   text-decoration: none;
 }
 

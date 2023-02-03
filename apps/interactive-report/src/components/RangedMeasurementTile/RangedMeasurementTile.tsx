@@ -160,9 +160,9 @@ const getLinearGradient = (measurement: Measurement): string => {
       measurement.range.lowerDanger
     );
 
-    linearGradientStops.push("var(--color--danger) 0%");
+    linearGradientStops.push("var(--color-danger) 0%");
     linearGradientStops.push(
-      `var(--color--danger) ${lowerDangerOffsetPercent}%`
+      `var(--color-danger) ${lowerDangerOffsetPercent}%`
     );
     previousOffsetPercent = lowerDangerOffsetPercent;
   }
@@ -178,27 +178,25 @@ const getLinearGradient = (measurement: Measurement): string => {
     if (!measurement.range.lowerDanger) {
       // If there's no lower danger value, then the bar is yellow starting from
       // 0%.
-      linearGradientStops.push(`var(--color--warning) 0%`);
+      linearGradientStops.push(`var(--color-warning) 0%`);
       linearGradientStops.push(
-        `var(--color--warning) ${lowerWarningOffsetPercent}%`
+        `var(--color-warning) ${lowerWarningOffsetPercent}%`
       );
     } else {
       // If there's a lower danger value, then the bar is yellow starting from
       // that value.
       linearGradientStops.push(
-        `var(--color--warning) ${previousOffsetPercent}%`
+        `var(--color-warning) ${previousOffsetPercent}%`
       );
       linearGradientStops.push(
-        `var(--color--warning) ${lowerWarningOffsetPercent}%`
+        `var(--color-warning) ${lowerWarningOffsetPercent}%`
       );
     }
 
     if (!measurement.range.upperWarning && !measurement.range.upperDanger) {
       // If there are no more warning or danger values, then we reset the bar to
       // green after the warning value.
-      linearGradientStops.push(
-        `var(--color--ok) ${lowerWarningOffsetPercent}%`
-      );
+      linearGradientStops.push(`var(--color-ok) ${lowerWarningOffsetPercent}%`);
     }
 
     // Store the last transition point so we can use it later.
@@ -214,21 +212,21 @@ const getLinearGradient = (measurement: Measurement): string => {
     );
 
     // First, we reset the bar to green starting from the last transition point.
-    linearGradientStops.push(`var(--color--ok) ${previousOffsetPercent}%`);
-    linearGradientStops.push(`var(--color--ok) ${upperWarningOffsetPercent}%`);
+    linearGradientStops.push(`var(--color-ok) ${previousOffsetPercent}%`);
+    linearGradientStops.push(`var(--color-ok) ${upperWarningOffsetPercent}%`);
 
     if (!measurement.range.upperDanger) {
       // If there's no upper danger value, then the bar is yellow all the way to
       // 100%.
       linearGradientStops.push(
-        `var(--color--warning) ${upperWarningOffsetPercent}%`
+        `var(--color-warning) ${upperWarningOffsetPercent}%`
       );
-      linearGradientStops.push(`var(--color--warning) 100%`);
+      linearGradientStops.push(`var(--color-warning) 100%`);
     } else {
       // If there's an upper danger value, then the bar is yellow only up to
       // that value.
       linearGradientStops.push(
-        `var(--color--warning) ${upperWarningOffsetPercent}%`
+        `var(--color-warning) ${upperWarningOffsetPercent}%`
       );
     }
 
@@ -247,22 +245,22 @@ const getLinearGradient = (measurement: Measurement): string => {
     if (!measurement.range.upperWarning) {
       // If we saw no upper warning value, then we reset the bar to green
       // starting from the last transition point.
-      linearGradientStops.push(`var(--color--ok) ${previousOffsetPercent}%`);
-      linearGradientStops.push(`var(--color--ok) ${upperDangerOffsetPercent}%`);
+      linearGradientStops.push(`var(--color-ok) ${previousOffsetPercent}%`);
+      linearGradientStops.push(`var(--color-ok) ${upperDangerOffsetPercent}%`);
       linearGradientStops.push(
-        `var(--color--danger) ${upperDangerOffsetPercent}%`
+        `var(--color-danger) ${upperDangerOffsetPercent}%`
       );
-      linearGradientStops.push(`var(--color--danger) 100%`);
+      linearGradientStops.push(`var(--color-danger) 100%`);
     } else {
       // If we saw an upper warning value, then we know we've already reset the
       // bar to green at some point before.
       linearGradientStops.push(
-        `var(--color--warning) ${upperDangerOffsetPercent}%`
+        `var(--color-warning) ${upperDangerOffsetPercent}%`
       );
       linearGradientStops.push(
-        `var(--color--danger) ${upperDangerOffsetPercent}%`
+        `var(--color-danger) ${upperDangerOffsetPercent}%`
       );
-      linearGradientStops.push(`var(--color--danger) 100%`);
+      linearGradientStops.push(`var(--color-danger) 100%`);
     }
   }
 

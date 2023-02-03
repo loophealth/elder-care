@@ -1,0 +1,8 @@
+:root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  --color-ok: #00b825;
+  --color-warning: #fbc01f;
+  --color-danger: #ff4400;
+}

@@ -2,8 +2,8 @@
   --tick-width: 4px;
 
   position: relative;
-  background-color: var(--color--gray--dark);
-  border-radius: var(--border-radius--xl);
+  background-color: var(--color-gray-dark);
+  border-radius: var(--border-radius-xl);
   aspect-ratio: 3;
 }
 
@@ -50,7 +50,7 @@
   width: var(--space-s);
   height: var(--space-s);
   border-radius: 50%;
-  background-color: var(--color--ok);
+  background-color: var(--color-ok);
   z-index: 2;
   transform: translate(-50%, -50%);
 }
@@ -60,7 +60,7 @@
   width: var(--space-l);
   height: var(--space-l);
   border-radius: 50%;
-  background-color: var(--color--gray--light);
+  background-color: var(--color-gray-light);
   opacity: 0.25;
   z-index: 1;
   transform: translate(-50%, -50%);
@@ -71,8 +71,8 @@
   width: var(--space-2xs);
   height: var(--space-2xs);
   border-radius: 50%;
-  border: solid 2px var(--color--gray);
-  background-color: var(--color--white);
+  border: solid 2px var(--color-gray);
+  background-color: var(--color-white);
   top: calc(var(--space-3xs) / -2);
 }
 
@@ -92,7 +92,7 @@
 .RangedMeasurementTileZones__Dots__DotValue {
   position: absolute;
   transform: translate(calc(-50% + var(--tick-width)), 75%);
-  color: var(--color--gray--light);
+  color: var(--color-gray-light);
 }
 
 .RangedMeasurementTileZones__Scale {

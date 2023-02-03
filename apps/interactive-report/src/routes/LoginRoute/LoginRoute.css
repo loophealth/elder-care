@@ -8,7 +8,7 @@
 
 .LoginRoute__Form {
   padding: var(--space-m);
-  background-color: var(--color--gray--dark);
-  border-radius: var(--border-radius--l);
+  background-color: var(--color-gray-dark);
+  border-radius: var(--border-radius-l);
   min-width: calc(8 * var(--space-xl));
 }

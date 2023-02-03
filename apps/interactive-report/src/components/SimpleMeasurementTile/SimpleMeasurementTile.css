@@ -3,9 +3,9 @@
   flex-direction: column;
   justify-content: space-between;
   gap: var(--space-m);
-  border-radius: var(--border-radius--l);
+  border-radius: var(--border-radius-l);
   padding: var(--space-xs);
-  background-color: var(--color--gray--dark);
+  background-color: var(--color-gray-dark);
   aspect-ratio: 1.75;
 }
 

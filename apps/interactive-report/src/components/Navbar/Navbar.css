@@ -1,5 +1,5 @@
 .Navbar {
-  border-bottom: solid 1px var(--color--gray);
+  border-bottom: solid 1px var(--color-gray);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,13 +36,13 @@
 }
 
 .Navbar ul li:has(a.active) {
-  border-bottom-color: var(--color--white);
+  border-bottom-color: var(--color-white);
 }
 
 .Navbar a {
   font-weight: 700;
   text-decoration: none;
-  color: var(--color--gray);
+  color: var(--color-gray);
 
   padding-top: var(--space-xl);
   padding-bottom: var(--space-s);

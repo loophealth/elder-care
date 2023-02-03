@@ -4,18 +4,18 @@
   font-size: var(--step--1);
   letter-spacing: 0.06em;
   font-weight: 500;
-  color: var(--color--gray);
+  color: var(--color-gray);
 }
 
 .Utils__Label--Bold {
   font-weight: 700;
-  color: var(--color--gray--light);
+  color: var(--color-gray-light);
 }
 
 .Utils__Tile {
-  background-color: var(--color--gray--dark);
+  background-color: var(--color-gray-dark);
   padding: var(--space-s);
-  border-radius: var(--border-radius--xl);
+  border-radius: var(--border-radius-xl);
 }
 
 .Utils__VerticalForm {

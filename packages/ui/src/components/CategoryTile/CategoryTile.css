@@ -3,15 +3,15 @@
   color: inherit;
   display: flex;
   flex-direction: column;
-  border-radius: var(--border-radius--l);
-  background-color: var(--color--gray--dark);
+  border-radius: var(--border-radius-l);
+  background-color: var(--color-gray-dark);
   padding: var(--space-s);
   transition: background-color 0.1s ease-in-out;
   aspect-ratio: 1.5;
 }
 
 .CategoryTile:hover {
-  background-color: var(--color--gray);
+  background-color: var(--color-gray);
 }
 
 .CategoryTile__StatusContainer {
@@ -30,15 +30,15 @@
 }
 
 .StatusIndicator--Ok {
-  background-color: var(--color--ok);
+  background-color: var(--color-ok);
 }
 
 .StatusIndicator--Warning {
-  background-color: var(--color--warning);
+  background-color: var(--color-warning);
 }
 
 .StatusIndicator--Danger {
-  background-color: var(--color--danger);
+  background-color: var(--color-danger);
 }
 
 .CategoryTileIcon {

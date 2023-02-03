@@ -23,7 +23,7 @@
 
 .IconTextTile__Tile__TextContent__Details {
   font-size: var(--step--1);
-  color: var(--color--gray--light);
+  color: var(--color-gray-light);
   line-height: 1.25;
 }
 
