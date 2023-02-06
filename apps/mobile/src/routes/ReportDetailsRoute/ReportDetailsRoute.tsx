@@ -46,7 +46,7 @@ export const ReportDetailsRoute = () => {
 
   return (
     <main className="ReportDetailsRoute">
-      <PageHeader label={categoryName} />
+      <PageHeader label={categoryName} backHref="/report" />
       {layoutElt}
     </main>
   );

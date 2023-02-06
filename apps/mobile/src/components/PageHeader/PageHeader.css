@@ -7,9 +7,37 @@
   background: #fefaf7;
   border-bottom: 2px solid #faf1e9;
   padding-top: calc(var(--space-2xs) + var(--safe-area-inset-top));
-  padding-bottom: var(--space-xs);
+  padding-bottom: var(--space-3xs);
   font-weight: bold;
   color: var(--color-black);
   font-size: var(--step-0);
   z-index: var(--z-index-navigation);
+
+  display: grid;
+  grid-template-columns: 2em 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+}
+
+.PageHeader__Label {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 1;
+}
+
+.PageHeader__Icon {
+  padding-left: var(--space-2xs);
+}
+
+.PageHeader__Icon,
+.PageHeader__PlaceholderIcon {
+  grid-column: 1 / span 1;
+  grid-row: 1 / span 1;
+}
+
+.PageHeader__Icon svg {
+  height: var(--space-l);
+}
+
+.PageHeader__PlaceholderIcon {
+  min-height: var(--space-l);
 }
