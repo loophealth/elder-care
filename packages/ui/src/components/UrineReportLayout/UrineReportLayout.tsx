@@ -1,15 +1,28 @@
+import clsx from "clsx";
+
 import { findMeasurementByName, Measurement } from "@loophealth/api";
-import { SimpleMeasurementTile } from "@loophealth/ui";
+
+import { SimpleMeasurementTile } from "../SimpleMeasurementTile";
+import { ColorTheme } from "../../types";
 
 import "./UrineReportLayout.css";
 
+interface UrineReportLayoutProps {
+  measurements: Measurement[];
+  colorTheme?: ColorTheme;
+}
+
 export const UrineReportLayout = ({
   measurements,
-}: {
-  measurements: Measurement[];
-}) => {
+  colorTheme = ColorTheme.Dark,
+}: UrineReportLayoutProps) => {
+  const appliedClassNames = clsx("UrineReportLayout", {
+    "UrineReportLayout--Light": colorTheme === ColorTheme.Light,
+    "UrineReportLayout--Dark": colorTheme === ColorTheme.Dark,
+  });
+
   return (
-    <div className="UrineReportLayout">
+    <div className={appliedClassNames}>
       <div>
         <h2 className="UrineReportLayout__SectionTitle Utils__Label">
           Physical Examination

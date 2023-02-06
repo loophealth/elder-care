@@ -2,9 +2,18 @@
   --tick-width: 4px;
 
   position: relative;
-  background-color: var(--color-gray-dark);
+
   border-radius: var(--border-radius-xl);
   aspect-ratio: 3;
+}
+
+.RangedMeasurementTile--Light {
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-sepia-m);
+}
+
+.RangedMeasurementTile--Dark {
+  background-color: var(--color-gray-dark);
 }
 
 .RangedMeasurementTile__Name {
@@ -60,10 +69,19 @@
   width: var(--space-l);
   height: var(--space-l);
   border-radius: 50%;
-  background-color: var(--color-gray-light);
   opacity: 0.25;
   z-index: 1;
   transform: translate(-50%, -50%);
+}
+
+.RangedMeasurementTile--Light
+  .RangedMeasurementTileZones__MeasurementDot__Background {
+  background-color: var(--color-sepia-dark);
+}
+
+.RangedMeasurementTile--Dark
+  .RangedMeasurementTileZones__MeasurementDot__Background {
+  background-color: var(--color-gray-light);
 }
 
 .RangedMeasurementTileZones__Dots__Dot {

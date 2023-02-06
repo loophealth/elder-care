@@ -5,7 +5,7 @@
   justify-content: space-between;
   background-color: var(--color-white);
   padding: var(--space-xs) var(--space-s);
-  border-radius: var(--border-radius-s);
+  border-radius: var(--border-radius-l);
   left: 8%;
   right: 8%;
   box-shadow: var(--shadow-sepia-m);
@@ -13,7 +13,7 @@
 
 .Navbar__Item {
   padding: var(--space-3xs) var(--space-m);
-  border-radius: var(--border-radius-s);
+  border-radius: var(--border-radius-l);
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,20 +1,32 @@
+import clsx from "clsx";
+
 import { findMeasurementByName, Measurement } from "@loophealth/api";
 
 import { SimpleMeasurementTile } from "../SimpleMeasurementTile";
+import { ColorTheme } from "../../types";
 
 import "./EkgReportLayout.css";
 
+interface EkgReportLayoutProps {
+  measurements: Measurement[];
+  colorTheme?: ColorTheme;
+}
+
 export const EkgReportLayout = ({
   measurements,
-}: {
-  measurements: Measurement[];
-}) => {
+  colorTheme = ColorTheme.Dark,
+}: EkgReportLayoutProps) => {
   const ekgImages = ["EKG1", "EKG2", "EKG3", "EKG4"].map((name) => {
     return (findMeasurementByName(measurements, name)?.value || "") as string;
   });
 
+  const appliedClassNames = clsx("EkgReportLayout", {
+    "EkgReportLayout--Light": colorTheme === ColorTheme.Light,
+    "EkgReportLayout--Dark": colorTheme === ColorTheme.Dark,
+  });
+
   return (
-    <div className="EkgReportLayout">
+    <div className={appliedClassNames}>
       <div className="EkgReportLayout__Measurements">
         <div className="EkgReportLayout__Determination__Container">
           <SimpleMeasurementTile

@@ -1,20 +1,8 @@
 :root {
-  --color-gray-lighter: #d3d2d2;
-  --color-gray-light: #999999;
-  --color-gray: #4d4d4d;
-  --color-gray-dark: #141414;
-  --color-gray-darker: #0f0f0f;
-
   --color-brown-dark: #23201d;
 
   --color-primary-light: #e3c57f;
   --color-primary: #ffc31e;
-
-  --border-radius-s: 2px;
-  --border-radius-m: 4px;
-  --border-radius-l: 8px;
-  --border-radius-xl: 16px;
-  --border-radius-ridiculous: 96px;
 }
 
 /* Scrollbar size. */

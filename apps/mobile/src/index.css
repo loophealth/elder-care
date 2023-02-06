@@ -1,6 +1,4 @@
 :root {
-  --color-gray: #5d5d5d;
-  --color-gray-dark: #333333;
   --color-sepia: #ffebde;
   --color-sepia-dark: #e06900;
 
@@ -31,10 +29,6 @@
       rgba(167, 70, 213, 0) 100%
     )
     #fffaf2;
-
-  --border-radius-s: 12px;
-  --border-radius-m: 16px;
-  --border-radius-l: 24px;
 
   --z-index-modal: 100;
   --z-index-navigation: 50;

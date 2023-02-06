@@ -2,10 +2,13 @@ import { useParams } from "react-router-dom";
 
 import { findMeasurementsByCategorySlug, usePatient } from "@loophealth/api";
 import {
+  ColorTheme,
   ColumnsReportLayout,
   EkgReportLayout,
   UrineReportLayout,
 } from "@loophealth/ui";
+
+import { PageHeader } from "components/PageHeader";
 
 import "./ReportDetailsRoute.css";
 
@@ -19,12 +22,32 @@ export const ReportDetailsRoute = () => {
 
   let layoutElt = null;
   if (slug === "urine-routine") {
-    layoutElt = <UrineReportLayout measurements={measurements} />;
+    layoutElt = (
+      <UrineReportLayout
+        measurements={measurements}
+        colorTheme={ColorTheme.Light}
+      />
+    );
   } else if (slug === "6-lead-ekg") {
-    layoutElt = <EkgReportLayout measurements={measurements} />;
+    layoutElt = (
+      <EkgReportLayout
+        measurements={measurements}
+        colorTheme={ColorTheme.Light}
+      />
+    );
   } else {
-    layoutElt = <ColumnsReportLayout slug={slug} measurements={measurements} />;
+    layoutElt = (
+      <ColumnsReportLayout
+        measurements={measurements}
+        colorTheme={ColorTheme.Light}
+      />
+    );
   }
 
-  return layoutElt;
+  return (
+    <main className="ReportDetailsRoute">
+      <PageHeader label={categoryName} />
+      {layoutElt}
+    </main>
+  );
 };

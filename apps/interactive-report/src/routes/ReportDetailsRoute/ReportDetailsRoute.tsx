@@ -23,7 +23,7 @@ export const ReportDetailsRoute = () => {
   } else if (slug === "6-lead-ekg") {
     layoutElt = <EkgReportLayout measurements={measurements} />;
   } else {
-    layoutElt = <ColumnsReportLayout slug={slug} measurements={measurements} />;
+    layoutElt = <ColumnsReportLayout measurements={measurements} />;
   }
 
   return (

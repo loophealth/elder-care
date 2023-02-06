@@ -5,8 +5,17 @@
   gap: var(--space-m);
   border-radius: var(--border-radius-l);
   padding: var(--space-xs);
-  background-color: var(--color-gray-dark);
+
   aspect-ratio: 1.75;
+}
+
+.SimpleMeasurementTile--Light {
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-sepia-m);
+}
+
+.SimpleMeasurementTile--Dark {
+  background-color: var(--color-gray-dark);
 }
 
 @media (min-width: 768px) {

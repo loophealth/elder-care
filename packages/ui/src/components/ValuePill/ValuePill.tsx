@@ -1,5 +1,7 @@
 import clsx from "clsx";
 
+import { ColorTheme } from "../../types";
+
 import "./ValuePill.css";
 
 interface ValuePillProps {
@@ -7,6 +9,7 @@ interface ValuePillProps {
   unit: string;
   className?: string;
   hasArrow?: boolean;
+  colorTheme?: ColorTheme;
 }
 
 export const ValuePill = ({
@@ -14,11 +17,15 @@ export const ValuePill = ({
   unit,
   className,
   hasArrow,
+  colorTheme = ColorTheme.Dark,
 }: ValuePillProps) => {
-  const appliedClasses = clsx("ValuePill", className);
+  const appliedClassNames = clsx("ValuePill", className, {
+    "ValuePill--Light": colorTheme === ColorTheme.Light,
+    "ValuePill--Dark": colorTheme === ColorTheme.Dark,
+  });
 
   return (
-    <div className={appliedClasses}>
+    <div className={appliedClassNames}>
       <div className="ValuePill__Value">{value}</div>
       <div className="ValuePill__Unit">{unit}</div>
       {hasArrow && <div className="ValuePill__Arrow" />}

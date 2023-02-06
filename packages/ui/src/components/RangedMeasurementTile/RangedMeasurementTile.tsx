@@ -1,9 +1,17 @@
 import clsx from "clsx";
 
 import { Measurement } from "@loophealth/api";
-import { ValuePill } from "@loophealth/ui";
+
+import { ValuePill } from "../ValuePill";
+import { ColorTheme } from "../../types";
 
 import "./RangedMeasurementTile.css";
+
+interface RangedMeasurementTileProps {
+  measurement: Measurement;
+  className?: string;
+  colorTheme?: ColorTheme;
+}
 
 /**
  * Displays a health measurement that should fall within a range to be
@@ -12,16 +20,18 @@ import "./RangedMeasurementTile.css";
  */
 export const RangedMeasurementTile = ({
   measurement,
-  className,
-}: {
-  measurement: Measurement;
-  className?: string;
-}) => {
+  className = "",
+  colorTheme = ColorTheme.Dark,
+}: RangedMeasurementTileProps) => {
   const measurementValueOffset = getMeasurementValueOffset(measurement);
-  const appliedClasses = clsx("RangedMeasurementTile", className);
+
+  const appliedClassNames = clsx("RangedMeasurementTile", className, {
+    "RangedMeasurementTile--Light": colorTheme === ColorTheme.Light,
+    "RangedMeasurementTile--Dark": colorTheme === ColorTheme.Dark,
+  });
 
   return (
-    <div className={appliedClasses}>
+    <div className={appliedClassNames}>
       <div className="RangedMeasurementTile__Name">{measurement.name}</div>
       <div
         className="RangedMeasurementTile__ValuePill"
@@ -31,6 +41,7 @@ export const RangedMeasurementTile = ({
           value={measurement.value}
           unit={measurement.unit}
           hasArrow={true}
+          colorTheme={colorTheme}
         />
       </div>
       <RangedMeasurementTileZones

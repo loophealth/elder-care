@@ -3,10 +3,17 @@
   gap: var(--space-3xs);
   align-items: flex-end;
   line-height: 1;
-  background-color: var(--color-brown-dark);
   padding: var(--space-xs) var(--space-s);
   border-radius: var(--border-radius-ridiculous);
   width: fit-content;
+}
+
+.ValuePill--Light {
+  background-color: var(--color-sepia);
+}
+
+.ValuePill--Dark {
+  background-color: var(--color-brown-dark);
 }
 
 .ValuePill__Value {
@@ -15,6 +22,10 @@
 
 .ValuePill__Unit {
   color: var(--color-gray-lighter);
+}
+
+.ValuePill--Light .ValuePill__Unit {
+  color: var(--color-gray);
 }
 
 .ValuePill__Arrow {
@@ -28,4 +39,8 @@
   border-left: var(--space-xs) solid transparent;
   border-right: var(--space-xs) solid transparent;
   border-top: var(--space-xs) solid var(--color-brown-dark);
+}
+
+.ValuePill--Light .ValuePill__Arrow {
+  border-top: var(--space-xs) solid var(--color-sepia);
 }
