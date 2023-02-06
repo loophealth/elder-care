@@ -11,4 +11,5 @@
   font-weight: bold;
   color: var(--color-black);
   font-size: var(--step-0);
+  z-index: var(--z-index-navigation);
 }

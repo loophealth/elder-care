@@ -1,13 +1,11 @@
 .ReportDetailsRoute {
-  padding-top: var(--space-l);
-  padding-bottom: var(--space-l);
+  padding: var(--space-l) var(--space-m);
   overflow-y: scroll;
 }
 
 @media (min-width: 768px) {
   .ReportDetailsRoute {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-xl);
+    padding: var(--space-xl) 0;
   }
 }
 

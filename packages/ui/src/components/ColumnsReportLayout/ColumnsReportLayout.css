@@ -2,10 +2,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-s);
-  max-width: calc(5 * var(--space-3xl));
-  padding: 0 var(--space-m);
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .ColumnsReportLayout {
+    max-width: calc(5 * var(--space-3xl));
+  }
 }
 
 .ColumnsReportLayout__RangedMeasurementTile {

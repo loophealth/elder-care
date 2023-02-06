@@ -32,13 +32,16 @@ export const EkgReportLayout = ({
           <SimpleMeasurementTile
             measurement={findMeasurementByName(measurements, "Determination")}
             className="EkgReportLayout__Determination"
+            colorTheme={colorTheme}
           />
         </div>
         <SimpleMeasurementTile
           measurement={findMeasurementByName(measurements, "Heart Rate")}
+          colorTheme={colorTheme}
         />
         <SimpleMeasurementTile
           measurement={findMeasurementByName(measurements, "Duration")}
+          colorTheme={colorTheme}
         />
       </div>
       <div className="EkgReportLayout__Ekg">
