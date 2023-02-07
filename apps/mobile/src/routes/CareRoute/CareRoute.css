@@ -1,0 +1,12 @@
+.CareRoute {
+  padding: calc(var(--space-2xl) + var(--safe-area-inset-top)) var(--space-s) 0
+    var(--space-s);
+}
+
+.CareRoute__Label {
+  margin-bottom: var(--space-xs);
+}
+
+.CareRoute__Label--TopMargin {
+  margin-top: var(--space-xl);
+}

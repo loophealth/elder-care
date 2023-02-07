@@ -3,8 +3,9 @@ import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "@loophealth/api";
 
 import { RootLayout } from "components/RootLayout";
-import { HomeRoute } from "routes/HomeRoute";
 import { LoginRoute } from "routes/LoginRoute";
+import { HomeRoute } from "routes/HomeRoute";
+import { CareRoute } from "routes/CareRoute";
 import { ReportOverviewRoute } from "routes/ReportOverviewRoute";
 import { ReportDetailsRoute } from "routes/ReportDetailsRoute";
 
@@ -27,7 +28,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/care",
-        element: <ProtectedRoute component={<h1>Care</h1>} />,
+        element: <ProtectedRoute component={<CareRoute />} />,
       },
       {
         path: "/insurance",
