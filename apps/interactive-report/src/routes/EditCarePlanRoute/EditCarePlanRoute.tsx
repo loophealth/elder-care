@@ -99,7 +99,9 @@ export const EditCarePlanRoute = () => {
           onSubmit={onSubmit}
         >
           <div className="Utils__VerticalForm__Group">
-            <label htmlFor="category">Category</label>
+            <label className="Utils__Label" htmlFor="category">
+              Category
+            </label>
             <Select
               name="category"
               id="category"
@@ -117,7 +119,9 @@ export const EditCarePlanRoute = () => {
           </div>
 
           <div className="Utils__VerticalForm__Group">
-            <label htmlFor="recommendation">Heading</label>
+            <label className="Utils__Label" htmlFor="recommendation">
+              Heading
+            </label>
             <Input
               id="recommendation"
               type="text"
@@ -130,7 +134,9 @@ export const EditCarePlanRoute = () => {
           </div>
 
           <div className="Utils__VerticalForm__Group">
-            <label htmlFor="details">Additional info</label>
+            <label className="Utils__Label" htmlFor="details">
+              Additional info
+            </label>
             <TextArea
               id="details"
               value={details}

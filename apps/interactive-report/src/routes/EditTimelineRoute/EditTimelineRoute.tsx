@@ -119,7 +119,9 @@ export const EditTimelineRoute = () => {
           onSubmit={onSubmit}
         >
           <div className="Utils__VerticalForm__Group">
-            <label htmlFor="approximateDate">Year and month</label>
+            <label className="Utils__Label" htmlFor="approximateDate">
+              Year and month
+            </label>
             <Input
               id="approximateDate"
               type="text"
@@ -132,7 +134,9 @@ export const EditTimelineRoute = () => {
           </div>
 
           <div className="Utils__VerticalForm__Group">
-            <label htmlFor="event">Heading</label>
+            <label className="Utils__Label" htmlFor="event">
+              Heading
+            </label>
             <Input
               id="event"
               type="text"

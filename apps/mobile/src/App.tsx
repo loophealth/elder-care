@@ -12,6 +12,7 @@ import {
 import "@loophealth/ui/src/styles/reset.css";
 import "@loophealth/ui/src/styles/utopia.css";
 import "@loophealth/ui/src/styles/globals.css";
+import "@loophealth/ui/src/styles/utils.css";
 
 import { router } from "router";
 
