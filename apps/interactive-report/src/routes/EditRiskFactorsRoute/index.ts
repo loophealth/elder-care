@@ -1,0 +1,1 @@
+export { EditRiskFactorsRoute } from "./EditRiskFactorsRoute";

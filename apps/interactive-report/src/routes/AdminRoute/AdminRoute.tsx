@@ -21,6 +21,12 @@ export const AdminRoute = () => {
           >
             Edit Timeline
           </LinkThatLooksLikeButton>
+          <LinkThatLooksLikeButton
+            to="/admin/risk-factors"
+            icon="/img/chevron-right.svg"
+          >
+            Edit Risk Factors
+          </LinkThatLooksLikeButton>
         </div>
       </main>
     </>
