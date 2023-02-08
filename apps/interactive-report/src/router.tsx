@@ -12,6 +12,7 @@ import { AdminRoute } from "routes/AdminRoute";
 import { EditTimelineRoute } from "routes/EditTimelineRoute";
 import { EditCarePlanRoute } from "routes/EditCarePlanRoute";
 import { EditRiskFactorsRoute } from "routes/EditRiskFactorsRoute";
+import { EditFollowUpsRoute } from "routes/EditFollowUpsRoute";
 
 import { ProtectedRoute } from "@loophealth/api";
 import { RequirePatientRoute } from "components/RequirePatientRoute";
@@ -112,6 +113,16 @@ export const router = createBrowserRouter([
           <ProtectedRoute
             component={
               <RequirePatientRoute component={<EditRiskFactorsRoute />} />
+            }
+          />
+        ),
+      },
+      {
+        path: "/admin/follow-ups",
+        element: (
+          <ProtectedRoute
+            component={
+              <RequirePatientRoute component={<EditFollowUpsRoute />} />
             }
           />
         ),

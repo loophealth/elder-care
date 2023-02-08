@@ -13,19 +13,25 @@ export const AdminRoute = () => {
             to="/admin/care-plan"
             icon="/img/chevron-right.svg"
           >
-            Edit Care Plan
+            Care plan
           </LinkThatLooksLikeButton>
           <LinkThatLooksLikeButton
             to="/admin/timeline"
             icon="/img/chevron-right.svg"
           >
-            Edit Timeline
+            Timeline
           </LinkThatLooksLikeButton>
           <LinkThatLooksLikeButton
             to="/admin/risk-factors"
             icon="/img/chevron-right.svg"
           >
-            Edit Risk Factors
+            Risk factors
+          </LinkThatLooksLikeButton>
+          <LinkThatLooksLikeButton
+            to="/admin/follow-ups"
+            icon="/img/chevron-right.svg"
+          >
+            Follow ups
           </LinkThatLooksLikeButton>
         </div>
       </main>

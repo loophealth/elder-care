@@ -112,8 +112,19 @@ export type CarePlanCategory =
   | "medication"
   | "others";
 
+/**
+ * A single risk factor for a patient.
+ */
 export interface RiskFactor {
   name: string;
   reasons: string;
   description: string;
+}
+
+/**
+ * A single follow-up for a patient.
+ */
+export interface FollowUp {
+  title: string;
+  date: Timestamp;
 }
