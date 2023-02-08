@@ -1,0 +1,12 @@
+.IconTextTileList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+@media (min-width: 768px) {
+  .IconTextTileList {
+    min-width: calc(var(--space-l) * 12);
+  }
+}

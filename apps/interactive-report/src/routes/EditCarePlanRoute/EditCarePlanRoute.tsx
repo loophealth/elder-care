@@ -9,6 +9,7 @@ import { Input } from "components/Input";
 import { Select } from "components/Select";
 import { TextArea } from "components/TextArea";
 import { IconTextTile } from "components/IconTextTile";
+import { IconTextTileList } from "components/IconTextTileList";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./EditCarePlanRoute.css";
@@ -154,7 +155,7 @@ export const EditCarePlanRoute = () => {
         </form>
       )}
       renderRight={() => (
-        <div className="EditCarePlanRoute__CarePlan">
+        <IconTextTileList>
           {carePlan ? (
             <>
               {carePlan.diet.map((item, index) => (
@@ -195,7 +196,7 @@ export const EditCarePlanRoute = () => {
               ))}
             </>
           ) : null}
-        </div>
+        </IconTextTileList>
       )}
     />
   );

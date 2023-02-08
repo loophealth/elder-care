@@ -1,12 +1,17 @@
 import { FormEvent, useEffect, useState } from "react";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 
-import { usePatient, HealthTimelineEvent } from "@loophealth/api";
+import {
+  usePatient,
+  HealthTimelineEvent,
+  moveArrayItem,
+} from "@loophealth/api";
 
 import { Button } from "components/Button";
 import { Input } from "components/Input";
 import { AdminEditorLayout } from "components/AdminEditorLayout";
 import { IconTextTile } from "components/IconTextTile";
+import { IconTextTileList } from "components/IconTextTileList";
 
 import "./EditTimelineRoute.css";
 
@@ -156,7 +161,7 @@ export const EditTimelineRoute = () => {
         </form>
       )}
       renderRight={() => (
-        <div className="EditTimelineRoute__Timeline">
+        <IconTextTileList>
           {healthTimeline.map((event, index) => (
             <IconTextTile
               key={event.event}
@@ -167,14 +172,8 @@ export const EditTimelineRoute = () => {
               isLoading={isLoading}
             />
           ))}
-        </div>
+        </IconTextTileList>
       )}
     />
   );
-};
-
-const moveArrayItem = (arr: any[], from: number, to: number) => {
-  const element = arr[from];
-  arr.splice(from, 1);
-  arr.splice(to, 0, element);
 };

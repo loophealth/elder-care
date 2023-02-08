@@ -111,3 +111,9 @@ export type CarePlanCategory =
   | "physicalActivity"
   | "medication"
   | "others";
+
+export interface RiskFactor {
+  name: string;
+  reasons: string;
+  description: string;
+}

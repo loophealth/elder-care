@@ -3,16 +3,3 @@
     min-width: calc(var(--space-l) * 10);
   }
 }
-
-.EditTimelineRoute__Timeline {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-xs);
-}
-
-@media (min-width: 768px) {
-  .EditTimelineRoute__Timeline {
-    min-width: calc(var(--space-l) * 12);
-  }
-}

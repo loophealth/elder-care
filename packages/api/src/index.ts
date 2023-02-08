@@ -6,3 +6,4 @@ export * from "./firebaseEntities";
 export * from "./ExcelHealthReport";
 export * from "./api";
 export * from "./measurement";
+export * from "./move_array_item";
