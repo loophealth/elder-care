@@ -21,6 +21,7 @@ export const HomeRoute = () => {
   return (
     <div className="HomeRoute">
       <div className="HomeRoute__RiskFactors">
+        <div className="Utils__Label">Your future risk factors</div>
         {patient?.profile.riskFactors.map((riskFactor) => (
           <RiskFactorTile key={riskFactor.name} riskFactor={riskFactor} />
         ))}
