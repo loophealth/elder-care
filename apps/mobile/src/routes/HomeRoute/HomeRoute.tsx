@@ -14,6 +14,10 @@ export const HomeRoute = () => {
     await signOut();
   };
 
+  if (!patient) {
+    return null;
+  }
+
   return (
     <div className="HomeRoute">
       <div className="HomeRoute__RiskFactors">
