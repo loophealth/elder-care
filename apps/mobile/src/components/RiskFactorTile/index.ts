@@ -1,0 +1,1 @@
+export { RiskFactorTile } from "./RiskFactorTile";

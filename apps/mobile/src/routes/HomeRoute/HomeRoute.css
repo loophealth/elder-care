@@ -3,6 +3,7 @@
 
   display: flex;
   flex-direction: column;
+  gap: var(--space-3xl);
 }
 
 .HomeRoute__Logout {
@@ -12,4 +13,10 @@
 
 .HomeRoute__Logout__Button {
   margin-bottom: var(--space-xs);
+}
+
+.HomeRoute__RiskFactors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }

@@ -1,29 +1,26 @@
-import { useAuth } from "@loophealth/api";
+import { useAuth, usePatient } from "@loophealth/api";
 
 import { Button, ButtonVariant } from "components/Button";
-
+import { RiskFactorTile } from "components/RiskFactorTile";
 import { signOut } from "lib/firebaseHelpers";
-import { useSafeArea } from "lib/useSafeArea";
 
 import "./HomeRoute.css";
 
 export const HomeRoute = () => {
   const { user } = useAuth();
-  const { isLoadingSafeAreaInsets, safeAreaInsets } = useSafeArea();
+  const { patient } = usePatient();
 
   const onLogOut = async () => {
     await signOut();
   };
 
-  if (isLoadingSafeAreaInsets || !safeAreaInsets) {
-    return null;
-  }
-
   return (
-    <div
-      className="HomeRoute"
-      style={{ paddingTop: `${safeAreaInsets.top}px` }}
-    >
+    <div className="HomeRoute">
+      <div className="HomeRoute__RiskFactors">
+        {patient?.profile.riskFactors.map((riskFactor) => (
+          <RiskFactorTile key={riskFactor.name} riskFactor={riskFactor} />
+        ))}
+      </div>
       <div className="HomeRoute__Logout">
         <Button
           className="HomeRoute__Logout__Button"

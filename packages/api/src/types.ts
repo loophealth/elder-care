@@ -85,6 +85,8 @@ export interface UserProfile {
   phoneNumber: string;
   role: "patient" | "doctor";
   healthTimeline: HealthTimelineEvent[];
+  riskFactors: RiskFactor[];
+  followUps: FollowUp[];
 }
 
 /**
