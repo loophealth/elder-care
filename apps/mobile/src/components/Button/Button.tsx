@@ -3,16 +3,29 @@ import clsx from "clsx";
 
 import "./Button.css";
 
+export enum ButtonVariant {
+  Primary = "primary",
+  Danger = "secondary",
+}
+
 interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   children: React.ReactNode;
+  variant?: ButtonVariant;
   className?: string;
 }
 
-export const Button = ({ children, className, ...props }: ButtonProps) => {
-  const appliedClasses = clsx("Button", className);
+export const Button = ({
+  children,
+  variant = ButtonVariant.Primary,
+  className,
+  ...props
+}: ButtonProps) => {
+  const appliedClassNames = clsx("Button", className, {
+    "Button--Danger": variant === ButtonVariant.Danger,
+  });
 
   return (
-    <button className={appliedClasses} {...props}>
+    <button className={appliedClassNames} {...props}>
       {children}
     </button>
   );

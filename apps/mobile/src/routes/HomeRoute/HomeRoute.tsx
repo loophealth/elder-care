@@ -1,5 +1,7 @@
 import { useAuth } from "@loophealth/api";
 
+import { Button, ButtonVariant } from "components/Button";
+
 import { signOut } from "lib/firebaseHelpers";
 import { useSafeArea } from "lib/useSafeArea";
 
@@ -22,8 +24,16 @@ export const HomeRoute = () => {
       className="HomeRoute"
       style={{ paddingTop: `${safeAreaInsets.top}px` }}
     >
-      <p>You are currently logged in as: {user?.phoneNumber ?? "unknown"}</p>
-      <button onClick={onLogOut}>Log Out</button>
+      <div className="HomeRoute__Logout">
+        <Button
+          className="HomeRoute__Logout__Button"
+          variant={ButtonVariant.Danger}
+          onClick={onLogOut}
+        >
+          Log out of the app
+        </Button>
+        <p>You are logged in as: {user?.phoneNumber ?? "unknown"}</p>
+      </div>
     </div>
   );
 };

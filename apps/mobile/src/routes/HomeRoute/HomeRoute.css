@@ -1,14 +1,15 @@
-.HomeRoute__BottomCardContent {
+.HomeRoute {
+  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-s);
+
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
 }
 
-.HomeRoute__BottomCardContent__Header {
+.HomeRoute__Logout {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
 }
 
-.HomeRoute__BottomCardContent__Button {
-  margin-top: var(--space-xl);
+.HomeRoute__Logout__Button {
+  margin-bottom: var(--space-xs);
 }

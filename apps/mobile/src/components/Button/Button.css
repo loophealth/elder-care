@@ -7,3 +7,7 @@
   text-align: center;
   border-radius: var(--border-radius-xl);
 }
+
+.Button--Danger {
+  background-color: var(--color-danger);
+}
