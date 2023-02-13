@@ -1,9 +1,24 @@
 .HomeRoute {
-  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-s);
+  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-2xs);
 
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  --timeline-gap: 1rem;
+}
+
+.HomeRoute__Timeline__TimelineTicks {
+  width: var(--space-2xs);
+  height: 100%;
+  color: red;
+  background-image: url(images/tick-horizontal.svg);
+}
+
+.HomeRoute__Content {
   display: flex;
   flex-direction: column;
   gap: var(--space-3xl);
+  padding-left: var(--timeline-gap);
 }
 
 .HomeRoute__Logout {
@@ -27,9 +42,8 @@
   gap: var(--space-l);
 }
 
-.HomeRoute__FollowUps__FollowUp__Date {
-  color: var(--color-gray-light);
-  font-size: var(--step--1);
+.HomeRoute__FollowUps__FollowUp {
+  position: relative;
 }
 
 .HomeRoute__FollowUps__FollowUp__Reason {
@@ -37,4 +51,15 @@
   margin-top: var(--space-2xs);
   color: var(--color-black);
   font-size: var(--step-0);
+}
+
+.HomeRoute__Dot {
+  --dot-size: 0.75rem;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: 50%;
+  border: solid 1px var(--color-gray-light);
+  background: var(--gradient-bg);
+  position: absolute;
+  left: calc(0.15rem - var(--dot-size) - var(--timeline-gap));
 }
