@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 import { useAuth, usePatient } from "@loophealth/api";
 
 import { Button, ButtonVariant } from "components/Button";
@@ -14,12 +16,28 @@ export const HomeRoute = () => {
     await signOut();
   };
 
+  const futureFollowUps = patient?.profile.followUps.filter(
+    (followUp) => followUp.date.toDate() >= new Date()
+  );
+
   if (!patient) {
     return null;
   }
 
   return (
     <div className="HomeRoute">
+      <div className="HomeRoute__FollowUps">
+        {futureFollowUps?.map((followUp) => (
+          <div key={followUp.title} className="HomeRoute__FollowUps__FollowUp">
+            <div className="Utils__Label HomeRoute__FollowUps__FollowUp__Date">
+              {format(followUp.date.toDate(), "do MMMM, yyyy")}
+            </div>
+            <div className="HomeRoute__FollowUps__FollowUp__Reason">
+              {followUp.title}
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="HomeRoute__RiskFactors">
         <div className="Utils__Label">Your future risk factors</div>
         {patient?.profile.riskFactors.map((riskFactor) => (
