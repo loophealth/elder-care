@@ -21,6 +21,10 @@
   padding-left: var(--timeline-gap);
 }
 
+.HomeRoute__CarePlan {
+  position: relative;
+}
+
 .HomeRoute__Logout {
   display: flex;
   flex-direction: column;
@@ -62,4 +66,22 @@
   background: var(--gradient-bg);
   position: absolute;
   left: calc(0.15rem - var(--dot-size) - var(--timeline-gap));
+}
+
+.HomeRoute__Dot--Active {
+  border: solid 1px var(--color-sepia-dark);
+  background: var(--color-sepia-dark);
+}
+
+.HomeRoute__Dot--Active::before {
+  content: "";
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--color-sepia-dark);
+  opacity: 0.2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
