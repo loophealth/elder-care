@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { usePatient } from "@loophealth/api";
+import { SummaryCard } from "@loophealth/ui";
 
-import { SummaryCard } from "components/SummaryCard";
 import { Navbar } from "components/Navbar";
 
 import "./SummaryRoute.css";

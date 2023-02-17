@@ -7,3 +7,4 @@ export * from "./MeasurementTile";
 export * from "./EkgReportLayout";
 export * from "./UrineReportLayout";
 export * from "./RangedMeasurementTile";
+export * from "./SummaryCard";
