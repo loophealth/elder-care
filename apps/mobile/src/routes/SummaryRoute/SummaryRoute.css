@@ -1,5 +1,14 @@
 .SummaryRoute {
-  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-2xs);
+  padding: 0 var(--space-s);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.SummaryRoute__SummaryCard {
+  height: 90%;
+  aspect-ratio: auto;
 }
 
 .SummaryRoute__Header {
@@ -10,4 +19,22 @@
 
 .SummaryRoute__Header__ButtonsContainer {
   margin-left: auto;
+  display: flex;
+  gap: var(--space-2xs);
+}
+
+.SummaryRoute__Header__ButtonsContainer__Button {
+  all: unset;
+  background-color: var(--color-gray-lighter);
+  color: var(--color-black);
+  padding: var(--space-xs) var(--space-xs);
+  border-radius: var(--border-radius-2xl);
+  min-width: var(--space-xl);
+  text-align: center;
+  transition: background-color 0.05s ease-in-out, color 0.05s ease-in-out;
+}
+
+.SummaryRoute__Header__ButtonsContainer__Button:active {
+  background-color: var(--color-sepia-dark);
+  color: var(--color-white);
 }

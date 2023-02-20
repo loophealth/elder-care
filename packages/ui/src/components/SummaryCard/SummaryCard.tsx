@@ -17,6 +17,7 @@ interface SummaryCardProps {
   iconPath?: string;
   onClick?: () => void;
   headerElt?: ReactNode;
+  className?: string;
   colorTheme?: ColorTheme;
 }
 
@@ -25,11 +26,12 @@ export const SummaryCard = ({
   iconPath,
   onClick,
   headerElt,
+  className,
   colorTheme = ColorTheme.Dark,
 }: SummaryCardProps) => {
   const { patient } = usePatient();
 
-  const appliedClassNames = clsx("SummaryCard", {
+  const appliedClassNames = clsx("SummaryCard", className, {
     "SummaryCard--Dark": colorTheme === ColorTheme.Dark,
     "SummaryCard--Light": colorTheme === ColorTheme.Light,
   });

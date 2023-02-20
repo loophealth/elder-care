@@ -6,5 +6,5 @@
 }
 
 .RootLayout--WithNavbar {
-  padding-bottom: calc(2 * var(--space-2xl));
+  padding-bottom: calc(3 * var(--space-xl));
 }
