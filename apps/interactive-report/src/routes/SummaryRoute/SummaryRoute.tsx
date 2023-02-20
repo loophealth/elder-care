@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { usePatient } from "@loophealth/api";
-import { SummaryCard } from "@loophealth/ui";
+import { CardIndicator, SummaryCard } from "@loophealth/ui";
 
 import { Navbar } from "components/Navbar";
 
@@ -32,6 +32,7 @@ export const SummaryRoute = () => {
       numCards={patient?.report.summary.length || 0}
       current={currentCard}
       setCurrent={setCurrentCard}
+      className="SummaryRoute__CardIndicator"
     />
   );
 
@@ -82,33 +83,5 @@ export const SummaryRoute = () => {
         />
       </main>
     </>
-  );
-};
-
-const CardIndicator = ({
-  numCards,
-  current,
-  setCurrent,
-}: {
-  numCards: number;
-  current: number;
-  setCurrent: (index: number) => void;
-}) => {
-  return (
-    <div className="SummaryRoute__CardIndicator">
-      {[...Array(numCards)].map((_, index) => {
-        return (
-          <button
-            className={`SummaryRoute__CardIndicator__Dot ${
-              index === current
-                ? "SummaryRoute__CardIndicator__Dot--Active"
-                : ""
-            }`}
-            key={index}
-            onClick={() => setCurrent(index)}
-          ></button>
-        );
-      })}
-    </div>
   );
 };

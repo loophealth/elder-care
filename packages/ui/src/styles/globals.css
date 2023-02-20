@@ -2,6 +2,8 @@
   --color-black: #000000;
   --color-white: #ffffff;
 
+  --color-brown-dark: #23201d;
+
   --color-gray-lighter: #d3d2d2;
   --color-gray-light: #999999;
   --color-gray: #4d4d4d;
@@ -18,4 +20,7 @@
   --border-radius-xl: 16px;
   --border-radius-2xl: 24px;
   --border-radius-ridiculous: 96px;
+
+  --shadow-elevation: 0px 2px 4px rgba(0, 0, 0, 0.02),
+    0px 8px 16px rgba(0, 0, 0, 0.06), 0px 16px 32px rgba(0, 0, 0, 0.02);
 }

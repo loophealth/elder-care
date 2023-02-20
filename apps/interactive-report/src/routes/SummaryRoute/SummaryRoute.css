@@ -20,6 +20,7 @@
 
 @media (min-width: 768px) {
   .SummaryRoute__ActiveCard .SummaryRoute__CardIndicator {
+    margin-top: var(--space-s);
     display: flex;
   }
 }
@@ -47,34 +48,4 @@
 .SummaryRoute__ActiveCard__Header__Button__Icon {
   width: var(--space-l);
   height: var(--space-l);
-}
-
-.SummaryRoute__CardIndicator {
-  display: flex;
-  gap: var(--space-3xs);
-  margin-top: var(--space-xs);
-  justify-content: center;
-}
-
-.SummaryRoute__CardIndicator__Dot {
-  all: unset;
-  width: var(--space-xs);
-  height: var(--space-xs);
-  border-radius: 50%;
-  background-color: var(--color-gray);
-  transition: width 0.2s ease-in-out, background-color 0.3s ease-in-out,
-    border-radius 0.1s ease-in-out, transform 0.1s ease-in-out;
-  cursor: pointer;
-}
-
-.SummaryRoute__CardIndicator__Dot:hover:not(
-    .SummaryRoute__CardIndicator__Dot--Active
-  ) {
-  transform: scale(1.25);
-}
-
-.SummaryRoute__CardIndicator__Dot--Active {
-  width: var(--space-l);
-  border-radius: var(--border-radius-l);
-  background-color: var(--color-primary);
 }

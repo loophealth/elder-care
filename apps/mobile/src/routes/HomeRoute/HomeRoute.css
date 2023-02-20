@@ -17,7 +17,7 @@
 .HomeRoute__Content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3xl);
+  gap: var(--space-xl);
   padding-left: var(--timeline-gap);
 }
 
@@ -35,6 +35,7 @@
 }
 
 .HomeRoute__RiskFactors {
+  margin-top: var(--space-2xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);

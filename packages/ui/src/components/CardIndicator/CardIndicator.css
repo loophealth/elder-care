@@ -1,0 +1,40 @@
+.CardIndicator {
+  display: flex;
+  gap: var(--space-3xs);
+  justify-content: center;
+}
+
+.CardIndicator__Dot {
+  all: unset;
+  width: var(--space-xs);
+  height: var(--space-xs);
+  border-radius: 50%;
+  transition: width 0.2s ease-in-out, background-color 0.3s ease-in-out,
+    border-radius 0.1s ease-in-out, transform 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.CardIndicator--Dark .CardIndicator__Dot {
+  background-color: var(--color-gray);
+}
+
+.CardIndicator--Sepia .CardIndicator__Dot {
+  background-color: var(--color-gray-lighter);
+}
+
+.CardIndicator__Dot:hover:not(.CardIndicator__Dot--Active) {
+  transform: scale(1.25);
+}
+
+.CardIndicator__Dot--Active {
+  width: var(--space-l);
+  border-radius: var(--border-radius-l);
+}
+
+.CardIndicator--Dark .CardIndicator__Dot--Active {
+  background-color: var(--color-primary);
+}
+
+.CardIndicator--Sepia .CardIndicator__Dot--Active {
+  background-color: var(--color-sepia-dark);
+}

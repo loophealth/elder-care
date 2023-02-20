@@ -2,9 +2,11 @@
   --tick-width: 4px;
 
   position: relative;
-
   border-radius: var(--border-radius-xl);
-  aspect-ratio: 3;
+
+  /* TODO: use container queries to adjust this to a reasonable value across
+  different sizes. */
+  aspect-ratio: 2.6;
 }
 
 .RangedMeasurementTile--Light {
@@ -16,10 +18,19 @@
   background-color: var(--color-gray-dark);
 }
 
+.RangedMeasurementTile--Sepia {
+  background: var(--color-sepia-light);
+  border: 1px solid var(--color-gray-lighter);
+}
+
 .RangedMeasurementTile__Name {
   padding: var(--space-xs);
   position: relative;
   z-index: 3;
+}
+
+.RangedMeasurementTile--Sepia .RangedMeasurementTile__Name {
+  color: var(--color-gray-dark);
 }
 
 @media (min-width: 768px) {
@@ -84,6 +95,11 @@
   background-color: var(--color-gray-light);
 }
 
+.RangedMeasurementTile--Sepia
+  .RangedMeasurementTileZones__MeasurementDot__Background {
+  background-color: var(--color-gray-light);
+}
+
 .RangedMeasurementTileZones__Dots__Dot {
   position: absolute;
   width: var(--space-2xs);
@@ -107,10 +123,23 @@
   );
 }
 
+.RangedMeasurementTile--Sepia .RangedMeasurementTileZones__Dots__DotTick {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
 .RangedMeasurementTileZones__Dots__DotValue {
   position: absolute;
   transform: translate(calc(-50% + var(--tick-width)), 75%);
   color: var(--color-gray-light);
+}
+
+.RangedMeasurementTile--Sepia .RangedMeasurementTileZones__Dots__DotValue {
+  color: var(--color-gray);
 }
 
 .RangedMeasurementTileZones__Scale {

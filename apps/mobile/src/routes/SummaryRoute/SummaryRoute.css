@@ -1,0 +1,13 @@
+.SummaryRoute {
+  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-2xs);
+}
+
+.SummaryRoute__Header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+.SummaryRoute__Header__ButtonsContainer {
+  margin-left: auto;
+}

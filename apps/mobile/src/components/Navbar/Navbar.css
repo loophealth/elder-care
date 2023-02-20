@@ -6,8 +6,8 @@
   background-color: var(--color-white);
   padding: var(--space-xs) var(--space-s);
   border-radius: var(--border-radius-l);
-  left: 8%;
-  right: 8%;
+  left: 6%;
+  right: 6%;
   box-shadow: var(--shadow-sepia-m);
 }
 

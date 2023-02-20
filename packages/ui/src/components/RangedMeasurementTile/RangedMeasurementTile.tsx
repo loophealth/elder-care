@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import clsx from "clsx";
 
 import { Measurement } from "@loophealth/api";
@@ -28,6 +29,7 @@ export const RangedMeasurementTile = ({
   const appliedClassNames = clsx("RangedMeasurementTile", className, {
     "RangedMeasurementTile--Light": colorTheme === ColorTheme.Light,
     "RangedMeasurementTile--Dark": colorTheme === ColorTheme.Dark,
+    "RangedMeasurementTile--Sepia": colorTheme === ColorTheme.Sepia,
   });
 
   return (
@@ -96,7 +98,7 @@ const RangedMeasurementTileZones = ({
         </div>
       )}
       <div className="RangedMeasurementTileZones__Dots">
-        {dotOffsets.map((offset, i) => {
+        {dotOffsets.map((offset) => {
           if (!offset) {
             return null;
           }
@@ -104,25 +106,22 @@ const RangedMeasurementTileZones = ({
           const { offsetPercent, value } = offset;
 
           return (
-            <>
+            <Fragment key={`RangedMeasurementTileZones__Dots_${offsetPercent}`}>
               <div
-                key={`RangedMeasurementTileZones__Dots__Dot__${i}`}
                 className="RangedMeasurementTileZones__Dots__Dot"
                 style={{ left: `${offsetPercent}%` }}
               />
               <div
-                key={`RangedMeasurementTileZones__Dots__DotTick__${i}`}
                 className="RangedMeasurementTileZones__Dots__DotTick"
                 style={{ left: `${offsetPercent}%` }}
               />
               <div
-                key={`RangedMeasurementTileZones__Dots__DotValue__${i}`}
                 className="RangedMeasurementTileZones__Dots__DotValue"
                 style={{ left: `${offsetPercent}%` }}
               >
                 {value}
               </div>
-            </>
+            </Fragment>
           );
         })}
       </div>

@@ -4,6 +4,7 @@ import { ProtectedRoute } from "@loophealth/api";
 
 import { RootLayout } from "components/RootLayout";
 import { LoginRoute } from "routes/LoginRoute";
+import { SummaryRoute } from "routes/SummaryRoute";
 import { HomeRoute } from "routes/HomeRoute";
 import { CareRoute } from "routes/CareRoute";
 import { ReportOverviewRoute } from "routes/ReportOverviewRoute";
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginRoute />,
+      },
+      {
+        path: "/summary",
+        element: <SummaryRoute />,
       },
     ],
   },

@@ -22,6 +22,7 @@ export const ValuePill = ({
   const appliedClassNames = clsx("ValuePill", className, {
     "ValuePill--Light": colorTheme === ColorTheme.Light,
     "ValuePill--Dark": colorTheme === ColorTheme.Dark,
+    "ValuePill--Sepia": colorTheme === ColorTheme.Sepia,
   });
 
   return (
