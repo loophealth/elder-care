@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "520092340665",
+    "project_id": "loop-next",
+    "storage_bucket": "loop-next.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520092340665:android:139048db05845090c0a668",
+        "android_client_info": {
+          "package_name": "com.loophealth.loopnext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520092340665-oi264orpn0u3dvqhqo9pmed9k8emh21o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loophealth.loopnext",
+            "certificate_hash": "a89ad521539df43c3ce09e7434aa15557cbdc970"
+          }
+        },
+        {
+          "client_id": "520092340665-vjs5fn9nchvpavsffvua10vd1nbgjkld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAMxQ01T9BQnrxnUr5j68pa5G8INAlSvc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520092340665-vjs5fn9nchvpavsffvua10vd1nbgjkld.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "520092340665-vqoqrft7roolppdpehs0iohcvdim22ec.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.loophealth.loopnext"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
