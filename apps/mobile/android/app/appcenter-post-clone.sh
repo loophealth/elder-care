@@ -15,7 +15,7 @@ nvm use default
 cd ../../../..
 
 # Install Turborepo CLI.
-npm install -g turbo
+npm install -g --arch=x64 --platform=darwin turbo
 
 # Install dependencies.
 npm install
