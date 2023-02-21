@@ -24,4 +24,5 @@ npm install
 turbo build
 
 # Copy assets and install native dependencies.
+cd apps/mobile
 npx cap sync
