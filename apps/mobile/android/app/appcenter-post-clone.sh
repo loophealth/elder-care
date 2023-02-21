@@ -3,9 +3,6 @@
 # Fail if any command fails.
 set -e
 
-# Print commands as they are executed.
-set -x
-
 NODE_VERSION=18.14.1
 
 # Install Node.
@@ -18,7 +15,7 @@ nvm use default
 cd ../../../..
 
 # Install Turborepo CLI.
-npm install -g @turborepo/cli
+npm install -g turbo
 
 # Install dependencies.
 npm install
