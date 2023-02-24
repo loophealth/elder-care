@@ -29,10 +29,32 @@
   },
   "dependencies": {
     "@capacitor-firebase/authentication": "^1.2.0",
+    "@capacitor/android": "^4.5.0",
+    "@capacitor/cli": "^4.5.0",
+    "@capacitor/core": "^4.5.0",
+    "@capacitor/ios": "^4.5.0",
+    "@craco/craco": "^7.0.0",
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
     "@loophealth/ui": "*",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.2.6",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "address": "^1.2.2",
-    "capacitor-plugin-safe-area": "^1.0.1"
+    "capacitor-plugin-safe-area": "^1.0.1",
+    "clsx": "^1.2.1",
+    "date-fns": "^2.29.3",
+    "firebase": "^9.15.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.5",
+    "react-scripts": "5.0.1",
+    "slugify": "^1.6.5",
+    "typescript": "^4.9.4",
+    "web-vitals": "^3.1.1"
   }
 }
