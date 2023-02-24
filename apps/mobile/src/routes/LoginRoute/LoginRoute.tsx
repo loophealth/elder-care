@@ -33,24 +33,33 @@ export const LoginRoute = () => {
 
   const onSubmitPhoneNumber = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      const id = await verifyPhoneNumber(phoneNumber);
+      const id = await verifyPhoneNumber(
+        phoneNumber,
+        "loginRecaptchaContainer"
+      );
       if (!id) {
         throw new Error("Firebase did not return a verification ID");
       }
       setVerificationId(id);
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onSubmitVerificationCode = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await signIn(verificationId, verificationCode);
       navigate("/");
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,6 +108,8 @@ export const LoginRoute = () => {
           </Button>
         </form>
       )}
+
+      <div id="loginRecaptchaContainer" />
     </div>
   );
 };
