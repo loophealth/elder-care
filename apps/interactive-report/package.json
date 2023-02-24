@@ -27,6 +27,11 @@
     ]
   },
   "dependencies": {
+    "@capacitor-firebase/authentication": "^1.2.0",
+    "@capacitor/android": "^4.5.0",
+    "@capacitor/cli": "^4.5.0",
+    "@capacitor/core": "^4.5.0",
+    "@capacitor/ios": "^4.5.0",
     "@craco/craco": "^7.0.0",
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
@@ -39,6 +44,7 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "capacitor-plugin-safe-area": "^1.0.1",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
     "firebase": "^9.15.0",
