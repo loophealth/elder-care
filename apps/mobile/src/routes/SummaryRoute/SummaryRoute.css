@@ -11,19 +11,24 @@
   aspect-ratio: auto;
 }
 
-.SummaryRoute__Header {
+.SummaryRoute__Header__Title {
+  font-size: var(--step-3);
+  margin-top: var(--space-l);
+}
+
+.SummaryRoute__Header__Controls {
   display: flex;
   align-items: center;
   margin-bottom: var(--space-xs);
 }
 
-.SummaryRoute__Header__ButtonsContainer {
+.SummaryRoute__Header__Controls__ButtonsContainer {
   margin-left: auto;
   display: flex;
   gap: var(--space-2xs);
 }
 
-.SummaryRoute__Header__ButtonsContainer__Button {
+.SummaryRoute__Header__Controls__ButtonsContainer__Button {
   all: unset;
   background-color: var(--color-gray-lighter);
   color: var(--color-black);
@@ -34,7 +39,7 @@
   transition: background-color 0.05s ease-in-out, color 0.05s ease-in-out;
 }
 
-.SummaryRoute__Header__ButtonsContainer__Button:active {
+.SummaryRoute__Header__Controls__ButtonsContainer__Button:active {
   background-color: var(--color-sepia-dark);
   color: var(--color-white);
 }

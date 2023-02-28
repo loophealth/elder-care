@@ -39,27 +39,32 @@ export const SummaryRoute = () => {
         className="SummaryRoute__SummaryCard"
         headerElt={
           <div className="SummaryRoute__Header">
-            <CardIndicator
-              numCards={patient?.report.summary.length || 0}
-              current={currentCard}
-              setCurrent={setCurrentCard}
-              className="SummaryRoute__Header__CardIndicator"
-              colorTheme={ColorTheme.Sepia}
-            />
-            <div className="SummaryRoute__Header__ButtonsContainer">
-              <button
-                className="SummaryRoute__Header__ButtonsContainer__Button"
-                onClick={onBackClick}
-              >
-                Back
-              </button>
-              <button
-                className="SummaryRoute__Header__ButtonsContainer__Button"
-                onClick={onForwardClick}
-              >
-                Next
-              </button>
+            <div className="SummaryRoute__Header__Controls">
+              <CardIndicator
+                numCards={patient?.report.summary.length || 0}
+                current={currentCard}
+                setCurrent={setCurrentCard}
+                className="SummaryRoute__Header__Controls__CardIndicator"
+                colorTheme={ColorTheme.Sepia}
+              />
+              <div className="SummaryRoute__Header__Controls__ButtonsContainer">
+                <button
+                  className="SummaryRoute__Header__Controls__ButtonsContainer__Button"
+                  onClick={onBackClick}
+                >
+                  Back
+                </button>
+                <button
+                  className="SummaryRoute__Header__Controls__ButtonsContainer__Button"
+                  onClick={onForwardClick}
+                >
+                  Next
+                </button>
+              </div>
             </div>
+            {currentCard === 0 ? (
+              <h1 className="SummaryRoute__Header__Title">Checkup Summary</h1>
+            ) : null}
           </div>
         }
       />
