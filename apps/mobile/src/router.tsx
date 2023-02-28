@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/summary",
-        element: <SummaryRoute />,
+        element: <ProtectedRoute component={<SummaryRoute />} />,
       },
     ],
   },

@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
 import { signIn, verifyPhoneNumber } from "lib/firebaseHelpers";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { IRequestStatus, useAuth } from "@loophealth/api";
 
 import { Button } from "components/Button/Button";
 import { Input } from "components/Input/Input";
+import { useFirstRun } from "lib/useFirstRun";
 
 import "./LoginRoute.css";
 
@@ -16,7 +17,7 @@ enum LoginStep {
 
 export const LoginRoute = () => {
   const { user, requestStatus } = useAuth();
-  const navigate = useNavigate();
+  const [firstRun] = useFirstRun();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +27,11 @@ export const LoginRoute = () => {
 
   let loginStep = LoginStep.PhoneNumber;
   if (requestStatus === IRequestStatus.Loaded && user !== null) {
-    return <Navigate to="/" />;
+    if (firstRun.didShowReportSummary) {
+      return <Navigate to="/" />;
+    } else {
+      return <Navigate to="/summary" />;
+    }
   } else if (verificationId.length > 0) {
     loginStep = LoginStep.VerificationCode;
   }
@@ -54,8 +59,9 @@ export const LoginRoute = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      // The component will automatically redirect to the summary page
+      // if the login is successful.
       await signIn(verificationId, verificationCode);
-      navigate("/");
     } catch (e) {
       console.error(e);
     } finally {
