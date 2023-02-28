@@ -1,5 +1,5 @@
 .HomeRoute {
-  padding: var(--safe-area-inset-top) var(--space-s) 0 var(--space-2xs);
+  padding: 0 var(--space-s) 0 var(--space-2xs);
 
   display: grid;
   grid-template-columns: auto 1fr;
@@ -15,6 +15,7 @@
 }
 
 .HomeRoute__Content {
+  margin-top: var(--space-xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);

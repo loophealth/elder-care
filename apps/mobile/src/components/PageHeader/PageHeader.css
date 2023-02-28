@@ -6,7 +6,7 @@
   text-align: center;
   background: #fefaf7;
   border-bottom: 2px solid #faf1e9;
-  padding-top: calc(var(--space-2xs) + var(--safe-area-inset-top));
+  padding-top: var(--padding-top-safe);
   padding-bottom: var(--space-3xs);
   font-weight: bold;
   color: var(--color-black);

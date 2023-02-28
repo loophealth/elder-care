@@ -1,19 +1,11 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 
-import { useSafeArea } from "lib/useSafeArea";
-
 import "./Navbar.css";
 
 export const Navbar = () => {
-  const { isLoadingSafeAreaInsets, safeAreaInsets } = useSafeArea();
-
-  if (isLoadingSafeAreaInsets || !safeAreaInsets) {
-    return null;
-  }
-
   return (
-    <div className="Navbar" style={{ bottom: `${safeAreaInsets.bottom}px` }}>
+    <div className="Navbar">
       <NavbarLink to="/">
         <div className="Navbar__Item__Icon Navbar__Item__Icon--Home" />
         <div className="Navbar__Item__Label">Home</div>

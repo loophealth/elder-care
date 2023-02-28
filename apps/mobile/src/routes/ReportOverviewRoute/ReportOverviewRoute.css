@@ -1,6 +1,5 @@
 .ReportOverviewRoute {
-  padding: calc(var(--space-2xl) + var(--safe-area-inset-top)) var(--space-s) 0
-    var(--space-s);
+  padding: var(--padding-top-content-start) var(--space-s) 0 var(--space-s);
 }
 
 .ReportOverviewRoute__Link {

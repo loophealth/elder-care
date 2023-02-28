@@ -8,6 +8,7 @@
   border-radius: var(--border-radius-l);
   left: 6%;
   right: 6%;
+  bottom: calc(var(--space-s) + env(safe-area-inset-bottom));
   box-shadow: var(--shadow-sepia-m);
 }
 
