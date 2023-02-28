@@ -25,6 +25,7 @@ export const SimpleMeasurementTile = ({
   const appliedClassNames = clsx("SimpleMeasurementTile", className, {
     "SimpleMeasurementTile--Light": colorTheme === ColorTheme.Light,
     "SimpleMeasurementTile--Dark": colorTheme === ColorTheme.Dark,
+    "SimpleMeasurementTile--Sepia": colorTheme === ColorTheme.Sepia,
   });
 
   return (

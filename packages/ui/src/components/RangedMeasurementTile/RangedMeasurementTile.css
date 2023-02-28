@@ -6,7 +6,7 @@
 
   /* TODO: use container queries to adjust this to a reasonable value across
   different sizes. */
-  aspect-ratio: 2.6;
+  aspect-ratio: 2.5;
 }
 
 .RangedMeasurementTile--Light {

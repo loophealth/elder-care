@@ -3,10 +3,10 @@
   flex-direction: column;
   justify-content: space-between;
   gap: var(--space-m);
-  border-radius: var(--border-radius-l);
+  border-radius: var(--border-radius-xl);
   padding: var(--space-xs);
 
-  aspect-ratio: 1.75;
+  aspect-ratio: 2.5;
 }
 
 .SimpleMeasurementTile--Light {
@@ -16,6 +16,11 @@
 
 .SimpleMeasurementTile--Dark {
   background-color: var(--color-gray-dark);
+}
+
+.SimpleMeasurementTile--Sepia {
+  background-color: var(--color-sepia-light);
+  border: 1px solid var(--color-gray-lighter);
 }
 
 @media (min-width: 768px) {
