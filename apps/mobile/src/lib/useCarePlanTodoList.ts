@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { concat } from "lodash";
+import { formatISO } from "date-fns";
 
 import { CarePlan, CarePlanItem } from "@loophealth/api";
 
@@ -8,15 +9,17 @@ export interface CarePlanChecklistItem extends CarePlanItem {
   isDone: boolean;
 }
 
-const LOCAL_STORAGE_KEY = "carePlanChecklist";
+const CHECKLIST_LOCAL_STORAGE_KEY = "carePlanChecklist";
+const LAST_MODIFIED_LOCAL_STORAGE_KEY = "carePlanChecklistLastModified";
 
 export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   const [carePlanChecklistItems, setCarePlanChecklistItems] = useState<
     CarePlanChecklistItem[]
   >(() => {
     // Find existing items in localStorage.
-    const existingChecklistJson =
-      window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    const existingChecklistJson = window.localStorage.getItem(
+      CHECKLIST_LOCAL_STORAGE_KEY
+    );
     let existingChecklist = [] as CarePlanChecklistItem[];
     if (existingChecklistJson) {
       existingChecklist = JSON.parse(
@@ -36,7 +39,7 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
     // both, use the existing item. If an item exists only in the passed-in
     // items, use the passed-in item. If an item exists only in the existing
     // items, discard it.
-    const mergedItems = passedInItems.map((passedInItem) => {
+    let mergedItems = passedInItems.map((passedInItem) => {
       const existingItem = existingChecklist.find(
         (existingItem) =>
           existingItem.recommendation === passedInItem.recommendation &&
@@ -50,8 +53,16 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
       }
     });
 
+    // If the modified date has changed, reset all items to not done.
+    if (hasDateChanged()) {
+      mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
+    }
+
     // Store the merged items in localStorage.
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(mergedItems));
+    window.localStorage.setItem(
+      CHECKLIST_LOCAL_STORAGE_KEY,
+      JSON.stringify(mergedItems)
+    );
 
     // Return the merged items.
     return mergedItems;
@@ -62,10 +73,34 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   ) => {
     setCarePlanChecklistItems(newCarePlanChecklist);
     window.localStorage.setItem(
-      LOCAL_STORAGE_KEY,
+      CHECKLIST_LOCAL_STORAGE_KEY,
       JSON.stringify(newCarePlanChecklist)
     );
+    window.localStorage.setItem(
+      LAST_MODIFIED_LOCAL_STORAGE_KEY,
+      new Date().toISOString()
+    );
   };
+
+  const maybeResetItems = useCallback(() => {
+    if (hasDateChanged()) {
+      const newCarePlanChecklist = carePlanChecklistItems.map((item) => ({
+        ...item,
+        isDone: false,
+      }));
+      setAndPersistCarePlanChecklist(newCarePlanChecklist);
+    }
+  }, [carePlanChecklistItems]);
+
+  // Check if the day has changed every minute. If it has, reset the isDone of
+  // all items to false.
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      maybeResetItems();
+    }, 1000 * 60);
+
+    return () => clearInterval(intervalId);
+  }, [maybeResetItems]);
 
   return [carePlanChecklistItems, setAndPersistCarePlanChecklist] as const;
 };
@@ -75,3 +110,20 @@ const extendItem = (category: string) => (item: CarePlanItem) => ({
   category,
   isDone: false,
 });
+
+const hasDateChanged = () => {
+  const lastModifiedString = window.localStorage.getItem(
+    LAST_MODIFIED_LOCAL_STORAGE_KEY
+  );
+
+  if (!lastModifiedString) {
+    return false;
+  }
+
+  const lastModifiedDateString = formatISO(new Date(lastModifiedString), {
+    representation: "date",
+  });
+  const todayDateString = formatISO(new Date(), { representation: "date" });
+
+  return lastModifiedDateString !== todayDateString;
+};
