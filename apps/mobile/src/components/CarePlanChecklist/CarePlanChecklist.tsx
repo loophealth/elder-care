@@ -1,8 +1,7 @@
-import { concat } from "lodash";
-
-import { CarePlanItem, usePatient } from "@loophealth/api";
+import { usePatient } from "@loophealth/api";
 
 import { Checkbox } from "components/Checkbox";
+import { useCarePlanChecklistItems } from "lib/useCarePlanTodoList";
 
 import "./CarePlanChecklist.css";
 
@@ -11,33 +10,26 @@ import { ReactComponent as MedicationIcon } from "images/pill.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/walk.svg";
 import { ReactComponent as OthersIcon } from "images/sun.svg";
 
-interface CarePlainItemWithCategory extends CarePlanItem {
-  category: string;
-}
-
 export const CarePlanChecklist = () => {
   const { patient } = usePatient();
 
-  const addCategory = (category: string) => (item: CarePlanItem) => ({
-    ...item,
-    category,
-  });
-
   const carePlan = patient?.carePlan;
-  const carePlanItems = concat(
-    [],
-    carePlan?.diet.map(addCategory("diet")),
-    carePlan?.medication.map(addCategory("medication")),
-    carePlan?.physicalActivity.map(addCategory("physicalActivity")),
-    carePlan?.others.map(addCategory("others"))
-  ).filter((item) => !!item) as CarePlainItemWithCategory[];
+  const [carePlanChecklistItems, setCarePlanChecklistItems] =
+    useCarePlanChecklistItems(carePlan);
+
+  const onCheck = (index: number) => {
+    const newCarePlanChecklistItems = [...carePlanChecklistItems];
+    newCarePlanChecklistItems[index].isDone =
+      !newCarePlanChecklistItems[index].isDone;
+    setCarePlanChecklistItems(newCarePlanChecklistItems);
+  };
 
   return (
     <div className="CarePlanChecklist">
       <div className="CarePlanChecklist__Title">Your care plan</div>
       <div className="Utils__Label CarePlanChecklist__TodayLabel">Today</div>
       <div className="CarePlanChecklist__Items">
-        {carePlanItems.map((item) => {
+        {carePlanChecklistItems.map((item, index) => {
           const icon = icons.get(item.category);
 
           return (
@@ -48,6 +40,8 @@ export const CarePlanChecklist = () => {
               <Checkbox
                 type="checkbox"
                 className="CarePlanChecklist__Items__Item__Checkbox"
+                checked={item.isDone}
+                onChange={() => onCheck(index)}
               />
               <div>
                 <div className="CarePlanChecklist__Items__Item__Name">
