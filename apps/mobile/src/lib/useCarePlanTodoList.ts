@@ -58,7 +58,7 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
       mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
     }
 
-    // Store the merged items in localStorage.
+    // Store the merged items back into localStorage.
     window.localStorage.setItem(
       CHECKLIST_LOCAL_STORAGE_KEY,
       JSON.stringify(mergedItems)
@@ -101,6 +101,22 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
 
     return () => clearInterval(intervalId);
   }, [maybeResetItems]);
+
+  // Check if the day has changed when the page becomes visible again. If it
+  // has, reset the isDone of all items to false.
+  const onVisibilityChange = useCallback(() => {
+    if (document.visibilityState === "visible") {
+      maybeResetItems();
+    }
+  }, [maybeResetItems]);
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [maybeResetItems, onVisibilityChange]);
 
   return [carePlanChecklistItems, setAndPersistCarePlanChecklist] as const;
 };
