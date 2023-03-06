@@ -11,6 +11,7 @@
     "dev": "turbo run dev --parallel"
   },
   "dependencies": {
+    "prettier": "^2.8.4",
     "turbo": "^1.8.2"
   }
 }
