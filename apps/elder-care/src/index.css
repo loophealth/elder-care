@@ -1,13 +1,79 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --color-sepia-light: #fff6ea;
+  --color-sepia: #ffebde;
+  --color-sepia-dark: #e06900;
+  --color-danger: #ee5656;
+  --color-brown: #30261e;
+
+  --gradient-bg: radial-gradient(
+      216.41% 100% at 50% 100%,
+      #f9ecdd 0%,
+      #fff9f1 33.33%,
+      #fcf9f2 66.67%,
+      #fcfbf7 100%
+    ),
+    #fbf8f2;
+  --gradient-debug: radial-gradient(
+      216.41% 100% at 50% 100%,
+      #c300ff 0%,
+      #ff9100 33.33%,
+      #005eff 66.67%,
+      #eeff00 100%
+    ),
+    #ff004c;
+
+  /* This gradient uses a rotation that is not supported by CSS and may not
+    behave as expected. It appears fine in Figma, though. */
+  --gradient-bottom-card: radial-gradient(
+      90.16% 143.01% at 15.32% 21.04%,
+      rgba(255, 218, 198, 0.1) 0%,
+      rgba(251, 183, 145, 0.16) 44.79%,
+      rgba(179, 113, 245, 0.04) 75.52%,
+      rgba(167, 70, 213, 0) 100%
+    )
+    #fffaf2;
+
+  --z-index-modal: 100;
+  --z-index-navigation: 50;
+
+  --shadow-sepia-m: 0px 2px 2px var(--color-sepia);
+
+  --padding-top-safe: calc(var(--space-2xs) + env(safe-area-inset-top));
+  --padding-top-content-start: calc(var(--padding-top-safe) + var(--space-2xl));
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: "Apercu Pro", system-ui;
+  font-size: 87.5%;
+  color: var(--color-gray);
+  user-select: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-black);
+}
+
+h1 {
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.45;
 }
