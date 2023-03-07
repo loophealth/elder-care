@@ -1,0 +1,64 @@
+.MobileNavbar {
+  z-index: var(--z-index-navigation);
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--color-white);
+  padding: var(--space-xs) var(--space-s);
+  border-radius: var(--border-radius-l);
+  left: 6%;
+  right: 6%;
+  bottom: calc(var(--space-s) + env(safe-area-inset-bottom));
+  box-shadow: var(--shadow-sepia-m);
+}
+
+.MobileNavbar__Item {
+  padding: var(--space-3xs) var(--space-m);
+  border-radius: var(--border-radius-l);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: var(--step--1);
+  gap: var(--space-2xs);
+  color: var(--color-gray);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.MobileNavbar__Item--Active {
+  background-color: var(--color-sepia);
+  color: var(--color-sepia-dark);
+}
+
+.MobileNavbar__Item__Icon {
+  width: var(--space-m);
+  height: var(--space-m);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.MobileNavbar__Item__Icon--Home {
+  background-image: url("../../images/home.svg");
+}
+
+.MobileNavbar__Item--Active .MobileNavbar__Item__Icon--Home {
+  background-image: url("../../images/home-orange.svg");
+}
+
+.MobileNavbar__Item__Icon--Care {
+  background-image: url("../../images/stethoscope.svg");
+}
+
+.MobileNavbar__Item--Active .MobileNavbar__Item__Icon--Care {
+  background-image: url("../../images/stethoscope-orange.svg");
+}
+
+.MobileNavbar__Item__Icon--You {
+  background-image: url("../../images/user.svg");
+}
+
+.MobileNavbar__Item--Active .MobileNavbar__Item__Icon--You {
+  background-image: url("../../images/user-orange.svg");
+}
