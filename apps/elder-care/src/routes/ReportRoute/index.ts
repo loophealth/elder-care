@@ -1,0 +1,1 @@
+export { ReportRoute } from "./ReportRoute";
