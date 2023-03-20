@@ -27,6 +27,7 @@
     ]
   },
   "dependencies": {
+    "@craco/craco": "^7.0.0",
     "@loophealth/api": "*",
     "@loophealth/craco-shared-config": "*",
     "@loophealth/ui": "*",
