@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "site": "elder-care-mobile",
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}
