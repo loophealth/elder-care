@@ -6,7 +6,9 @@
     "start": "HOST=0.0.0.0 PORT=3002 BROWSER=none craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "emulator": "firebase emulators:start",
+    "deploy": "firebase deploy --only hosting:elder-care-client"
   },
   "eslintConfig": {
     "extends": [
