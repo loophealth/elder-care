@@ -17,7 +17,7 @@ export const HomeRoute = () => {
     await signOut();
   };
 
-  const futureFollowUps = patient?.profile.followUps.filter(
+  const futureFollowUps = patient?.profile?.followUps?.filter(
     (followUp) => followUp.date.toDate() >= new Date()
   );
 
@@ -56,7 +56,7 @@ export const HomeRoute = () => {
 
         <div className="HomeRoute__RiskFactors">
           <div className="Utils__Label">Your future risk factors</div>
-          {patient?.profile.riskFactors.map((riskFactor) => (
+          {patient?.profile?.riskFactors?.map((riskFactor) => (
             <RiskFactorTile key={riskFactor.name} riskFactor={riskFactor} />
           ))}
         </div>

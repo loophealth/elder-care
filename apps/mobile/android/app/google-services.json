@@ -1,49 +1,34 @@
 {
   "project_info": {
-    "project_number": "520092340665",
-    "project_id": "loop-next",
-    "storage_bucket": "loop-next.appspot.com"
+    "project_number": "1020932618874",
+    "project_id": "elder-care-mvp",
+    "storage_bucket": "elder-care-mvp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:520092340665:android:139048db05845090c0a668",
+        "mobilesdk_app_id": "1:1020932618874:android:8885860a61ecd07b2ed9c3",
         "android_client_info": {
           "package_name": "com.loophealth.loopnext"
         }
       },
       "oauth_client": [
         {
-          "client_id": "520092340665-oi264orpn0u3dvqhqo9pmed9k8emh21o.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.loophealth.loopnext",
-            "certificate_hash": "a89ad521539df43c3ce09e7434aa15557cbdc970"
-          }
-        },
-        {
-          "client_id": "520092340665-vjs5fn9nchvpavsffvua10vd1nbgjkld.apps.googleusercontent.com",
+          "client_id": "1020932618874-nuhvu4to1n44b4qivvk7rn07rpvmjeb1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBAMxQ01T9BQnrxnUr5j68pa5G8INAlSvc"
+          "current_key": "AIzaSyAubeDiqWYeosWk3Qn0AtxJ4QvZWxGqNd8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "520092340665-vjs5fn9nchvpavsffvua10vd1nbgjkld.apps.googleusercontent.com",
+              "client_id": "1020932618874-nuhvu4to1n44b4qivvk7rn07rpvmjeb1.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "520092340665-vqoqrft7roolppdpehs0iohcvdim22ec.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.loophealth.loopnext"
-              }
             }
           ]
         }
