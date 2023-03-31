@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "elder-care",
+    "site": "elder-care-mvp",
     "public": "build",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
