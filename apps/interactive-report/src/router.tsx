@@ -16,6 +16,7 @@ import { EditFollowUpsRoute } from "routes/EditFollowUpsRoute";
 
 import { ProtectedRoute } from "@loophealth/api";
 import { RequirePatientRoute } from "components/RequirePatientRoute";
+import { NotificationRoute } from "routes/NotificationRoute";
 
 export const router = createBrowserRouter([
   {
@@ -124,6 +125,14 @@ export const router = createBrowserRouter([
             component={
               <RequirePatientRoute component={<EditFollowUpsRoute />} />
             }
+          />
+        ),
+      },
+      {
+        path: "/admin/notification",
+        element: (
+          <ProtectedRoute
+            component={<RequirePatientRoute component={<NotificationRoute />} />}
           />
         ),
       },

@@ -33,6 +33,12 @@ export const AdminRoute = () => {
           >
             Follow ups
           </LinkThatLooksLikeButton>
+          <LinkThatLooksLikeButton
+            to="/admin/notification"
+            icon="/img/chevron-right.svg"
+          >
+            Notification
+          </LinkThatLooksLikeButton>
         </div>
       </main>
     </>

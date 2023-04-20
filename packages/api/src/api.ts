@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 
 import { db } from "./firebaseEntities";
@@ -251,6 +252,24 @@ export const findOrCreateCarePlan = async (
       return carePlan;
     }
 
+    throw error;
+  }
+};
+
+/**
+ * Update user with registered fcm token.
+ */
+export const updateUserToken = async (phoneNumber: string, token: string): Promise<void> => {
+  if(!phoneNumber) return;
+  try {
+    const {ref, data} = await findUserProfile(phoneNumber);
+    //Avoiding un-necessary update
+    if(data?.fcmToken && data?.fcmToken === token) return;
+    await updateDoc(ref, {
+      fcmToken: token,
+      updatedAt: new Date()
+    });
+  } catch(error: any) {
     throw error;
   }
 };

@@ -5,6 +5,9 @@ import { AuthProvider, PatientProvider } from "@loophealth/api";
 
 import { App } from "App";
 import reportWebVitals from "reportWebVitals";
+import { registerServiceWorker } from "./register-sw";
+
+registerServiceWorker();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

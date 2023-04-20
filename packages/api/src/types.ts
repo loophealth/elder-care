@@ -85,8 +85,9 @@ export interface UserProfile {
   phoneNumber: string;
   role: "patient" | "doctor";
   healthTimeline: HealthTimelineEvent[];
-  riskFactors: RiskFactor[];
-  followUps: FollowUp[];
+  riskFactors?: RiskFactor[];
+  followUps?: FollowUp[];
+  fcmToken?: string;
 }
 
 /**
@@ -130,3 +131,20 @@ export interface FollowUp {
   title: string;
   date: Timestamp;
 }
+
+/**
+ * A single Notification for a patient.
+ */
+export interface PatientNotification {
+  type: string;
+  heading: string;
+  description: string;
+  time: Timestamp;
+}
+
+/**
+ * Notification type category.
+ */
+export type NotificationCategory =
+  | "exerciseReminder"
+  | "others";
