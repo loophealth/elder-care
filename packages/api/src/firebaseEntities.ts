@@ -10,9 +10,7 @@ import { getFirestore } from "firebase/firestore";
 import { Capacitor } from "@capacitor/core";
 import { getMessaging, getToken, onMessage, MessagePayload, Messaging } from "firebase/messaging";
 
-import { firebaseConfig } from "./firebaseConfig";
-
-const webPushKey = "BE_OI18YiuqJGg9KJZiXh_ovcFC3drGWLa4q7_GahZgAcY98-ykMAl_LdowUaLMAB9-2NHAMbKnoPeUMYtyVFTo";
+import { firebaseConfig, notificationKeys } from "./firebaseConfig";
 
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
@@ -45,7 +43,7 @@ export const requestPermissionAndToken = (setTokenFound: React.Dispatch<React.Se
 }
 
 export const requestForToken = (setTokenFound: React.Dispatch<React.SetStateAction<string>>) => {
-  return getToken(messaging, { vapidKey: webPushKey })
+  return getToken(messaging, { vapidKey: notificationKeys?.webPushKey })
     .then((currentToken) => {
       if (currentToken) {
         // Perform any other neccessary action with the token
@@ -84,7 +82,7 @@ export const sendNotification = (notificationData: any) => {
     body: JSON.stringify(message),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
-      "Authorization": "key=AAAA7bRTeno:APA91bEWSCzKJ8uJRtDcEoE2hz1YPUsTtlJCBBIKEKt9ITDoAB-tA4SBLAzym8uMUVc6b5rmqvKZiF85ObQGRkieWTyrHn_QKGYtUAN1XClAWdUdNR5qfPOsdUJMJyYlbrzTbGXEOWrE"
+      "Authorization": `key=${notificationKeys?.fcmServerKey}`
     }
   }).then(response => response.json()) 
   .then(json => console.log("sendNotification response => ", json))

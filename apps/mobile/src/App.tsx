@@ -19,7 +19,7 @@ import { router } from "router";
 import "fonts/ApercuPro/ApercuPro.css";
 import "utils.css";
 import "index.css";
-import { Notification } from './components/Notification'
+import { NotificationView } from './components/NotificationView';
 
 export const App = () => {
   const { user, setUser, setRequestStatus } = useAuth();
@@ -52,5 +52,5 @@ export const App = () => {
     }
   }, [user, setPatient]);
 
-  return (<><RouterProvider router={router} /><Notification /></>);
+  return (<><RouterProvider router={router} /><NotificationView /></>);
 };

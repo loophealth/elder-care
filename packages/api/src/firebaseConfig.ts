@@ -7,3 +7,8 @@ export const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+
+export const notificationKeys = {
+  webPushKey: process.env.REACT_APP_FIREBASE_WEB_PUSH_KEY,
+  fcmServerKey: process.env.REACT_APP_FIREBASE_SERVER_KEY,
+};
