@@ -135,16 +135,16 @@ export interface FollowUp {
 /**
  * A single Notification for a patient.
  */
-export interface PatientNotification {
-  type: string;
-  heading: string;
-  description: string;
-  time: Timestamp;
+export interface PatientNotificationItem {
+  title: string;
+  body?: string;
+  scheduledTime?: Timestamp | "";
+  cancel: boolean;
+  sent: boolean;
+  time?: string;
 }
 
-/**
- * Notification type category.
- */
-export type NotificationCategory =
-  | "exerciseReminder"
-  | "others";
+export interface PatientNotification {
+  phoneNumber: string;
+  notifications: PatientNotificationItem[],
+}

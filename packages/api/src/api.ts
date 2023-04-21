@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "./firebaseEntities";
-import { CarePlan, HealthReport, UserProfile } from "./types";
+import { CarePlan, HealthReport, PatientNotification, UserProfile } from "./types";
 import {
   ExcelHealthReport,
   toHealthReport,
@@ -270,6 +270,69 @@ export const updateUserToken = async (phoneNumber: string, token: string): Promi
       updatedAt: new Date()
     });
   } catch(error: any) {
+    throw error;
+  }
+};
+
+/**
+ * Finds a notification using the patient's phone number.
+ */
+export const findNotification = async (
+  phoneNumber: string
+): Promise<ApiResponse<PatientNotification>> => {
+  const q = query(
+    collection(db, "notification"),
+    where("phoneNumber", "==", phoneNumber)
+  );
+  const snapshot = await getDocs(q);
+  const notifications = snapshot.docs.map((doc) => doc.data() as PatientNotification);
+
+  if (notifications.length === 0) {
+    throw new ApiError(
+      "No notification found associated with that phone number",
+      ApiErrorCode.NotFound
+    );
+  } else if (notifications.length > 1) {
+    throw new ApiError(
+      "Multiple notifications found with that phone number, please contact support",
+      ApiErrorCode.MultipleFound
+    );
+  }
+
+  return { ref: snapshot.docs[0].ref, data: notifications[0] };
+};
+
+/**
+ * Creates a new notification.
+ */
+export const createNotification = async (
+  notification: PatientNotification
+): Promise<ApiResponse<PatientNotification>> => {
+  const notificationsRef = collection(db, "notification");
+  const newNotification = await addDoc(notificationsRef, notification);
+
+  return { ref: newNotification, data: notification };
+};
+
+/**
+ * Finds a notification using the patient's phone number. If no notification is found,
+ * creates a new notification with the given phone number.
+ */
+export const findOrCreateNotification = async (
+  phoneNumber: string
+): Promise<ApiResponse<PatientNotification>> => {
+  try {
+    const notification = await findNotification(phoneNumber);
+    return notification;
+  } catch (error: any) {
+    if (isApiError(error) && error.apiErrorCode === ApiErrorCode.NotFound) {
+      const notification = await createNotification({
+        phoneNumber,
+        notifications: [],
+      });
+      return notification;
+    }
+
     throw error;
   }
 };

@@ -1,7 +1,7 @@
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
-import { CarePlan, HealthReport, UserProfile } from "./types";
-import { findHealthReport, findOrCreateCarePlan, findUserProfile } from "./api";
+import { CarePlan, HealthReport, PatientNotification, UserProfile } from "./types";
+import { findHealthReport, findOrCreateCarePlan, findOrCreateNotification, findUserProfile } from "./api";
 
 export class Patient {
   profile: UserProfile;
@@ -10,18 +10,23 @@ export class Patient {
   reportRef: DocumentReference<DocumentData>;
   carePlan: CarePlan;
   carePlanRef: DocumentReference<DocumentData>;
+  notification: PatientNotification;
+  notificationRef: DocumentReference<DocumentData>;
 
   static async fromPhoneNumber(phoneNumber: string) {
     const profile = await findUserProfile(phoneNumber);
     const report = await findHealthReport(phoneNumber);
     const carePlan = await findOrCreateCarePlan(phoneNumber);
+    const notification = await findOrCreateNotification(phoneNumber);
     return new Patient(
       profile.data,
       profile.ref,
       report.data,
       report.ref,
       carePlan.data,
-      carePlan.ref
+      carePlan.ref,
+      notification.data,
+      notification.ref
     );
   }
 
@@ -31,7 +36,9 @@ export class Patient {
     report: HealthReport,
     reportRef: DocumentReference<DocumentData>,
     carePlan: CarePlan,
-    carePlanRef: DocumentReference<DocumentData>
+    carePlanRef: DocumentReference<DocumentData>,
+    notification: PatientNotification,
+    notificationRef: DocumentReference<DocumentData>
   ) {
     this.profile = profile;
     this.profileRef = profileRef;
@@ -39,5 +46,7 @@ export class Patient {
     this.reportRef = reportRef;
     this.carePlan = carePlan;
     this.carePlanRef = carePlanRef;
+    this.notification = notification;
+    this.notificationRef = notificationRef;
   }
 }
