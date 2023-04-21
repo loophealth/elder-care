@@ -128,23 +128,41 @@ export interface RiskFactor {
  * A single follow-up for a patient.
  */
 export interface FollowUp {
+  id: number;
   title: string;
   date: Timestamp;
+  description?: string;
 }
 
 /**
  * A single Notification for a patient.
  */
 export interface PatientNotificationItem {
+  id?: number;
   title: string;
   body?: string;
   scheduledTime?: Timestamp | "";
   cancel: boolean;
   sent: boolean;
   time?: string;
+  scheduledTimeArray?: Timestamp[];
 }
 
 export interface PatientNotification {
   phoneNumber: string;
   notifications: PatientNotificationItem[],
 }
+
+export type NotificationCategory =
+  | "immediate"
+  | "scheduled"
+  | "recurring";
+
+export enum NotificationSchedule {
+  instant = "instant",
+  daily = "daily",
+  weekdays = "weekdays",
+  oneWeekBefore = "1 week before",
+  twoDayBefore = "2 day before",
+  oneDayBefore = "1 day before"
+} 

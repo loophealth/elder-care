@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
-import { PatientNotificationItem, sendNotification, usePatient } from "@loophealth/api";
+import { NotificationCategory, PatientNotificationItem, sendNotification, usePatient } from "@loophealth/api";
 
 import { AdminEditorLayout } from "components/AdminEditorLayout";
 import { Button } from "components/Button";
@@ -12,12 +12,14 @@ import { IconTextTile } from "components/IconTextTile";
 
 import "./NotificationRoute.css";
 import { TextArea } from "components/TextArea";
+import { Select } from "components/Select";
 
 export const NotificationRoute = () => {
   const { patient } = usePatient();
 
   const [notifications, setNotifications] = useState<PatientNotificationItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [type, setType] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [date, setDate] = useState("");
@@ -59,15 +61,15 @@ export const NotificationRoute = () => {
     try {
       let customDate, firebaseDate;
       let newNotification: PatientNotificationItem = { title, body, sent: false, cancel: false };
-      if(date && time) {
-        customDate = new Date(date+' '+time);
+      if (date && time) {
+        customDate = new Date(date + ' ' + time);
         firebaseDate = Timestamp.fromDate(parseISO(customDate.toISOString()));
         newNotification = {
           ...newNotification,
           scheduledTime: firebaseDate,
           time,
         }
-      } else if(!date && time) {
+      } else if (!date && time) {
         newNotification = {
           ...newNotification,
           scheduledTime: "",
@@ -81,12 +83,12 @@ export const NotificationRoute = () => {
           sent: true
         }
       }
-     
+
       const newNotifications = [...notifications, newNotification];
 
       await updateDoc(patient.notificationRef, { notifications: newNotifications });
 
-      if(!newNotification?.scheduledTime && !newNotification?.time && patient?.profile?.fcmToken){
+      if (!newNotification?.scheduledTime && !newNotification?.time && patient?.profile?.fcmToken) {
         const notificationData = {
           title,
           body,
@@ -134,6 +136,25 @@ export const NotificationRoute = () => {
           onSubmit={onSubmit}
         >
           <div className="Utils__VerticalForm__Group">
+            <label className="Utils__Label" htmlFor="notificationType">
+              Notification Type
+            </label>
+            <Select
+              name="notificationType"
+              id="notificationType"
+              value={type}
+              onChange={(e) => setType(e.target.value as NotificationCategory)}
+              required
+              disabled={isLoading}
+            >
+              <option value="">Select type</option>
+              <option value="immediate">Immediate</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="recurring">Recurring</option>
+            </Select>
+          </div>
+
+          <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label" htmlFor="notificationHeading">
               Heading
             </label>
@@ -150,7 +171,7 @@ export const NotificationRoute = () => {
 
           <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label" htmlFor="notificationDescription">
-            Description
+              Description
             </label>
             <TextArea
               id="notificationDescription"
@@ -160,35 +181,35 @@ export const NotificationRoute = () => {
               disabled={isLoading}
             />
           </div>
-
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="notificationDate">
-              {`Date (optional)`}
-            </label>
-            <Input
-              id="notificationDate"
-              type="date"
-              placeholder="Select Date"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="notificationTime">
-              {`Time ${!date ? '(optional)':''}`}
-            </label>
-            <Input
-              id="notificationTime"
-              type="time"
-              placeholder="Select Time"
-              value={time}
-              onChange={(event) => setTime(event.target.value)}
-              required={date?true:false}
-              disabled={isLoading}
-            />
-          </div>
+          {type === "scheduled" ?
+            (<div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="notificationDate">
+                Date
+              </label>
+              <Input
+                id="notificationDate"
+                type="date"
+                placeholder="Select Date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+                disabled={isLoading}
+              />
+            </div>) : null}
+          {(type === "scheduled" || type === "recurring") ?
+            (<div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="notificationTime">
+                Time
+              </label>
+              <Input
+                id="notificationTime"
+                type="time"
+                placeholder="Select Time"
+                value={time}
+                onChange={(event) => setTime(event.target.value)}
+                required={date ? true : false}
+                disabled={isLoading}
+              />
+            </div>) : null}
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
@@ -203,7 +224,7 @@ export const NotificationRoute = () => {
             <IconTextTile
               key={index}
               title={notification.title}
-              details={`${notification.body} ${notification.scheduledTime?format(notification.scheduledTime.toDate(), "d MMMM, yyyy hh:mm a"):notification.time}`}
+              details={`${notification.body} ${notification.scheduledTime ? format(notification.scheduledTime.toDate(), "d MMMM, yyyy hh:mm a") : notification.time}`}
               onDelete={() => onDeleteNotification(index)}
               isLoading={isLoading}
             />

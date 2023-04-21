@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
-import { FollowUp, usePatient } from "@loophealth/api";
+import { FollowUp, PatientNotificationItem, usePatient } from "@loophealth/api";
 
 import { AdminEditorLayout } from "components/AdminEditorLayout";
 import { Button } from "components/Button";
@@ -11,6 +11,7 @@ import { IconTextTileList } from "components/IconTextTileList";
 import { IconTextTile } from "components/IconTextTile";
 
 import "./EditFollowUpsRoute.css";
+import { generateId, substractDate } from "utils";
 
 export const EditFollowUpsRoute = () => {
   const { patient } = usePatient();
@@ -19,6 +20,8 @@ export const EditFollowUpsRoute = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [notifications, setNotifications] = useState<PatientNotificationItem[]>([]);
 
   // Subscribe to follow ups updates.
   useEffect(() => {
@@ -30,11 +33,39 @@ export const EditFollowUpsRoute = () => {
       const followUps: FollowUp[] = snapshot.data()?.followUps ?? [];
       setFollowUps(followUps);
     });
+    const unsubNotification = onSnapshot(patient.notificationRef, (snapshot) => {
+      const data = snapshot.data();
+      const notifications: PatientNotificationItem[] = data?.notifications ?? [];
+      setNotifications(notifications);
+    });
 
     return () => {
       unsub();
+      unsubNotification();
     };
   }, [patient]);
+
+  // Reset local state
+  const resetData = () => {
+    setTitle("");
+    setDate("");
+    setDescription("")
+  }
+
+  const updateFollowUpNotification = (date: Date, id: number) => {
+      // FollowUp Notification rule
+      let scheduledTimeArray = [
+        substractDate(date, 7),
+        substractDate(date, 2),
+        substractDate(date, 1),
+        substractDate(date)
+      ];
+      //Filtering date less than today
+      scheduledTimeArray = scheduledTimeArray.filter(data => data >= Timestamp.fromDate(new Date()))
+      let newNotification: PatientNotificationItem = { id, title, body: description, sent: false, cancel: false, scheduledTimeArray };
+      const newNotifications = [...notifications, newNotification];
+      return newNotifications;
+  }
 
   // Add a new follow up to the user profile.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -46,8 +77,13 @@ export const EditFollowUpsRoute = () => {
 
     setIsLoading(true);
     try {
-      const firebaseDate = Timestamp.fromDate(parseISO(date));
-      const newFollowUp: FollowUp = { title, date: firebaseDate };
+      const newDate: Date = new Date(date);
+      //FollowUp Notification will be scheduled at 12 afternoon
+      newDate.setHours(12);
+      newDate.setMinutes(0);
+      const newFollowUpId = generateId();
+      const firebaseDate = Timestamp.fromDate(newDate);
+      const newFollowUp: FollowUp = { id: newFollowUpId, title, description, date: firebaseDate };
       const newFollowUps = [...followUps, newFollowUp];
 
       // Sort new follow ups by date.
@@ -60,10 +96,10 @@ export const EditFollowUpsRoute = () => {
         }
         return 0;
       });
-
+      
       await updateDoc(patient.profileRef, { followUps: newFollowUps });
-      setTitle("");
-      setDate("");
+      await updateDoc(patient.notificationRef, { notifications: updateFollowUpNotification(newDate, newFollowUpId) });
+      resetData();
     } catch (e) {
       alert(
         "There was an error adding the follow up. Please check your network and try again. If the error persists, please contact support."
@@ -83,8 +119,14 @@ export const EditFollowUpsRoute = () => {
     setIsLoading(true);
     try {
       const newFollowUps = [...followUps];
+      const followUpId = newFollowUps[index]?.id;
       newFollowUps.splice(index, 1);
       await updateDoc(patient.profileRef, { followUps: newFollowUps });
+      if(followUpId){
+        let newNotifications = [...notifications];
+        newNotifications = newNotifications.filter(data => (!data.id || (data.id && data.id != followUpId)))
+        await updateDoc(patient.notificationRef, { notifications: newNotifications });
+      }
     } catch (e) {
       alert(
         "There was an error deleting this follow up. Please check your network and try again. If the error persists, please contact support."
@@ -103,11 +145,11 @@ export const EditFollowUpsRoute = () => {
           onSubmit={onSubmit}
         >
           <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="approximateDate">
-              Title
+            <label className="Utils__Label" htmlFor="followupHeading">
+              Heading
             </label>
             <Input
-              id="approximateDate"
+              id="followupHeading"
               type="text"
               placeholder="e.g. Follow up with Dr. Waseem"
               value={title}
@@ -128,6 +170,20 @@ export const EditFollowUpsRoute = () => {
               value={date}
               onChange={(event) => setDate(event.target.value)}
               required
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="Utils__VerticalForm__Group">
+            <label className="Utils__Label" htmlFor="followupDescription">
+            Description
+            </label>
+            <Input
+              id="followupDescription"
+              type="text"
+              placeholder="enter text here"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
               disabled={isLoading}
             />
           </div>
