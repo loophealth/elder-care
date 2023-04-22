@@ -11,7 +11,7 @@ const notificationCollection = "notification";
 const profileCollection = "userProfiles";
 
 // Creating a pubsub function with name `taskRunner`, memory `512MB` and schedule every 30 min between 9 am to 10 pm
-exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/30 9-22 * * *').timeZone('Asia/Kolkata').onRun(async (context: any) => {
+exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/60 9-22 * * *').timeZone('Asia/Kolkata').onRun(async (context: any) => {
 
     // Current Timestamp
     const firebaseCurrentTime = admin.firestore.Timestamp.now();
@@ -23,24 +23,28 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/3
 
     const tasks = await query.get()
 
-     tasks.forEach((snapshot: any) => {
+    tasks.forEach((snapshot: any) => {
         // destruct data from firebase document
         const { notifications, phoneNumber } = snapshot.data();
         let newNotifications: any = [], fcmToken: string = "";
-        notifications.forEach(async (notification:any, notificationIndex: number) => {
+        notifications.forEach(async (notification: any, notificationIndex: number) => {
             const isScheduledNotif = notification?.scheduledTime && notification?.scheduledTime <= firebaseCurrentTime && notification?.sent == false;
             const isRecurringNotif = !notification?.scheduledTime && notification?.time;
+            const isScheduledArrayNotif = notification?.scheduledTimeArray && notification?.scheduledTimeArray?.length > 0;
 
-            if(isScheduledNotif || isRecurringNotif) {
+            if (isScheduledNotif || isRecurringNotif || isScheduledArrayNotif) {
                 // destruct data from firebase document
                 const { body, title } = notification;
-               
-                let tempDateTime = notification?.scheduledTime;
+
+                const notificationType = isScheduledNotif ? "Scheduled Notification" : isRecurringNotif ? "Recurring Notification" : "FollowUp Notification";
+                console.log("Notification Type => ", notificationType);
+
+                let tempDateTime = notification?.scheduledTime || notification?.scheduledTimeArray?.[0];
                 const sentTime = notification?.["sentTimestamp"] ? new Date(notification?.["sentTimestamp"]) : null;
                 const currentTime = new Date(currentDateTime.setTime(getIndTime(currentDateTime)));
-                
+
                 //Handling Recurring Notification
-                if(isRecurringNotif && (!sentTime || (sentTime && sentTime.getDate() == currentTime.getDate()))){
+                if (isRecurringNotif && (!sentTime || (sentTime && sentTime.getDate() == currentTime.getDate()))) {
                     const time = notification.time.split(":");
                     tempDateTime = currentDateTime;
                     tempDateTime.setHours(time[0]);
@@ -49,8 +53,8 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/3
                     tempDateTime = admin.firestore.Timestamp.fromDate(tempDateTime)
                 }
 
-                if(tempDateTime && tempDateTime <= firebaseCurrentTime){
-                    if(!fcmToken) {
+                if (tempDateTime && tempDateTime <= firebaseCurrentTime) {
+                    if (!fcmToken) {
                         const profileQuery = firestore().collection(profileCollection).where("phoneNumber", "==", phoneNumber);
                         const profile = await profileQuery.get()
 
@@ -69,6 +73,9 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/3
 
                     if (job.length != 0) {
                         newNotifications = [...notifications];
+                        if (isScheduledArrayNotif) {
+                            newNotifications[notificationIndex]["scheduledTimeArray"].splice(0, 1)
+                        }
                         newNotifications[notificationIndex]["sent"] = true;
                         newNotifications[notificationIndex]["sentTimestamp"] = firebaseCurrentTime;
                         // updating firestore notification document's `sent` to true. 
@@ -78,5 +85,5 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/3
                 }
             }
         });
-     })
+    })
 })
