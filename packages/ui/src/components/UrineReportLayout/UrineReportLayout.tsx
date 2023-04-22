@@ -30,6 +30,7 @@ export const UrineReportLayout = ({
         <div className="UrineReportLayout__Section">
           {["Volume", "Colour", "Appearance"].map((name) => (
             <SimpleMeasurementTile
+              key={name}
               measurement={findMeasurementByName(measurements, name)}
               colorTheme={colorTheme}
             />
@@ -50,6 +51,7 @@ export const UrineReportLayout = ({
             "Nitrites",
           ].map((name) => (
             <SimpleMeasurementTile
+              key={name}
               measurement={findMeasurementByName(measurements, name)}
               colorTheme={colorTheme}
             />
@@ -63,6 +65,7 @@ export const UrineReportLayout = ({
         <div className="UrineReportLayout__Section">
           {["Plus Cells", "Epithelial Cells"].map((name) => (
             <SimpleMeasurementTile
+              key={name}
               measurement={findMeasurementByName(measurements, name)}
               colorTheme={colorTheme}
             />
