@@ -1,6 +1,6 @@
 import { isRangedMeasurement, Measurement } from "@loophealth/api";
 
-import { RangedMeasurementTile } from "../RangedMeasurementTile";
+import { RangedMeasurementTile, getMeasurementValueOffset } from "../RangedMeasurementTile";
 import { SimpleMeasurementTile } from "../SimpleMeasurementTile";
 import { ColorTheme } from "../../types";
 
@@ -15,7 +15,7 @@ export const MeasurementTile = ({
   className = "",
   colorTheme = ColorTheme.Dark,
 }: MeasurementTileProps) => {
-  if (isRangedMeasurement(measurement)) {
+  if (isRangedMeasurement(measurement) && getMeasurementValueOffset(measurement)) {
     return (
       <RangedMeasurementTile
         measurement={measurement}

@@ -1,1 +1,1 @@
-export { RangedMeasurementTile } from "./RangedMeasurementTile";
+export { RangedMeasurementTile, getMeasurementValueOffset } from "./RangedMeasurementTile";

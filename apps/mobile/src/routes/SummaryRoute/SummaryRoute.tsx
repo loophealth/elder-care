@@ -14,10 +14,14 @@ export const SummaryRoute = () => {
   const [currentCard, setCurrentCard] = useState(0);
   const [, setFirstRun] = useFirstRun();
 
+  const closeSummaryCard = () => {
+    setFirstRun({ didShowReportSummary: true });
+    return navigate("/");
+  }
+
   const onForwardClick = () => {
     if (patient && currentCard === patient.report.summary.length - 1) {
-      setFirstRun({ didShowReportSummary: true });
-      return navigate("/");
+      return closeSummaryCard();
     }
 
     setCurrentCard((currentCard) => currentCard + 1);
@@ -48,17 +52,25 @@ export const SummaryRoute = () => {
                 colorTheme={ColorTheme.Sepia}
               />
               <div className="SummaryRoute__Header__Controls__ButtonsContainer">
-                <button
-                  className="SummaryRoute__Header__Controls__ButtonsContainer__Button"
-                  onClick={onBackClick}
-                >
-                  Back
-                </button>
+                {currentCard !== 0 ? (
+                  <button
+                    className="SummaryRoute__Header__Controls__ButtonsContainer__Button"
+                    onClick={onBackClick}
+                  >
+                    Back
+                  </button>
+                ) : null}
                 <button
                   className="SummaryRoute__Header__Controls__ButtonsContainer__Button"
                   onClick={onForwardClick}
                 >
                   Next
+                </button>
+                <button
+                  className="SummaryRoute__Header__Controls__ButtonsContainer__Close__Button"
+                  onClick={closeSummaryCard}
+                >
+                  X
                 </button>
               </div>
             </div>

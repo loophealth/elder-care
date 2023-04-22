@@ -39,6 +39,17 @@
   transition: background-color 0.05s ease-in-out, color 0.05s ease-in-out;
 }
 
+.SummaryRoute__Header__Controls__ButtonsContainer__Close__Button {
+  all: unset;
+  background-color: var(--color-gray-lighter);
+  color: var(--color-black);
+  padding: var(--space-xs) var(--space-xs);
+  border-radius: var(--border-radius-2xl);
+  min-width: var(--space-s);
+  text-align: center;
+  transition: background-color 0.05s ease-in-out, color 0.05s ease-in-out;
+}
+
 .SummaryRoute__Header__Controls__ButtonsContainer__Button:active {
   background-color: var(--color-sepia-dark);
   color: var(--color-white);

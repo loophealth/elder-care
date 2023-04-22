@@ -7,6 +7,7 @@ import { ValuePill } from "../ValuePill";
 import { ColorTheme } from "../../types";
 
 import "./RangedMeasurementTile.css";
+import { SimpleMeasurementTile } from "../SimpleMeasurementTile";
 
 interface RangedMeasurementTileProps {
   measurement: Measurement;
@@ -133,7 +134,7 @@ const RangedMeasurementTileZones = ({
   );
 };
 
-const getMeasurementValueOffset = (measurement: Measurement): number | null => {
+export const getMeasurementValueOffset = (measurement: Measurement): number | null => {
   if (typeof measurement.value === "number" && measurement.range !== null) {
     return getOffsetPercent(
       measurement.range?.lower,
