@@ -2,4 +2,11 @@
   .EditCarePlanRoute__Form {
     width: calc(var(--space-l) * 10);
   }
+  .IconTextTileList {
+      min-width: calc(var(--space-l) * 10);
+  }
+}
+
+.Hide_Label {
+  visibility: hidden;
 }

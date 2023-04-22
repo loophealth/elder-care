@@ -32,7 +32,7 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
       carePlan?.diet.map(extendItem("diet")),
       carePlan?.medication.map(extendItem("medication")),
       carePlan?.physicalActivity.map(extendItem("physicalActivity")),
-      carePlan?.others.map(extendItem("others"))
+      carePlan?.suggestedContent.map(extendItem("suggestedContent"))
     ).filter((item) => !!item) as CarePlanChecklistItem[];
 
     // Merge the existing items with the passed-in items. If an item exists in

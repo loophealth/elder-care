@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import "./AdminEditorLayout.css";
 
 export const AdminEditorLayout = ({
+  title,
   renderLeft,
   renderRight,
 }: {
+  title?: string;
   renderLeft: () => ReactNode;
   renderRight: () => ReactNode;
 }) => {
@@ -19,6 +21,9 @@ export const AdminEditorLayout = ({
           <Link className="AdminEditorLayout__Header__BackButton" to="/admin">
             <img src="/img/arrow-left.svg" alt="Back button" />
           </Link>
+          {title ?
+            (<h2>{title}</h2>) : null
+          }
         </div>
         <div className="AdminEditorLayout__Content">
           <div className="AdminEditorLayout__Content__Left">{renderLeft()}</div>

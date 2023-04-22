@@ -12,9 +12,7 @@ import {
   createHealthReportAndUserProfile,
 } from "@loophealth/api";
 
-import { Button } from "components/Button";
-import { Input } from "components/Input";
-import { FilePicker } from "components/FilePicker";
+import { Button, Input, FilePicker } from "components";
 
 import "./HomeRoute.css";
 

@@ -1,7 +1,7 @@
 import { usePatient } from "@loophealth/api";
 import { ReportOverviewGrid } from "@loophealth/ui";
 
-import { Navbar } from "components/Navbar";
+import { Navbar } from "components";
 
 import "./ReportOverviewRoute.css";
 

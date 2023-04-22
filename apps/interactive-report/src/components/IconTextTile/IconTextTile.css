@@ -25,6 +25,7 @@
   font-size: var(--step--1);
   color: var(--color-gray-light);
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .IconTextTile__ButtonContainer {

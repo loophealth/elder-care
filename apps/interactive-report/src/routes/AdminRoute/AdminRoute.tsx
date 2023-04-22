@@ -1,5 +1,5 @@
 import { Navbar } from "components/Navbar";
-import { LinkThatLooksLikeButton } from "components/LinkThatLooksLikeButton";
+import { LinkThatLooksLikeButton } from "components";
 
 import "./AdminRoute.css";
 

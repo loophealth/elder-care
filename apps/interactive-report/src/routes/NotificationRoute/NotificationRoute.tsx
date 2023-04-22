@@ -4,15 +4,9 @@ import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
 import { NotificationCategory, PatientNotificationItem, sendNotification, usePatient } from "@loophealth/api";
 
-import { AdminEditorLayout } from "components/AdminEditorLayout";
-import { Button } from "components/Button";
-import { Input } from "components/Input";
-import { IconTextTileList } from "components/IconTextTileList";
-import { IconTextTile } from "components/IconTextTile";
+import { AdminEditorLayout, Button,Input, IconTextTile, IconTextTileList, TextArea, Select } from "components";
 
 import "./NotificationRoute.css";
-import { TextArea } from "components/TextArea";
-import { Select } from "components/Select";
 
 export const NotificationRoute = () => {
   const { patient } = usePatient();
@@ -130,6 +124,7 @@ export const NotificationRoute = () => {
 
   return (
     <AdminEditorLayout
+      title="Notification"
       renderLeft={() => (
         <form
           className="NotificationRoute__Form Utils__VerticalForm"

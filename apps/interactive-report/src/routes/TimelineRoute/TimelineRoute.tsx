@@ -1,5 +1,4 @@
-import { Navbar } from "components/Navbar";
-import { Timeline } from "components/Timeline";
+import { Navbar, Timeline } from "components";
 
 import "./TimelineRoute.css";
 

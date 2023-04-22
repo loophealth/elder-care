@@ -8,7 +8,7 @@ import "./CarePlanChecklist.css";
 import { ReactComponent as DietIcon } from "images/rice-bowl.svg";
 import { ReactComponent as MedicationIcon } from "images/pill.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/walk.svg";
-import { ReactComponent as OthersIcon } from "images/sun.svg";
+import { ReactComponent as SuggestedContentIcon } from "images/sun.svg";
 
 export const CarePlanChecklist = () => {
   const { patient } = usePatient();
@@ -72,5 +72,5 @@ const icons = new Map([
     "physicalActivity",
     <PhysicalActivityIcon className="CarePlanChecklist__Items__Item__Icon" />,
   ],
-  ["others", <OthersIcon className="CarePlanChecklist__Items__Item__Icon" />],
+  ["suggestedContent", <SuggestedContentIcon className="CarePlanChecklist__Items__Item__Icon" />],
 ]);

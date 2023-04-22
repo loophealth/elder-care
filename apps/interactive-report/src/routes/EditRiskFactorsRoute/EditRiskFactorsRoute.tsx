@@ -3,12 +3,7 @@ import { onSnapshot, updateDoc } from "firebase/firestore";
 
 import { moveArrayItem, RiskFactor, usePatient } from "@loophealth/api";
 
-import { AdminEditorLayout } from "components/AdminEditorLayout";
-import { Input } from "components/Input";
-import { TextArea } from "components/TextArea";
-import { Button } from "components/Button";
-import { IconTextTile } from "components/IconTextTile";
-import { IconTextTileList } from "components/IconTextTileList";
+import { Button, Input, AdminEditorLayout, TextArea, IconTextTile, IconTextTileList } from "components";
 
 import "./EditRiskFactorsRoute.css";
 
@@ -118,6 +113,7 @@ export const EditRiskFactorsRoute = () => {
 
   return (
     <AdminEditorLayout
+      title="Risk Factors"
       renderLeft={() => (
         <form
           className="Utils__VerticalForm EditCarePlanRoute__Form"

@@ -8,3 +8,14 @@ export const substractDate = (date: Date, count = 0) => {
 export const generateId = () => {
     return new Date().getTime()
 };
+
+//FollowUp is before 1 week(i.e. 7 days), before 2 days(i.e. 2 days), before 2 day, selected date
+export const followUpRules = [7,2,1,0];
+
+//CarePlan Category Time
+export const carePlanCategoryTime = {
+    morning: "08:00",
+    afternoon: "13:00",
+    evening: "17:00",
+    night: "20:00"
+};

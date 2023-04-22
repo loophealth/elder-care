@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePatient } from "@loophealth/api";
 import { CardIndicator, SummaryCard } from "@loophealth/ui";
 
-import { Navbar } from "components/Navbar";
+import { Navbar } from "components";
 
 import "./SummaryRoute.css";
 

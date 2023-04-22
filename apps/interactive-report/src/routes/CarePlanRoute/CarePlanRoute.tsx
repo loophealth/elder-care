@@ -8,8 +8,7 @@ import {
   usePatient,
 } from "@loophealth/api";
 
-import { Navbar } from "components/Navbar";
-import { IconTextTile } from "components/IconTextTile";
+import { Navbar, IconTextTile } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./CarePlanRoute.css";
@@ -61,9 +60,9 @@ export const CarePlanRoute = () => {
         </div>
         <div className="CarePlanRoute__CategoryList">
           <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Others
+            Suggested Content
           </h1>
-          <TileList items={carePlan?.others ?? []} category="others" />
+          <TileList items={carePlan?.suggestedContent ?? []} category="suggestedContent" />
         </div>
       </main>
     </>
@@ -84,6 +83,7 @@ const TileList = ({
           key={item.recommendation}
           title={item.recommendation}
           details={item.details}
+          link={item?.link}
           icon={CATEGORY_ICONS[category]}
         />
       ))}

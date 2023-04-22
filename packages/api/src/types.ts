@@ -94,8 +94,11 @@ export interface UserProfile {
  * A single item in a care plan.
  */
 export interface CarePlanItem {
+  id: number;
   recommendation: string;
   details?: string;
+  reminder?: string;
+  link?: string;
 }
 
 /**
@@ -106,14 +109,27 @@ export interface CarePlan {
   diet: CarePlanItem[];
   physicalActivity: CarePlanItem[];
   medication: CarePlanItem[];
-  others: CarePlanItem[];
+  suggestedContent: CarePlanItem[];
 }
 
 export type CarePlanCategory =
   | "diet"
   | "physicalActivity"
   | "medication"
-  | "others";
+  | "suggestedContent";
+
+export type CarePlanReminder =
+  | "morning"
+  | "afternoon"
+  | "evening"
+  | "night";
+
+export type CarePlanFilterCategory =
+  | "morning"
+  | "afternoon"
+  | "evening"
+  | "night"
+  | "suggestedContent";
 
 /**
  * A single risk factor for a patient.
@@ -158,11 +174,3 @@ export type NotificationCategory =
   | "scheduled"
   | "recurring";
 
-export enum NotificationSchedule {
-  instant = "instant",
-  daily = "daily",
-  weekdays = "weekdays",
-  oneWeekBefore = "1 week before",
-  twoDayBefore = "2 day before",
-  oneDayBefore = "1 day before"
-} 

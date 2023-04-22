@@ -1,6 +1,14 @@
 .AdminEditorLayout__Header {
   padding-top: var(--space-l);
   padding-left: var(--space-l);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.AdminEditorLayout__Header__BackButton
+{
+  margin-right: 20px;
 }
 
 .AdminEditorLayout__Header__BackButton img {

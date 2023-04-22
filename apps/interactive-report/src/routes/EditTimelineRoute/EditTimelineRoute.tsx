@@ -7,11 +7,7 @@ import {
   moveArrayItem,
 } from "@loophealth/api";
 
-import { Button } from "components/Button";
-import { Input } from "components/Input";
-import { AdminEditorLayout } from "components/AdminEditorLayout";
-import { IconTextTile } from "components/IconTextTile";
-import { IconTextTileList } from "components/IconTextTileList";
+import { Button, Input, AdminEditorLayout, IconTextTile, IconTextTileList } from "components";
 
 import "./EditTimelineRoute.css";
 
@@ -118,6 +114,7 @@ export const EditTimelineRoute = () => {
 
   return (
     <AdminEditorLayout
+      title="Timeline"
       renderLeft={() => (
         <form
           className="EditTimelineRoute__Form Utils__VerticalForm"

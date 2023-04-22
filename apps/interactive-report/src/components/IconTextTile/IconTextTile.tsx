@@ -10,11 +10,13 @@ interface IconTextTileProps {
   isLoading?: boolean;
   onReorder?: (direction: 1 | -1) => void;
   onDelete?: () => void;
+  link?: string;
 }
 
 export const IconTextTile = ({
   title,
   details,
+  link,
   icon,
   iconAlt,
   isLoading,
@@ -49,6 +51,15 @@ export const IconTextTile = ({
           <div className="IconTextTile__Tile__TextContent__Details">
             {details}
           </div>
+          {link ?
+            (
+              <div className="IconTextTile__Tile__TextContent__Details">
+                <a href={link} target="_blank" rel="noreferrer" className="IconTextTile__Tile__TextContent__Details">
+                  {link}
+                </a>
+              </div>
+            ) : null
+          }
         </div>
       </div>
 

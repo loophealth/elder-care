@@ -4,14 +4,10 @@ import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
 import { FollowUp, PatientNotificationItem, usePatient } from "@loophealth/api";
 
-import { AdminEditorLayout } from "components/AdminEditorLayout";
-import { Button } from "components/Button";
-import { Input } from "components/Input";
-import { IconTextTileList } from "components/IconTextTileList";
-import { IconTextTile } from "components/IconTextTile";
+import { AdminEditorLayout, Button,Input, IconTextTile, IconTextTileList } from "components";
 
 import "./EditFollowUpsRoute.css";
-import { generateId, substractDate } from "utils";
+import { followUpRules, generateId, substractDate } from "utils";
 
 export const EditFollowUpsRoute = () => {
   const { patient } = usePatient();
@@ -53,15 +49,9 @@ export const EditFollowUpsRoute = () => {
   }
 
   const updateFollowUpNotification = (date: Date, id: number) => {
-      // FollowUp Notification rule
-      let scheduledTimeArray = [
-        substractDate(date, 7),
-        substractDate(date, 2),
-        substractDate(date, 1),
-        substractDate(date)
-      ];
-      //Filtering date less than today
-      scheduledTimeArray = scheduledTimeArray.filter(data => data >= Timestamp.fromDate(new Date()))
+      // FollowUp Notification rule & Filtering date less than today
+      let scheduledTimeArray = followUpRules.map(count => substractDate(date, count)).filter(data => data >= Timestamp.fromDate(new Date()));
+      
       let newNotification: PatientNotificationItem = { id, title, body: description, sent: false, cancel: false, scheduledTimeArray };
       const newNotifications = [...notifications, newNotification];
       return newNotifications;
@@ -124,7 +114,7 @@ export const EditFollowUpsRoute = () => {
       await updateDoc(patient.profileRef, { followUps: newFollowUps });
       if(followUpId){
         let newNotifications = [...notifications];
-        newNotifications = newNotifications.filter(data => (!data.id || (data.id && data.id != followUpId)))
+        newNotifications = newNotifications.filter(data => (!data.id || (data.id && data.id !== followUpId)))
         await updateDoc(patient.notificationRef, { notifications: newNotifications });
       }
     } catch (e) {
@@ -139,6 +129,7 @@ export const EditFollowUpsRoute = () => {
 
   return (
     <AdminEditorLayout
+      title="Follow Ups"
       renderLeft={() => (
         <form
           className="EditFollowUpsRoute__Form Utils__VerticalForm"

@@ -247,7 +247,7 @@ export const findOrCreateCarePlan = async (
         diet: [],
         physicalActivity: [],
         medication: [],
-        others: [],
+        suggestedContent: [],
       });
       return carePlan;
     }
