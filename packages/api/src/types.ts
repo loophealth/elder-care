@@ -94,7 +94,7 @@ export interface UserProfile {
  * A single item in a care plan.
  */
 export interface CarePlanItem {
-  id: number;
+  id: string;
   recommendation: string;
   details?: string;
   reminder?: string;
@@ -144,7 +144,7 @@ export interface RiskFactor {
  * A single follow-up for a patient.
  */
 export interface FollowUp {
-  id: number;
+  id: string;
   title: string;
   date: Timestamp;
   description?: string;
@@ -154,14 +154,15 @@ export interface FollowUp {
  * A single Notification for a patient.
  */
 export interface PatientNotificationItem {
-  id?: number;
+  id: string;
   title: string;
   body?: string;
   scheduledTime?: Timestamp | "";
-  cancel: boolean;
   sent: boolean;
   time?: string;
   scheduledTimeArray?: Timestamp[];
+  source?: string;
+  type?: string;
 }
 
 export interface PatientNotification {

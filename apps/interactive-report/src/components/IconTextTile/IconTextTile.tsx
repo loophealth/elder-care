@@ -51,15 +51,18 @@ export const IconTextTile = ({
           <div className="IconTextTile__Tile__TextContent__Details">
             {details}
           </div>
-          {link ?
-            (
-              <div className="IconTextTile__Tile__TextContent__Details">
-                <a href={link} target="_blank" rel="noreferrer" className="IconTextTile__Tile__TextContent__Details">
-                  {link}
-                </a>
-              </div>
-            ) : null
-          }
+          {link ? (
+            <div className="IconTextTile__Tile__TextContent__Details">
+              <a
+                href={link}
+                target="_blank"
+                rel="noreferrer"
+                className="IconTextTile__Tile__TextContent__Details"
+              >
+                {link}
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
 

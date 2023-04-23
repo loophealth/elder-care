@@ -3,7 +3,7 @@
     width: calc(var(--space-l) * 10);
   }
   .IconTextTileList {
-      min-width: calc(var(--space-l) * 10);
+    min-width: calc(var(--space-l) * 10);
   }
 }
 

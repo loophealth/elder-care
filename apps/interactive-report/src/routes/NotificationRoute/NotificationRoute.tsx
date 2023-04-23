@@ -1,17 +1,33 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
-import { NotificationCategory, PatientNotificationItem, sendNotification, usePatient } from "@loophealth/api";
+import {
+  NotificationCategory,
+  PatientNotificationItem,
+  sendNotification,
+  usePatient,
+} from "@loophealth/api";
 
-import { AdminEditorLayout, Button,Input, IconTextTile, IconTextTileList, TextArea, Select } from "components";
+import {
+  AdminEditorLayout,
+  Button,
+  Input,
+  IconTextTile,
+  IconTextTileList,
+  TextArea,
+  Select,
+} from "components";
 
 import "./NotificationRoute.css";
+import { generateId, notificationSource } from "utils";
 
 export const NotificationRoute = () => {
   const { patient } = usePatient();
 
-  const [notifications, setNotifications] = useState<PatientNotificationItem[]>([]);
+  const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [type, setType] = useState("");
   const [title, setTitle] = useState("");
@@ -27,7 +43,8 @@ export const NotificationRoute = () => {
 
     const unsub = onSnapshot(patient.notificationRef, (snapshot) => {
       const data = snapshot.data();
-      const notifications: PatientNotificationItem[] = data?.notifications ?? [];
+      const notifications: PatientNotificationItem[] =
+        data?.notifications ?? [];
       setNotifications(notifications);
     });
 
@@ -42,7 +59,7 @@ export const NotificationRoute = () => {
     setBody("");
     setDate("");
     setTime("");
-  }
+  };
   // Add a new notification to the user profile.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,46 +71,59 @@ export const NotificationRoute = () => {
     setIsLoading(true);
     try {
       let customDate, firebaseDate;
-      let newNotification: PatientNotificationItem = { title, body, sent: false, cancel: false };
+      let newNotification: PatientNotificationItem = {
+        id: generateId(),
+        title,
+        body,
+        sent: false,
+        type,
+        source: notificationSource.notification,
+      };
       if (date && time) {
-        customDate = new Date(date + ' ' + time);
+        customDate = new Date(date + " " + time);
         firebaseDate = Timestamp.fromDate(parseISO(customDate.toISOString()));
         newNotification = {
           ...newNotification,
           scheduledTime: firebaseDate,
           time,
-        }
+        };
       } else if (!date && time) {
         newNotification = {
           ...newNotification,
           scheduledTime: "",
           time,
-        }
+        };
       } else if (!date && !time) {
         newNotification = {
           ...newNotification,
           scheduledTime: "",
           time: "",
-          sent: true
-        }
+          sent: true,
+        };
       }
 
       const newNotifications = [...notifications, newNotification];
 
-      await updateDoc(patient.notificationRef, { notifications: newNotifications });
+      await updateDoc(patient.notificationRef, {
+        notifications: newNotifications,
+      });
 
-      if (!newNotification?.scheduledTime && !newNotification?.time && patient?.profile?.fcmToken) {
+      if (
+        !newNotification?.scheduledTime &&
+        !newNotification?.time &&
+        patient?.profile?.fcmToken
+      ) {
         const notificationData = {
           title,
           body,
-          fcmToken: patient?.profile?.fcmToken
-        }
-        sendNotification(notificationData)
+          fcmToken: patient?.profile?.fcmToken,
+        };
+        sendNotification(notificationData);
       }
       resetData();
     } catch (e) {
       alert(
-        "There was an error adding the notification. Please check your network and try again. If the error persists, please contact support."
+        `There was an error adding the notification. Please check your network and try again. If the error persists, please contact support.`
       );
       console.error(e);
     } finally {
@@ -102,16 +132,20 @@ export const NotificationRoute = () => {
   };
 
   // Delete notification.
-  const onDeleteNotification = async (index: number) => {
+  const onDeleteNotification = async (id: string) => {
     if (!patient) {
       return;
     }
 
     setIsLoading(true);
     try {
-      const newNotifications = [...notifications];
-      newNotifications.splice(index, 1);
-      await updateDoc(patient.notificationRef, { notifications: newNotifications });
+      let newNotifications = [...notifications];
+      newNotifications = newNotifications.filter(
+        (data) => !data.id || (data.id && data.id !== id)
+      );
+      await updateDoc(patient.notificationRef, {
+        notifications: newNotifications,
+      });
     } catch (e) {
       alert(
         "There was an error deleting this notification. Please check your network and try again. If the error persists, please contact support."
@@ -121,6 +155,13 @@ export const NotificationRoute = () => {
       setIsLoading(false);
     }
   };
+
+  const filteredNotification = useMemo(() => {
+    return notifications.filter(
+      (notification: PatientNotificationItem) =>
+        notification && notification.source === notificationSource.notification
+    );
+  }, [notifications]);
 
   return (
     <AdminEditorLayout
@@ -176,8 +217,8 @@ export const NotificationRoute = () => {
               disabled={isLoading}
             />
           </div>
-          {type === "scheduled" ?
-            (<div className="Utils__VerticalForm__Group">
+          {type === "scheduled" ? (
+            <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="notificationDate">
                 Date
               </label>
@@ -189,9 +230,10 @@ export const NotificationRoute = () => {
                 onChange={(event) => setDate(event.target.value)}
                 disabled={isLoading}
               />
-            </div>) : null}
-          {(type === "scheduled" || type === "recurring") ?
-            (<div className="Utils__VerticalForm__Group">
+            </div>
+          ) : null}
+          {type === "scheduled" || type === "recurring" ? (
+            <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="notificationTime">
                 Time
               </label>
@@ -204,7 +246,8 @@ export const NotificationRoute = () => {
                 required={date ? true : false}
                 disabled={isLoading}
               />
-            </div>) : null}
+            </div>
+          ) : null}
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
@@ -213,19 +256,28 @@ export const NotificationRoute = () => {
           </div>
         </form>
       )}
-      renderRight={() => (
-        <IconTextTileList>
-          {notifications.map((notification, index) => (
-            <IconTextTile
-              key={index}
-              title={notification.title}
-              details={`${notification.body} ${notification.scheduledTime ? format(notification.scheduledTime.toDate(), "d MMMM, yyyy hh:mm a") : notification.time}`}
-              onDelete={() => onDeleteNotification(index)}
-              isLoading={isLoading}
-            />
-          ))}
-        </IconTextTileList>
-      )}
+      renderRight={() =>
+        filteredNotification ? (
+          <IconTextTileList>
+            {filteredNotification.map((notification, index) => (
+              <IconTextTile
+                key={index}
+                title={notification.title}
+                details={`${notification.body} ${
+                  notification.scheduledTime
+                    ? format(
+                        notification.scheduledTime.toDate(),
+                        "d MMMM, yyyy hh:mm a"
+                      )
+                    : notification.time
+                }`}
+                onDelete={() => onDeleteNotification(notification.id)}
+                isLoading={isLoading}
+              />
+            ))}
+          </IconTextTileList>
+        ) : null
+      }
     />
   );
 };

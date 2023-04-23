@@ -62,7 +62,10 @@ export const CarePlanRoute = () => {
           <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
             Suggested Content
           </h1>
-          <TileList items={carePlan?.suggestedContent ?? []} category="suggestedContent" />
+          <TileList
+            items={carePlan?.suggestedContent ?? []}
+            category="suggestedContent"
+          />
         </div>
       </main>
     </>

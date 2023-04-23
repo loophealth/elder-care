@@ -3,7 +3,14 @@ import { onSnapshot, updateDoc } from "firebase/firestore";
 
 import { moveArrayItem, RiskFactor, usePatient } from "@loophealth/api";
 
-import { Button, Input, AdminEditorLayout, TextArea, IconTextTile, IconTextTileList } from "components";
+import {
+  Button,
+  Input,
+  AdminEditorLayout,
+  TextArea,
+  IconTextTile,
+  IconTextTileList,
+} from "components";
 
 import "./EditRiskFactorsRoute.css";
 

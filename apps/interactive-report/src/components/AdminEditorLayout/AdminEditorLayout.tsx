@@ -21,9 +21,7 @@ export const AdminEditorLayout = ({
           <Link className="AdminEditorLayout__Header__BackButton" to="/admin">
             <img src="/img/arrow-left.svg" alt="Back button" />
           </Link>
-          {title ?
-            (<h2>{title}</h2>) : null
-          }
+          {title ? <h2>{title}</h2> : null}
         </div>
         <div className="AdminEditorLayout__Content">
           <div className="AdminEditorLayout__Content__Left">{renderLeft()}</div>

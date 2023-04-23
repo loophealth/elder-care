@@ -1,13 +1,29 @@
 import { FormEvent, useEffect, useState } from "react";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 
-import { usePatient, CarePlan, CarePlanCategory, CarePlanFilterCategory, CarePlanReminder, CarePlanItem, PatientNotificationItem } from "@loophealth/api";
+import {
+  usePatient,
+  CarePlan,
+  CarePlanCategory,
+  CarePlanFilterCategory,
+  CarePlanReminder,
+  CarePlanItem,
+  PatientNotificationItem,
+} from "@loophealth/api";
 
-import { AdminEditorLayout, Button, Input, Select, TextArea, IconTextTile, IconTextTileList } from "components";
+import {
+  AdminEditorLayout,
+  Button,
+  Input,
+  Select,
+  TextArea,
+  IconTextTile,
+  IconTextTileList,
+} from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./EditCarePlanRoute.css";
-import { carePlanCategoryTime, generateId } from "utils";
+import { carePlanCategoryTime, generateId, notificationSource } from "utils";
 
 export const EditCarePlanRoute = () => {
   const { patient } = usePatient();
@@ -15,13 +31,17 @@ export const EditCarePlanRoute = () => {
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
 
   const [category, setCategory] = useState<CarePlanCategory | "">("");
-  const [filterCategory, setFilterCategory] = useState<CarePlanFilterCategory | "">("");
+  const [filterCategory, setFilterCategory] = useState<
+    CarePlanFilterCategory | ""
+  >("");
   const [recommendation, setRecommendation] = useState("");
   const [details, setDetails] = useState("");
   const [reminder, setReminder] = useState<CarePlanReminder | "">("");
   const [link, setLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [notifications, setNotifications] = useState<PatientNotificationItem[]>([]);
+  const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
+    []
+  );
 
   // Subscribe to care plan updates.
   useEffect(() => {
@@ -34,11 +54,15 @@ export const EditCarePlanRoute = () => {
       setCarePlan(carePlan);
     });
 
-    const unsubNotification = onSnapshot(patient.notificationRef, (snapshot) => {
-      const data = snapshot.data();
-      const notifications: PatientNotificationItem[] = data?.notifications ?? [];
-      setNotifications(notifications);
-    });
+    const unsubNotification = onSnapshot(
+      patient.notificationRef,
+      (snapshot) => {
+        const data = snapshot.data();
+        const notifications: PatientNotificationItem[] =
+          data?.notifications ?? [];
+        setNotifications(notifications);
+      }
+    );
 
     return () => {
       unsub();
@@ -46,12 +70,19 @@ export const EditCarePlanRoute = () => {
     };
   }, [patient]);
 
-  const updateCarePlanNotification = (reminder: string, id: number) => {
-    // Care Plan Notification daily    
-    let newNotification: PatientNotificationItem = { id, title: recommendation, body: details, sent: false, cancel: false, time: (carePlanCategoryTime as any)[reminder] };
+  const updateCarePlanNotification = (reminder: string, id: string) => {
+    // Care Plan Notification daily
+    let newNotification: PatientNotificationItem = {
+      id,
+      title: recommendation,
+      body: details,
+      sent: false,
+      time: (carePlanCategoryTime as any)[reminder],
+      source: notificationSource.carePlan,
+    };
     const newNotifications = [...notifications, newNotification];
     return newNotifications;
-  }
+  };
 
   // Handle form submission.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -64,11 +95,19 @@ export const EditCarePlanRoute = () => {
     setIsLoading(true);
     const newCarePlanId = generateId();
     try {
-      const newCarePlanItem = { id: newCarePlanId, recommendation, details, reminder, link };
+      const newCarePlanItem = {
+        id: newCarePlanId,
+        recommendation,
+        details,
+        reminder,
+        link,
+      };
       const newCarePlan = [...carePlan[category], newCarePlanItem];
       await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
       if (category !== "suggestedContent" && reminder) {
-        await updateDoc(patient.notificationRef, { notifications: updateCarePlanNotification(reminder, newCarePlanId) });
+        await updateDoc(patient.notificationRef, {
+          notifications: updateCarePlanNotification(reminder, newCarePlanId),
+        });
       }
       onReset();
     } catch (e) {
@@ -90,7 +129,7 @@ export const EditCarePlanRoute = () => {
   };
 
   // Delete an item.
-  const onDelete = async (category: CarePlanCategory, id: number) => {
+  const onDelete = async (category: CarePlanCategory, id: string) => {
     if (!patient) {
       return;
     }
@@ -98,13 +137,17 @@ export const EditCarePlanRoute = () => {
     setIsLoading(true);
     try {
       let newCategoryItems = [...patient.carePlan[category]];
-      newCategoryItems = newCategoryItems.filter(item => item.id !== id)
+      newCategoryItems = newCategoryItems.filter((item) => item.id !== id);
       await updateDoc(patient.carePlanRef, { [category]: newCategoryItems });
-      
+
       //Delete Care plan Notification
       let newNotifications = [...notifications];
-      newNotifications = newNotifications.filter(data => (!data.id || (data.id && data.id !== id)))
-      await updateDoc(patient.notificationRef, { notifications: newNotifications });
+      newNotifications = newNotifications.filter(
+        (data) => !data.id || (data.id && data.id !== id)
+      );
+      await updateDoc(patient.notificationRef, {
+        notifications: newNotifications,
+      });
     } catch (e) {
       alert(
         "There was an error while deleting this item from the care plan, please contact support"
@@ -115,39 +158,45 @@ export const EditCarePlanRoute = () => {
     }
   };
 
-  const getFilteredData = (carePlan: CarePlan, filterCategory: CarePlanFilterCategory) => {
-    const filteredDiet = carePlan.diet?.filter((item: CarePlanItem) => (item.reminder === filterCategory)).map((item: CarePlanItem, index: number) =>
-    (
-      <IconTextTile
-        key={`${item.recommendation}-${index}`}
-        title={item.recommendation}
-        details={item.details}
-        icon={CATEGORY_ICONS.diet}
-        onDelete={() => onDelete("diet", item?.id)}
-      />
-    ))
-    const filteredPhysicalActivity = carePlan.physicalActivity?.filter((item: CarePlanItem) => (item.reminder === filterCategory)).map((item: CarePlanItem, index: number) =>
-    (
-      <IconTextTile
-        key={`${item.recommendation}-${index}`}
-        title={item.recommendation}
-        details={item.details}
-        icon={CATEGORY_ICONS.physicalActivity}
-        onDelete={() => onDelete("physicalActivity", item?.id)}
-      />
-    ))
-    const filteredMedication = carePlan.medication?.filter((item: CarePlanItem) => (item.reminder === filterCategory)).map((item: CarePlanItem, index: number) =>
-    (
-      <IconTextTile
-        key={`${item.recommendation}-${index}`}
-        title={item.recommendation}
-        details={item.details}
-        icon={CATEGORY_ICONS.medication}
-        onDelete={() => onDelete("medication", item?.id)}
-      />
-    ))
+  const getFilteredData = (
+    carePlan: CarePlan,
+    filterCategory: CarePlanFilterCategory
+  ) => {
+    const filteredDiet = carePlan.diet
+      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
+      .map((item: CarePlanItem, index: number) => (
+        <IconTextTile
+          key={`${item.recommendation}-${index}`}
+          title={item.recommendation}
+          details={item.details}
+          icon={CATEGORY_ICONS.diet}
+          onDelete={() => onDelete("diet", item?.id)}
+        />
+      ));
+    const filteredPhysicalActivity = carePlan.physicalActivity
+      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
+      .map((item: CarePlanItem, index: number) => (
+        <IconTextTile
+          key={`${item.recommendation}-${index}`}
+          title={item.recommendation}
+          details={item.details}
+          icon={CATEGORY_ICONS.physicalActivity}
+          onDelete={() => onDelete("physicalActivity", item?.id)}
+        />
+      ));
+    const filteredMedication = carePlan.medication
+      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
+      .map((item: CarePlanItem, index: number) => (
+        <IconTextTile
+          key={`${item.recommendation}-${index}`}
+          title={item.recommendation}
+          details={item.details}
+          icon={CATEGORY_ICONS.medication}
+          onDelete={() => onDelete("medication", item?.id)}
+        />
+      ));
     return [...filteredDiet, filteredPhysicalActivity, ...filteredMedication];
-  }
+  };
 
   return (
     <AdminEditorLayout
@@ -191,8 +240,8 @@ export const EditCarePlanRoute = () => {
               disabled={isLoading}
             />
           </div>
-          {category === "suggestedContent" ?
-            (<div className="Utils__VerticalForm__Group">
+          {category === "suggestedContent" ? (
+            <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="link">
                 Enter Link
               </label>
@@ -203,11 +252,10 @@ export const EditCarePlanRoute = () => {
                 placeholder="Enter Link"
                 disabled={isLoading}
               />
-            </div>)
-            : null
-          }
-          {category !== "suggestedContent" ?
-            (<>
+            </div>
+          ) : null}
+          {category !== "suggestedContent" ? (
+            <>
               <div className="Utils__VerticalForm__Group">
                 <label className="Utils__Label" htmlFor="details">
                   Additional info
@@ -229,7 +277,9 @@ export const EditCarePlanRoute = () => {
                   name="reminder"
                   id="reminder"
                   value={reminder}
-                  onChange={(e) => setReminder(e.target.value as CarePlanReminder)}
+                  onChange={(e) =>
+                    setReminder(e.target.value as CarePlanReminder)
+                  }
                   disabled={isLoading}
                 >
                   <option value="">Select reminder</option>
@@ -239,8 +289,8 @@ export const EditCarePlanRoute = () => {
                   <option value="night">Night</option>
                 </Select>
               </div>
-            </>) : null
-          }
+            </>
+          ) : null}
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
@@ -250,8 +300,7 @@ export const EditCarePlanRoute = () => {
         </form>
       )}
       renderRight={() => (
-        <div
-          className="Utils__VerticalForm EditCarePlanRoute__Form">
+        <div className="Utils__VerticalForm EditCarePlanRoute__Form">
           <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label Hide_Label" htmlFor="filterCategory">
               Care Plan for
@@ -260,7 +309,9 @@ export const EditCarePlanRoute = () => {
               name="filterCategory"
               id="filterCategory"
               value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value as CarePlanFilterCategory)}
+              onChange={(e) =>
+                setFilterCategory(e.target.value as CarePlanFilterCategory)
+              }
               required
               disabled={isLoading}
             >
@@ -274,9 +325,13 @@ export const EditCarePlanRoute = () => {
           </div>
           <div className="Utils__VerticalForm__Group">
             <IconTextTileList>
-              {carePlan && filterCategory && filterCategory !== "suggestedContent" ? (
+              {carePlan &&
+              filterCategory &&
+              filterCategory !== "suggestedContent" ? (
                 getFilteredData(carePlan, filterCategory)
-              ) : (carePlan && filterCategory && filterCategory === "suggestedContent") ? (
+              ) : carePlan &&
+                filterCategory &&
+                filterCategory === "suggestedContent" ? (
                 <>
                   {carePlan.suggestedContent?.map((item, index) => (
                     <IconTextTile

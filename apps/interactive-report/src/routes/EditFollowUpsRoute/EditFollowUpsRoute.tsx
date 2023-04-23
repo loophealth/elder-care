@@ -4,10 +4,21 @@ import { onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 
 import { FollowUp, PatientNotificationItem, usePatient } from "@loophealth/api";
 
-import { AdminEditorLayout, Button,Input, IconTextTile, IconTextTileList } from "components";
+import {
+  AdminEditorLayout,
+  Button,
+  Input,
+  IconTextTile,
+  IconTextTileList,
+} from "components";
 
 import "./EditFollowUpsRoute.css";
-import { followUpRules, generateId, substractDate } from "utils";
+import {
+  followUpRules,
+  generateId,
+  notificationSource,
+  substractDate,
+} from "utils";
 
 export const EditFollowUpsRoute = () => {
   const { patient } = usePatient();
@@ -17,7 +28,9 @@ export const EditFollowUpsRoute = () => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
-  const [notifications, setNotifications] = useState<PatientNotificationItem[]>([]);
+  const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
+    []
+  );
 
   // Subscribe to follow ups updates.
   useEffect(() => {
@@ -29,11 +42,15 @@ export const EditFollowUpsRoute = () => {
       const followUps: FollowUp[] = snapshot.data()?.followUps ?? [];
       setFollowUps(followUps);
     });
-    const unsubNotification = onSnapshot(patient.notificationRef, (snapshot) => {
-      const data = snapshot.data();
-      const notifications: PatientNotificationItem[] = data?.notifications ?? [];
-      setNotifications(notifications);
-    });
+    const unsubNotification = onSnapshot(
+      patient.notificationRef,
+      (snapshot) => {
+        const data = snapshot.data();
+        const notifications: PatientNotificationItem[] =
+          data?.notifications ?? [];
+        setNotifications(notifications);
+      }
+    );
 
     return () => {
       unsub();
@@ -45,17 +62,26 @@ export const EditFollowUpsRoute = () => {
   const resetData = () => {
     setTitle("");
     setDate("");
-    setDescription("")
-  }
+    setDescription("");
+  };
 
-  const updateFollowUpNotification = (date: Date, id: number) => {
-      // FollowUp Notification rule & Filtering date less than today
-      let scheduledTimeArray = followUpRules.map(count => substractDate(date, count)).filter(data => data >= Timestamp.fromDate(new Date()));
-      
-      let newNotification: PatientNotificationItem = { id, title, body: description, sent: false, cancel: false, scheduledTimeArray };
-      const newNotifications = [...notifications, newNotification];
-      return newNotifications;
-  }
+  const updateFollowUpNotification = (date: Date, id: string) => {
+    // FollowUp Notification rule & Filtering date less than today
+    let scheduledTimeArray = followUpRules
+      .map((count) => substractDate(date, count))
+      .filter((data) => data >= Timestamp.fromDate(new Date()));
+
+    let newNotification: PatientNotificationItem = {
+      id,
+      title,
+      body: description,
+      sent: false,
+      scheduledTimeArray,
+      source: notificationSource.followUp,
+    };
+    const newNotifications = [...notifications, newNotification];
+    return newNotifications;
+  };
 
   // Add a new follow up to the user profile.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -73,7 +99,12 @@ export const EditFollowUpsRoute = () => {
       newDate.setMinutes(0);
       const newFollowUpId = generateId();
       const firebaseDate = Timestamp.fromDate(newDate);
-      const newFollowUp: FollowUp = { id: newFollowUpId, title, description, date: firebaseDate };
+      const newFollowUp: FollowUp = {
+        id: newFollowUpId,
+        title,
+        description,
+        date: firebaseDate,
+      };
       const newFollowUps = [...followUps, newFollowUp];
 
       // Sort new follow ups by date.
@@ -86,9 +117,11 @@ export const EditFollowUpsRoute = () => {
         }
         return 0;
       });
-      
+
       await updateDoc(patient.profileRef, { followUps: newFollowUps });
-      await updateDoc(patient.notificationRef, { notifications: updateFollowUpNotification(newDate, newFollowUpId) });
+      await updateDoc(patient.notificationRef, {
+        notifications: updateFollowUpNotification(newDate, newFollowUpId),
+      });
       resetData();
     } catch (e) {
       alert(
@@ -112,10 +145,14 @@ export const EditFollowUpsRoute = () => {
       const followUpId = newFollowUps[index]?.id;
       newFollowUps.splice(index, 1);
       await updateDoc(patient.profileRef, { followUps: newFollowUps });
-      if(followUpId){
+      if (followUpId) {
         let newNotifications = [...notifications];
-        newNotifications = newNotifications.filter(data => (!data.id || (data.id && data.id !== followUpId)))
-        await updateDoc(patient.notificationRef, { notifications: newNotifications });
+        newNotifications = newNotifications.filter(
+          (data) => !data.id || (data.id && data.id !== followUpId)
+        );
+        await updateDoc(patient.notificationRef, {
+          notifications: newNotifications,
+        });
       }
     } catch (e) {
       alert(
@@ -167,7 +204,7 @@ export const EditFollowUpsRoute = () => {
 
           <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label" htmlFor="followupDescription">
-            Description
+              Description
             </label>
             <Input
               id="followupDescription"
