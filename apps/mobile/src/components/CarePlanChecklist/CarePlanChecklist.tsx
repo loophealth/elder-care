@@ -1,14 +1,19 @@
+import { useMemo } from "react";
 import { usePatient } from "@loophealth/api";
 
 import { Checkbox } from "components/Checkbox";
-import { useCarePlanChecklistItems } from "lib/useCarePlanTodoList";
+import {
+  CarePlanChecklistItem,
+  useCarePlanChecklistItems,
+} from "lib/useCarePlanTodoList";
 
 import "./CarePlanChecklist.css";
 
 import { ReactComponent as DietIcon } from "images/rice-bowl.svg";
 import { ReactComponent as MedicationIcon } from "images/pill.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/walk.svg";
-import { ReactComponent as SuggestedContentIcon } from "images/sun.svg";
+import { ReactComponent as OthersIcon } from "images/sun.svg";
+import { groupBy } from "lodash";
 
 export const CarePlanChecklist = () => {
   const { patient } = usePatient();
@@ -17,46 +22,101 @@ export const CarePlanChecklist = () => {
   const [carePlanChecklistItems, setCarePlanChecklistItems] =
     useCarePlanChecklistItems(carePlan);
 
-  const onCheck = (index: number) => {
-    const newCarePlanChecklistItems = [...carePlanChecklistItems];
-    newCarePlanChecklistItems[index].isDone =
-      !newCarePlanChecklistItems[index].isDone;
+  const onCheck = (id: string) => {
+    let newCarePlanChecklistItems = [...carePlanChecklistItems];
+    newCarePlanChecklistItems = newCarePlanChecklistItems.map((item: any) => {
+      if (item.id === id) {
+        item["isDone"] = !item["isDone"];
+      }
+      return item;
+    });
     setCarePlanChecklistItems(newCarePlanChecklistItems);
+  };
+
+  const getGroupedChecklistItem: any = useMemo(() => {
+    return carePlanChecklistItems
+      ? groupBy(carePlanChecklistItems, "reminder")
+      : [];
+  }, [carePlanChecklistItems]);
+
+  const convertToEmbedUrl = (url: string) => {
+    return url.replace("watch?v=", "embed/").replace("&t", "?start");
   };
 
   return (
     <div className="CarePlanChecklist">
       <div className="CarePlanChecklist__Title">Your care plan</div>
-      <div className="Utils__Label CarePlanChecklist__TodayLabel">Today</div>
-      <div className="CarePlanChecklist__Items">
-        {carePlanChecklistItems.map((item, index) => {
-          const icon = icons.get(item.category);
+      {Object.keys(getGroupedChecklistItem).map((data: string) => (
+        <div key={data}>
+          <div className="Utils__Label CarePlanChecklist__TodayLabel">
+            {data.toUpperCase()}
+          </div>
+          <div className="CarePlanChecklist__Items">
+            {getGroupedChecklistItem[data].map(
+              (item: CarePlanChecklistItem, index: number) => {
+                const icon = icons.get(item.category) || "";
 
-          return (
-            <label
-              key={item.recommendation}
-              className="CarePlanChecklist__Items__Item"
-            >
-              <Checkbox
-                type="checkbox"
-                className="CarePlanChecklist__Items__Item__Checkbox"
-                checked={item.isDone}
-                onChange={() => onCheck(index)}
-              />
+                return (
+                  <label
+                    key={item.recommendation}
+                    className="CarePlanChecklist__Items__Item"
+                  >
+                    <Checkbox
+                      type="checkbox"
+                      className="CarePlanChecklist__Items__Item__Checkbox"
+                      checked={item.isDone}
+                      onChange={() => onCheck(item.id)}
+                    />
+                    <div>
+                      <div className="CarePlanChecklist__Items__Item__Name">
+                        {item.recommendation}
+                      </div>
+                      {item.details ? (
+                        <div className="CarePlanChecklist__Items__Item__Description">
+                          {item.details}
+                        </div>
+                      ) : null}
+                    </div>
+                    {icon}
+                  </label>
+                );
+              }
+            )}
+          </div>
+        </div>
+      ))}
+      <div className="CarePlanChecklist__Container_Margin">
+        {carePlan?.suggestedContent.map((item) => (
+          <div
+            key={item.recommendation}
+            className="CarePlanChecklist__Items CarePlanChecklist__Items_Margin"
+          >
+            <label className="CarePlanChecklist__Items__Item">
               <div>
                 <div className="CarePlanChecklist__Items__Item__Name">
                   {item.recommendation}
                 </div>
-                {item.details ? (
+                {item.link ? (
                   <div className="CarePlanChecklist__Items__Item__Description">
-                    {item.details}
+                    {item.link.indexOf("youtube") !== -1 ? (
+                      <iframe
+                        title="Loop health video"
+                        src={convertToEmbedUrl(item.link)}
+                        width={window.innerWidth}
+                        height={0.57 * window.innerWidth}
+                        allowFullScreen={true}
+                        loading="eager"
+                        seamless={true}
+                      />
+                    ) : (
+                      <a href={item.link}>{"Open Link"}</a>
+                    )}
                   </div>
                 ) : null}
               </div>
-              {icon}
             </label>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -72,5 +132,5 @@ const icons = new Map([
     "physicalActivity",
     <PhysicalActivityIcon className="CarePlanChecklist__Items__Item__Icon" />,
   ],
-  ["suggestedContent", <SuggestedContentIcon className="CarePlanChecklist__Items__Item__Icon" />],
+  ["others", <OthersIcon className="CarePlanChecklist__Items__Item__Icon" />],
 ]);

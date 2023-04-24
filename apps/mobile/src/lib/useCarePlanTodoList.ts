@@ -16,6 +16,13 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   const [carePlanChecklistItems, setCarePlanChecklistItems] = useState<
     CarePlanChecklistItem[]
   >(() => {
+    const reminderLookup: any = {
+      morning: 0,
+      afternoon: 1,
+      evening: 2,
+      night: 3,
+      others: 4,
+    };
     // Find existing items in localStorage.
     const existingChecklistJson = window.localStorage.getItem(
       CHECKLIST_LOCAL_STORAGE_KEY
@@ -32,8 +39,16 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
       carePlan?.diet.map(extendItem("diet")),
       carePlan?.medication.map(extendItem("medication")),
       carePlan?.physicalActivity.map(extendItem("physicalActivity")),
-      carePlan?.suggestedContent.map(extendItem("suggestedContent"))
+      carePlan?.others.map(extendItem("others"))
+      // carePlan?.suggestedContent.map(extendItem("suggestedContent"))
     ).filter((item) => !!item) as CarePlanChecklistItem[];
+
+    //Sort based on time
+    passedInItems.sort((a: CarePlanChecklistItem, b: CarePlanChecklistItem) => {
+      const aReminder = a.reminder as string,
+        bReminder = b.reminder as string;
+      return reminderLookup[aReminder] - reminderLookup[bReminder];
+    });
 
     // Merge the existing items with the passed-in items. If an item exists in
     // both, use the existing item. If an item exists only in the passed-in
@@ -44,7 +59,10 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
         (existingItem) =>
           existingItem.recommendation === passedInItem.recommendation &&
           existingItem.category === passedInItem.category &&
-          existingItem.details === passedInItem.details
+          existingItem.details === passedInItem.details &&
+          existingItem.reminder === passedInItem.reminder &&
+          existingItem.id === passedInItem.id &&
+          existingItem.link === passedInItem.link
       );
       if (existingItem) {
         return existingItem;
@@ -121,11 +139,18 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   return [carePlanChecklistItems, setAndPersistCarePlanChecklist] as const;
 };
 
-const extendItem = (category: string) => (item: CarePlanItem) => ({
-  ...item,
-  category,
-  isDone: false,
-});
+const extendItem = (category: string) => (item: CarePlanItem) => {
+  if (category == "others") {
+    return {
+      ...item,
+      category,
+      isDone: false,
+      reminder: category,
+    };
+  } else {
+    return { ...item, category, isDone: false };
+  }
+};
 
 const hasDateChanged = () => {
   const lastModifiedString = window.localStorage.getItem(

@@ -37,6 +37,7 @@ export const HomeRoute = () => {
         </div>
 
         <div className="HomeRoute__FollowUps">
+          <div className="CarePlanChecklist__Title">Upcoming</div>
           {/* TODO: extract this list into a separate component */}
           {futureFollowUps?.map((followUp) => (
             <div

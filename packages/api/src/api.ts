@@ -11,7 +11,12 @@ import {
 } from "firebase/firestore";
 
 import { db } from "./firebaseEntities";
-import { CarePlan, HealthReport, PatientNotification, UserProfile } from "./types";
+import {
+  CarePlan,
+  HealthReport,
+  PatientNotification,
+  UserProfile,
+} from "./types";
 import {
   ExcelHealthReport,
   toHealthReport,
@@ -69,17 +74,14 @@ export const findHealthReport = async (
     where("phoneNumber", "==", phoneNumber)
   );
   const snapshot = await getDocs(q);
-  const reports = snapshot.docs.map((doc) => doc.data() as HealthReport);
+  const reports = snapshot.docs
+    .map((doc) => doc.data() as HealthReport)
+    .sort((a: any, b: any) => b.createdOn.toDate() - a.createdOn.toDate());
 
   if (reports.length === 0) {
     throw new ApiError(
       "No report found with that phone number",
       ApiErrorCode.NotFound
-    );
-  } else if (reports.length > 1) {
-    throw new ApiError(
-      "Multiple reports found with that phone number, please contact support",
-      ApiErrorCode.MultipleFound
     );
   }
 
@@ -248,6 +250,7 @@ export const findOrCreateCarePlan = async (
         physicalActivity: [],
         medication: [],
         suggestedContent: [],
+        others: [],
       });
       return carePlan;
     }
@@ -259,17 +262,20 @@ export const findOrCreateCarePlan = async (
 /**
  * Update user with registered fcm token.
  */
-export const updateUserToken = async (phoneNumber: string, token: string): Promise<void> => {
-  if(!phoneNumber) return;
+export const updateUserToken = async (
+  phoneNumber: string,
+  token: string
+): Promise<void> => {
+  if (!phoneNumber) return;
   try {
-    const {ref, data} = await findUserProfile(phoneNumber);
+    const { ref, data } = await findUserProfile(phoneNumber);
     //Avoiding un-necessary update
-    if(data?.fcmToken && data?.fcmToken === token) return;
+    if (data?.fcmToken && data?.fcmToken === token) return;
     await updateDoc(ref, {
       fcmToken: token,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
-  } catch(error: any) {
+  } catch (error: any) {
     throw error;
   }
 };
@@ -285,7 +291,9 @@ export const findNotification = async (
     where("phoneNumber", "==", phoneNumber)
   );
   const snapshot = await getDocs(q);
-  const notifications = snapshot.docs.map((doc) => doc.data() as PatientNotification);
+  const notifications = snapshot.docs.map(
+    (doc) => doc.data() as PatientNotification
+  );
 
   if (notifications.length === 0) {
     throw new ApiError(

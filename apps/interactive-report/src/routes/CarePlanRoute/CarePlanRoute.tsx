@@ -60,13 +60,21 @@ export const CarePlanRoute = () => {
         </div>
         <div className="CarePlanRoute__CategoryList">
           <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Suggested Content
+            Others
           </h1>
-          <TileList
-            items={carePlan?.suggestedContent ?? []}
-            category="suggestedContent"
-          />
+          <TileList items={carePlan?.others ?? []} category="others" />
         </div>
+        {carePlan?.suggestedContent && carePlan.suggestedContent.length > 0 ? (
+          <div className="CarePlanRoute__CategoryList">
+            <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+              Suggested Content
+            </h1>
+            <TileList
+              items={carePlan?.suggestedContent ?? []}
+              category="suggestedContent"
+            />
+          </div>
+        ) : null}
       </main>
     </>
   );
@@ -87,7 +95,7 @@ const TileList = ({
           title={item.recommendation}
           details={item.details}
           link={item?.link}
-          icon={CATEGORY_ICONS[category]}
+          icon={category !== "suggestedContent" ? CATEGORY_ICONS[category] : ""}
         />
       ))}
       {items.length === 0 ? (

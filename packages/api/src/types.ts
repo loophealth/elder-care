@@ -110,13 +110,15 @@ export interface CarePlan {
   physicalActivity: CarePlanItem[];
   medication: CarePlanItem[];
   suggestedContent: CarePlanItem[];
+  others: CarePlanItem[];
 }
 
 export type CarePlanCategory =
   | "diet"
   | "physicalActivity"
   | "medication"
-  | "suggestedContent";
+  | "suggestedContent"
+  | "others";
 
 export type CarePlanReminder =
   | "morning"
@@ -129,7 +131,8 @@ export type CarePlanFilterCategory =
   | "afternoon"
   | "evening"
   | "night"
-  | "suggestedContent";
+  | "suggestedContent"
+  | "others";
 
 /**
  * A single risk factor for a patient.

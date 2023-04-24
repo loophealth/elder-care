@@ -6,6 +6,7 @@
 }
 
 .CarePlanChecklist__TodayLabel {
+  margin-top: var(--space-xs);
   margin-bottom: var(--space-xs);
 }
 
@@ -46,4 +47,12 @@
   margin-left: auto;
   min-width: var(--space-xl);
   min-height: var(--space-xl);
+}
+
+.CarePlanChecklist__Items_Margin {
+  margin-top: var(--space-xs);
+}
+
+.CarePlanChecklist__Container_Margin {
+  margin-top: var(--space-xl);
 }

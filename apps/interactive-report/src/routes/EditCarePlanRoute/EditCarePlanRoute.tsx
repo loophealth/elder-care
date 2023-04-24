@@ -104,7 +104,7 @@ export const EditCarePlanRoute = () => {
       };
       const newCarePlan = [...carePlan[category], newCarePlanItem];
       await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
-      if (category !== "suggestedContent" && reminder) {
+      if (category !== "suggestedContent" && category !== "others" && reminder) {
         await updateDoc(patient.notificationRef, {
           notifications: updateCarePlanNotification(reminder, newCarePlanId),
         });
@@ -223,6 +223,7 @@ export const EditCarePlanRoute = () => {
               <option value="physicalActivity">Physical Activity</option>
               <option value="medication">Medication</option>
               <option value="suggestedContent">Suggested content</option>
+              <option value="others">Others</option>
             </Select>
           </div>
 
@@ -255,41 +256,40 @@ export const EditCarePlanRoute = () => {
             </div>
           ) : null}
           {category !== "suggestedContent" ? (
-            <>
-              <div className="Utils__VerticalForm__Group">
-                <label className="Utils__Label" htmlFor="details">
-                  Additional info
-                </label>
-                <TextArea
-                  id="details"
-                  value={details}
-                  onChange={(e) => setDetails(e.target.value)}
-                  placeholder="Any additional info (eg. before breakfast)"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className="Utils__VerticalForm__Group">
-                <label className="Utils__Label" htmlFor="reminder">
-                  Set reminder
-                </label>
-                <Select
-                  name="reminder"
-                  id="reminder"
-                  value={reminder}
-                  onChange={(e) =>
-                    setReminder(e.target.value as CarePlanReminder)
-                  }
-                  disabled={isLoading}
-                >
-                  <option value="">Select reminder</option>
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
-                  <option value="night">Night</option>
-                </Select>
-              </div>
-            </>
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="details">
+                Additional info
+              </label>
+              <TextArea
+                id="details"
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+                placeholder="Any additional info (eg. before breakfast)"
+                disabled={isLoading}
+              />
+            </div>
+          ) : null}
+          {category !== "suggestedContent" && category !== "others" ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="reminder">
+                Set reminder
+              </label>
+              <Select
+                name="reminder"
+                id="reminder"
+                value={reminder}
+                onChange={(e) =>
+                  setReminder(e.target.value as CarePlanReminder)
+                }
+                disabled={isLoading}
+              >
+                <option value="">Select reminder</option>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+                <option value="night">Night</option>
+              </Select>
+            </div>
           ) : null}
 
           <div className="Utils__VerticalForm__ButtonsContainer">
@@ -321,13 +321,15 @@ export const EditCarePlanRoute = () => {
               <option value="evening">Evening</option>
               <option value="night">Night</option>
               <option value="suggestedContent">Suggested content</option>
+              <option value="others">Others</option>
             </Select>
           </div>
           <div className="Utils__VerticalForm__Group">
             <IconTextTileList>
               {carePlan &&
               filterCategory &&
-              filterCategory !== "suggestedContent" ? (
+              filterCategory !== "suggestedContent" &&
+              filterCategory !== "others" ? (
                 getFilteredData(carePlan, filterCategory)
               ) : carePlan &&
                 filterCategory &&
@@ -338,8 +340,19 @@ export const EditCarePlanRoute = () => {
                       key={`${item.recommendation}-${index}`}
                       title={item.recommendation}
                       link={item?.link}
-                      icon={CATEGORY_ICONS.suggestedContent}
                       onDelete={() => onDelete("suggestedContent", item.id)}
+                    />
+                  ))}
+                </>
+              ) : carePlan && filterCategory && filterCategory === "others" ? (
+                <>
+                  {carePlan.others?.map((item, index) => (
+                    <IconTextTile
+                      key={`${item.recommendation}-${index}`}
+                      title={item.recommendation}
+                      link={item?.link}
+                      icon={CATEGORY_ICONS.others}
+                      onDelete={() => onDelete("others", item.id)}
                     />
                   ))}
                 </>
