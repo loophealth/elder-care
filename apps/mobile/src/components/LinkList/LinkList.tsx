@@ -18,8 +18,8 @@ interface LinkListProps {
 export const LinkList = ({ links }: LinkListProps) => {
   return (
     <ul className="LinkList">
-      {links.map(({ href, title, description, icon }) => (
-        <li key={href} className="LinkList__Item">
+      {links.map(({ href, title, description, icon }, index: number) => (
+        <li key={index} className="LinkList__Item">
           <a href={href} className="LinkList__Item__Link">
             <div className="LinkList__Item__Link__Icon">
               {icon || <DefaultIcon />}

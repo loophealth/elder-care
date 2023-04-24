@@ -10,8 +10,8 @@ admin.initializeApp(firebaseConfig);
 const notificationCollection = "notification";
 const profileCollection = "userProfiles";
 
-// Creating a pubsub function with name `taskRunner`, memory `512MB` and schedule every 30 min between 9 am to 10 pm
-exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/60 9-22 * * *').timeZone('Asia/Kolkata').onRun(async (context: any) => {
+// Creating a pubsub function with name `taskRunner`, memory `512MB` and schedule every 31 min between 7 am to 10 pm
+exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/31 7-22 * * *').timeZone('Asia/Kolkata').onRun(async (context: any) => {
 
     // Current Timestamp
     const firebaseCurrentTime = admin.firestore.Timestamp.now();
@@ -35,9 +35,6 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/6
             if (isScheduledNotif || isRecurringNotif || isScheduledArrayNotif) {
                 // destruct data from firebase document
                 const { body, title } = notification;
-
-                const notificationType = isScheduledNotif ? "Scheduled Notification" : isRecurringNotif ? "Recurring Notification" : "FollowUp Notification";
-                console.log("Notification Type => ", notificationType);
 
                 let tempDateTime = notification?.scheduledTime || notification?.scheduledTimeArray?.[0];
                 const sentTime = notification?.["sentTimestamp"] ? new Date(notification?.["sentTimestamp"]) : null;
@@ -69,7 +66,6 @@ exports.taskRunner = functions.runWith({ memory: '512MB' }).pubsub.schedule('*/6
                         },
                         token: fcmToken
                     })
-                    console.log('Notification Sent');
 
                     if (job.length != 0) {
                         newNotifications = [...notifications];
