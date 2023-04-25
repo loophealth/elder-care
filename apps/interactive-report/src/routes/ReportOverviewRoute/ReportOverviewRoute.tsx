@@ -4,6 +4,7 @@ import { ReportOverviewGrid } from "@loophealth/ui";
 import { Navbar } from "components";
 
 import "./ReportOverviewRoute.css";
+import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const ReportOverviewRoute = () => {
   const { patient } = usePatient();
@@ -12,14 +13,20 @@ export const ReportOverviewRoute = () => {
     <>
       <Navbar />
       <main className="ReportOverviewRoute">
-        <ReportOverviewGrid
-          categories={patient?.report.categories || []}
-          className="ReportOverviewRoute__ReportOverviewGrid"
-        />
-        <ReportOverviewRouteBasicInfo
-          name={patient?.profile.fullName || "Unknown"}
-          age={patient?.profile.age || "Unknown"}
-        />
+        {!patient ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <ReportOverviewGrid
+              categories={patient?.report.categories || []}
+              className="ReportOverviewRoute__ReportOverviewGrid"
+            />
+            <ReportOverviewRouteBasicInfo
+              name={patient?.profile.fullName || "Unknown"}
+              age={patient?.profile.age || "Unknown"}
+            />
+          </>
+        )}
       </main>
     </>
   );

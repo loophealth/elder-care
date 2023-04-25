@@ -15,6 +15,9 @@ import {
 import { Button, Input, FilePicker } from "components";
 
 import "./HomeRoute.css";
+import { useLocalStorage } from "lib/useLocalStorage";
+
+export const PATIENT_PHONE_NUMBER_KEY = "PATIENT_PHONE_NUMBER_KEY";
 
 export const HomeRoute = () => {
   return (
@@ -41,6 +44,7 @@ const OpenReportTile = () => {
     patient || null
   );
 
+  const [, setValue] = useLocalStorage(PATIENT_PHONE_NUMBER_KEY, "")
   useEffect(() => {
     // When shouldRedirect transitions to true, and we have a healthReport,
     // redirect to the report page.
@@ -60,10 +64,12 @@ const OpenReportTile = () => {
         phoneNumberWithCountryCode
       );
       setFoundPatient(newPatient);
+      setValue(phoneNumber);
     } catch (e: any) {
       const message = isApiError(e)
         ? e.message
         : "An unknown error occurred, please contact support";
+      setValue("");
       alert(message);
       console.error(e);
     } finally {
@@ -78,6 +84,7 @@ const OpenReportTile = () => {
     setIsSearching(false);
     setFoundPatient(null);
     setPatient(null);
+    setValue("");
   };
 
   // Open the report for the found patient and redirect to the report page.

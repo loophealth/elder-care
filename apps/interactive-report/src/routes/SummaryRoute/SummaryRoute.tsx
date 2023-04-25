@@ -6,6 +6,7 @@ import { CardIndicator, SummaryCard } from "@loophealth/ui";
 import { Navbar } from "components";
 
 import "./SummaryRoute.css";
+import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const SummaryRoute = () => {
   const { patient } = usePatient();
@@ -39,49 +40,55 @@ export const SummaryRoute = () => {
   return (
     <>
       <Navbar />
-      <main className="SummaryRoute">
-        <SummaryCard
-          summary={null}
-          iconPath="/img/back.svg"
-          onClick={onBackClick}
-        />
-        <div className="SummaryRoute__ActiveCard">
-          <SummaryCard
-            summary={patient?.report.summary[currentCard] || null}
-            headerElt={
-              <div className="SummaryRoute__ActiveCard__Header">
-                <button
-                  className="SummaryRoute__ActiveCard__Header__Button"
-                  onClick={onBackClick}
-                >
-                  <img
-                    src="/img/back.svg"
-                    alt="Back button"
-                    className="SummaryRoute__ActiveCard__Header__Button__Icon"
-                  />
-                </button>
-                {cardIndicatorElt}
-                <button
-                  className="SummaryRoute__ActiveCard__Header__Button"
-                  onClick={onForwardClick}
-                >
-                  <img
-                    src="/img/forward.svg"
-                    alt="Forward button"
-                    className="SummaryRoute__ActiveCard__Header__Button__Icon"
-                  />
-                </button>
-              </div>
-            }
-          />
-          {cardIndicatorElt}
+      {!patient?.report ? (
+        <div className="CareLoaderMargin">
+          <LoadingSpinner />
         </div>
-        <SummaryCard
-          summary={null}
-          iconPath="/img/forward.svg"
-          onClick={onForwardClick}
-        />
-      </main>
+      ) : (
+        <main className="SummaryRoute">
+          <SummaryCard
+            summary={null}
+            iconPath="/img/back.svg"
+            onClick={onBackClick}
+          />
+          <div className="SummaryRoute__ActiveCard">
+            <SummaryCard
+              summary={patient?.report.summary[currentCard] || null}
+              headerElt={
+                <div className="SummaryRoute__ActiveCard__Header">
+                  <button
+                    className="SummaryRoute__ActiveCard__Header__Button"
+                    onClick={onBackClick}
+                  >
+                    <img
+                      src="/img/back.svg"
+                      alt="Back button"
+                      className="SummaryRoute__ActiveCard__Header__Button__Icon"
+                    />
+                  </button>
+                  {cardIndicatorElt}
+                  <button
+                    className="SummaryRoute__ActiveCard__Header__Button"
+                    onClick={onForwardClick}
+                  >
+                    <img
+                      src="/img/forward.svg"
+                      alt="Forward button"
+                      className="SummaryRoute__ActiveCard__Header__Button__Icon"
+                    />
+                  </button>
+                </div>
+              }
+            />
+            {cardIndicatorElt}
+          </div>
+          <SummaryCard
+            summary={null}
+            iconPath="/img/forward.svg"
+            onClick={onForwardClick}
+          />
+        </main>
+      )}
     </>
   );
 };

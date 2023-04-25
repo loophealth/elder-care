@@ -12,6 +12,7 @@ import { Navbar, IconTextTile } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./CarePlanRoute.css";
+import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const CarePlanRoute = () => {
   const { patient } = usePatient();
@@ -36,46 +37,54 @@ export const CarePlanRoute = () => {
   return (
     <>
       <Navbar />
-      <main className="CarePlanRoute">
-        <div className="CarePlanRoute__CategoryList">
-          <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Diet
-          </h1>
-          <TileList items={carePlan?.diet ?? []} category="diet" />
-        </div>
-        <div className="CarePlanRoute__CategoryList">
-          <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Physical Activity
-          </h1>
-          <TileList
-            items={carePlan?.physicalActivity ?? []}
-            category="physicalActivity"
-          />
-        </div>
-        <div className="CarePlanRoute__CategoryList">
-          <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Medication
-          </h1>
-          <TileList items={carePlan?.medication ?? []} category="medication" />
-        </div>
-        <div className="CarePlanRoute__CategoryList">
-          <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-            Others
-          </h1>
-          <TileList items={carePlan?.others ?? []} category="others" />
-        </div>
-        {carePlan?.suggestedContent && carePlan.suggestedContent.length > 0 ? (
+      {!carePlan ? (
+        <div className="CareLoaderMargin"><LoadingSpinner /></div>
+      ) : (
+        <main className="CarePlanRoute">
           <div className="CarePlanRoute__CategoryList">
             <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-              Suggested Content
+              Diet
+            </h1>
+            <TileList items={carePlan?.diet ?? []} category="diet" />
+          </div>
+          <div className="CarePlanRoute__CategoryList">
+            <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+              Physical Activity
             </h1>
             <TileList
-              items={carePlan?.suggestedContent ?? []}
-              category="suggestedContent"
+              items={carePlan?.physicalActivity ?? []}
+              category="physicalActivity"
             />
           </div>
-        ) : null}
-      </main>
+          <div className="CarePlanRoute__CategoryList">
+            <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+              Medication
+            </h1>
+            <TileList
+              items={carePlan?.medication ?? []}
+              category="medication"
+            />
+          </div>
+          <div className="CarePlanRoute__CategoryList">
+            <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+              Others
+            </h1>
+            <TileList items={carePlan?.others ?? []} category="others" />
+          </div>
+          {carePlan?.suggestedContent &&
+          carePlan.suggestedContent.length > 0 ? (
+            <div className="CarePlanRoute__CategoryList">
+              <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+                Suggested Content
+              </h1>
+              <TileList
+                items={carePlan?.suggestedContent ?? []}
+                category="suggestedContent"
+              />
+            </div>
+          ) : null}
+        </main>
+      )}
     </>
   );
 };

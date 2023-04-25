@@ -34,3 +34,7 @@
     margin-bottom: var(--space-2xs);
   }
 }
+
+.CareLoaderMargin {
+  margin-top: var(--space-xl);
+}
