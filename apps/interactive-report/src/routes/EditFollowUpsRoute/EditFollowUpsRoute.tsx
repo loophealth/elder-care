@@ -239,3 +239,5 @@ export const EditFollowUpsRoute = () => {
     />
   );
 };
+
+export default EditFollowUpsRoute;

@@ -364,3 +364,5 @@ export const EditCarePlanRoute = () => {
     />
   );
 };
+
+export default EditCarePlanRoute;

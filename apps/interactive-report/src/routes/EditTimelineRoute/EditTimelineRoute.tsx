@@ -180,3 +180,5 @@ export const EditTimelineRoute = () => {
     />
   );
 };
+
+export default EditTimelineRoute;

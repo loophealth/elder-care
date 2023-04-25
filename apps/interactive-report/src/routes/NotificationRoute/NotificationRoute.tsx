@@ -281,3 +281,5 @@ export const NotificationRoute = () => {
     />
   );
 };
+
+export default NotificationRoute;

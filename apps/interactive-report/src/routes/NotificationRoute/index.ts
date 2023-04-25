@@ -1,1 +1,0 @@
-export { NotificationRoute } from "./NotificationRoute";

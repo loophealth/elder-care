@@ -12,3 +12,5 @@ export const TimelineRoute = () => {
     </>
   );
 };
+
+export default TimelineRoute;

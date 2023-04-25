@@ -132,7 +132,9 @@ export const router = createBrowserRouter([
         path: "/admin/notification",
         element: (
           <ProtectedRoute
-            component={<RequirePatientRoute component={<NotificationRoute />} />}
+            component={
+              <RequirePatientRoute component={<NotificationRoute />} />
+            }
           />
         ),
       },

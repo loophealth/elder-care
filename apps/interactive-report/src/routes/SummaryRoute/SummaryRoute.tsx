@@ -92,3 +92,5 @@ export const SummaryRoute = () => {
     </>
   );
 };
+
+export default SummaryRoute;

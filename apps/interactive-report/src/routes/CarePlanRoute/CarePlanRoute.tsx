@@ -117,3 +117,4 @@ const TileList = ({
     </>
   );
 };
+export default CarePlanRoute;

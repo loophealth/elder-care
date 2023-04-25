@@ -39,3 +39,5 @@ export const ReportDetailsRoute = () => {
     </>
   );
 };
+
+export default ReportDetailsRoute;

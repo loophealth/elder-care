@@ -58,3 +58,5 @@ const ReportOverviewRouteBasicInfo = ({
     </div>
   );
 };
+
+export default ReportOverviewRoute;

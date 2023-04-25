@@ -1,1 +1,0 @@
-export { CarePlanRoute } from "./CarePlanRoute";

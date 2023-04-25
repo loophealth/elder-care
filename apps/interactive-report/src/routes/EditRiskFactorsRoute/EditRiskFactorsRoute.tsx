@@ -194,3 +194,5 @@ export const EditRiskFactorsRoute = () => {
     />
   );
 };
+
+export default EditRiskFactorsRoute;
