@@ -41,7 +41,7 @@ export const SummaryRoute = () => {
     <>
       <Navbar />
       {!patient?.report ? (
-        <div className="CareLoaderMargin">
+        <div className="SummaryLoaderMargin">
           <LoadingSpinner />
         </div>
       ) : (
