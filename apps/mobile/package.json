@@ -9,7 +9,7 @@
     "test": "craco test",
     "capacitor_live_server": "node bin/capacitor_live_server.js",
     "emulator": "firebase emulators:start",
-    "deploy": "firebase deploy --only hosting:elder-care-mobile"
+    "deploy": "craco build && firebase deploy --only hosting:elder-care-mobile"
   },
   "browserslist": {
     "production": [

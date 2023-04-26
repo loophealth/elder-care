@@ -13,13 +13,13 @@ export const CareRoute = () => {
       <LinkList
         links={[
           {
-            href: "https://wa.me/919999999999",
+            href: "https://www.consult.loophealth.com/app/conversation",
             title: "Medical advisor",
             description: "Ask your medical advisor anything about your health",
             icon: <img src="/img/doctor.png" alt="A doctor" />,
           },
           {
-            href: "https://wa.me/919999999999",
+            href: "https://www.consult.loophealth.com/app/conversation",
             title: "Contact us",
             description: "Ask any questions or queries about Loop and the app",
             icon: <UserIcon />,

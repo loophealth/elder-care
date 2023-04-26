@@ -140,7 +140,7 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
 };
 
 const extendItem = (category: string) => (item: CarePlanItem) => {
-  if (category == "others") {
+  if (category === "others") {
     return {
       ...item,
       category,

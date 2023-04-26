@@ -57,7 +57,7 @@ export const requestForToken = (
     .then((currentToken) => {
       if (currentToken) {
         // Perform any other neccessary action with the token
-        console.log("current token for client: ", currentToken);
+        // console.log("current token for client: ", currentToken);
         setTokenFound(currentToken);
       } else {
         // Show permission request UI
