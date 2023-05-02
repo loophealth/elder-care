@@ -12,79 +12,87 @@ export interface CarePlanChecklistItem extends CarePlanItem {
 const CHECKLIST_LOCAL_STORAGE_KEY = "carePlanChecklist";
 const LAST_MODIFIED_LOCAL_STORAGE_KEY = "carePlanChecklistLastModified";
 
+const setChecklistState = (carePlan: CarePlan) => {
+  const reminderLookup: any = {
+    morning: 0,
+    afternoon: 1,
+    evening: 2,
+    night: 3,
+    others: 4,
+  };
+  // Find existing items in localStorage.
+  const existingChecklistJson = window.localStorage.getItem(
+    CHECKLIST_LOCAL_STORAGE_KEY
+  );
+  let existingChecklist = [] as CarePlanChecklistItem[];
+  if (existingChecklistJson) {
+    existingChecklist = JSON.parse(
+      existingChecklistJson
+    ) as CarePlanChecklistItem[];
+  }
+
+  // Add metadata to items passed in from the user.
+  const passedInItems = concat(
+    carePlan?.diet.map(extendItem("diet")),
+    carePlan?.medication.map(extendItem("medication")),
+    carePlan?.physicalActivity.map(extendItem("physicalActivity")),
+    carePlan?.others.map(extendItem("others"))
+    // carePlan?.suggestedContent.map(extendItem("suggestedContent"))
+  ).filter((item) => !!item) as CarePlanChecklistItem[];
+
+  //Sort based on time
+  passedInItems.sort((a: CarePlanChecklistItem, b: CarePlanChecklistItem) => {
+    const aReminder = a.reminder as string,
+      bReminder = b.reminder as string;
+    return reminderLookup[aReminder] - reminderLookup[bReminder];
+  });
+
+  // Merge the existing items with the passed-in items. If an item exists in
+  // both, use the existing item. If an item exists only in the passed-in
+  // items, use the passed-in item. If an item exists only in the existing
+  // items, discard it.
+  let mergedItems = passedInItems.map((passedInItem) => {
+    const existingItem = existingChecklist.find(
+      (existingItem) =>
+        existingItem.recommendation === passedInItem.recommendation &&
+        existingItem.category === passedInItem.category &&
+        existingItem.details === passedInItem.details &&
+        existingItem.reminder === passedInItem.reminder &&
+        existingItem.id === passedInItem.id &&
+        existingItem.link === passedInItem.link
+    );
+    if (existingItem) {
+      return existingItem;
+    } else {
+      return passedInItem;
+    }
+  });
+
+  // If the modified date has changed, reset all items to not done.
+  if (hasDateChanged()) {
+    mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
+  }
+
+  // Store the merged items back into localStorage.
+  window.localStorage.setItem(
+    CHECKLIST_LOCAL_STORAGE_KEY,
+    JSON.stringify(mergedItems)
+  );
+  // Return the merged items.
+  return mergedItems;
+};
+
 export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   const [carePlanChecklistItems, setCarePlanChecklistItems] = useState<
     CarePlanChecklistItem[]
-  >(() => {
-    const reminderLookup: any = {
-      morning: 0,
-      afternoon: 1,
-      evening: 2,
-      night: 3,
-      others: 4,
-    };
-    // Find existing items in localStorage.
-    const existingChecklistJson = window.localStorage.getItem(
-      CHECKLIST_LOCAL_STORAGE_KEY
-    );
-    let existingChecklist = [] as CarePlanChecklistItem[];
-    if (existingChecklistJson) {
-      existingChecklist = JSON.parse(
-        existingChecklistJson
-      ) as CarePlanChecklistItem[];
+  >([]);
+
+  useEffect(() => {
+    if (carePlan) {
+      const data = setChecklistState(carePlan);
+      setCarePlanChecklistItems(data);
     }
-
-    // Add metadata to items passed in from the user.
-    const passedInItems = concat(
-      carePlan?.diet.map(extendItem("diet")),
-      carePlan?.medication.map(extendItem("medication")),
-      carePlan?.physicalActivity.map(extendItem("physicalActivity")),
-      carePlan?.others.map(extendItem("others"))
-      // carePlan?.suggestedContent.map(extendItem("suggestedContent"))
-    ).filter((item) => !!item) as CarePlanChecklistItem[];
-
-    //Sort based on time
-    passedInItems.sort((a: CarePlanChecklistItem, b: CarePlanChecklistItem) => {
-      const aReminder = a.reminder as string,
-        bReminder = b.reminder as string;
-      return reminderLookup[aReminder] - reminderLookup[bReminder];
-    });
-
-    // Merge the existing items with the passed-in items. If an item exists in
-    // both, use the existing item. If an item exists only in the passed-in
-    // items, use the passed-in item. If an item exists only in the existing
-    // items, discard it.
-    let mergedItems = passedInItems.map((passedInItem) => {
-      const existingItem = existingChecklist.find(
-        (existingItem) =>
-          existingItem.recommendation === passedInItem.recommendation &&
-          existingItem.category === passedInItem.category &&
-          existingItem.details === passedInItem.details &&
-          existingItem.reminder === passedInItem.reminder &&
-          existingItem.id === passedInItem.id &&
-          existingItem.link === passedInItem.link
-      );
-      if (existingItem) {
-        return existingItem;
-      } else {
-        return passedInItem;
-      }
-    });
-
-    // If the modified date has changed, reset all items to not done.
-    if (hasDateChanged()) {
-      mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
-    }
-
-    // Store the merged items back into localStorage.
-    window.localStorage.setItem(
-      CHECKLIST_LOCAL_STORAGE_KEY,
-      JSON.stringify(mergedItems)
-    );
-
-    // Return the merged items.
-    return mergedItems;
-  });
+  }, [carePlan]);
 
   const setAndPersistCarePlanChecklist = (
     newCarePlanChecklist: CarePlanChecklistItem[]
@@ -167,4 +175,9 @@ const hasDateChanged = () => {
   const todayDateString = formatISO(new Date(), { representation: "date" });
 
   return lastModifiedDateString !== todayDateString;
+};
+
+export const resetLocalStorageOnLogout = () => {
+  window.localStorage.removeItem(CHECKLIST_LOCAL_STORAGE_KEY);
+  window.localStorage.removeItem(LAST_MODIFIED_LOCAL_STORAGE_KEY);
 };

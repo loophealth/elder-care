@@ -1,12 +1,11 @@
 import { useState } from "react";
 
 import { usePatient } from "@loophealth/api";
-import { CardIndicator, SummaryCard } from "@loophealth/ui";
+import { CardIndicator, LoadingSpinner, SummaryCard } from "@loophealth/ui";
 
 import { Navbar } from "components";
 
 import "./SummaryRoute.css";
-import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const SummaryRoute = () => {
   const { patient } = usePatient();

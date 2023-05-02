@@ -5,9 +5,7 @@ import {
   usePatient,
   CarePlan,
   CarePlanCategory,
-  CarePlanFilterCategory,
   CarePlanReminder,
-  CarePlanItem,
   PatientNotificationItem,
 } from "@loophealth/api";
 
@@ -29,11 +27,7 @@ export const EditCarePlanRoute = () => {
   const { patient } = usePatient();
 
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
-
   const [category, setCategory] = useState<CarePlanCategory | "">("");
-  const [filterCategory, setFilterCategory] = useState<
-    CarePlanFilterCategory | ""
-  >("");
   const [recommendation, setRecommendation] = useState("");
   const [details, setDetails] = useState("");
   const [reminder, setReminder] = useState<CarePlanReminder | "">("");
@@ -93,8 +87,10 @@ export const EditCarePlanRoute = () => {
     }
 
     setIsLoading(true);
-    const newCarePlanId = generateId();
+
     try {
+      const newCarePlanId = generateId();
+
       const newCarePlanItem = {
         id: newCarePlanId,
         recommendation,
@@ -102,9 +98,17 @@ export const EditCarePlanRoute = () => {
         reminder,
         link,
       };
-      const newCarePlan = [...carePlan[category], newCarePlanItem];
+      const newCarePlan =
+        category === "prescription"
+          ? [newCarePlanItem]
+          : [...carePlan[category], newCarePlanItem];
       await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
-      if (category !== "suggestedContent" && category !== "others" && reminder) {
+      if (
+        category !== "suggestedContent" &&
+        category !== "others" &&
+        category !== "prescription" &&
+        reminder
+      ) {
         await updateDoc(patient.notificationRef, {
           notifications: updateCarePlanNotification(reminder, newCarePlanId),
         });
@@ -158,46 +162,6 @@ export const EditCarePlanRoute = () => {
     }
   };
 
-  const getFilteredData = (
-    carePlan: CarePlan,
-    filterCategory: CarePlanFilterCategory
-  ) => {
-    const filteredDiet = carePlan.diet
-      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
-      .map((item: CarePlanItem, index: number) => (
-        <IconTextTile
-          key={`${item.recommendation}-${index}`}
-          title={item.recommendation}
-          details={item.details}
-          icon={CATEGORY_ICONS.diet}
-          onDelete={() => onDelete("diet", item?.id)}
-        />
-      ));
-    const filteredPhysicalActivity = carePlan.physicalActivity
-      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
-      .map((item: CarePlanItem, index: number) => (
-        <IconTextTile
-          key={`${item.recommendation}-${index}`}
-          title={item.recommendation}
-          details={item.details}
-          icon={CATEGORY_ICONS.physicalActivity}
-          onDelete={() => onDelete("physicalActivity", item?.id)}
-        />
-      ));
-    const filteredMedication = carePlan.medication
-      ?.filter((item: CarePlanItem) => item.reminder === filterCategory)
-      .map((item: CarePlanItem, index: number) => (
-        <IconTextTile
-          key={`${item.recommendation}-${index}`}
-          title={item.recommendation}
-          details={item.details}
-          icon={CATEGORY_ICONS.medication}
-          onDelete={() => onDelete("medication", item?.id)}
-        />
-      ));
-    return [...filteredDiet, filteredPhysicalActivity, ...filteredMedication];
-  };
-
   return (
     <AdminEditorLayout
       title="Care Plan"
@@ -222,6 +186,7 @@ export const EditCarePlanRoute = () => {
               <option value="diet">Diet</option>
               <option value="physicalActivity">Physical Activity</option>
               <option value="medication">Medication</option>
+              <option value="prescription">Prescription</option>
               <option value="suggestedContent">Suggested content</option>
               <option value="others">Others</option>
             </Select>
@@ -241,7 +206,7 @@ export const EditCarePlanRoute = () => {
               disabled={isLoading}
             />
           </div>
-          {category === "suggestedContent" ? (
+          {category === "suggestedContent" || category === "prescription" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="link">
                 Enter Link
@@ -255,7 +220,7 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category !== "suggestedContent" ? (
+          {category !== "suggestedContent" && category !== "prescription" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="details">
                 Additional info
@@ -269,7 +234,9 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category !== "suggestedContent" && category !== "others" ? (
+          {category !== "suggestedContent" &&
+          category !== "others" &&
+          category !== "prescription" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="reminder">
                 Set reminder
@@ -300,66 +267,64 @@ export const EditCarePlanRoute = () => {
         </form>
       )}
       renderRight={() => (
-        <div className="Utils__VerticalForm EditCarePlanRoute__Form">
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label Hide_Label" htmlFor="filterCategory">
-              Care Plan for
-            </label>
-            <Select
-              name="filterCategory"
-              id="filterCategory"
-              value={filterCategory}
-              onChange={(e) =>
-                setFilterCategory(e.target.value as CarePlanFilterCategory)
-              }
-              required
-              disabled={isLoading}
-            >
-              <option value="">Show Care Plan for</option>
-              <option value="morning">Morning</option>
-              <option value="afternoon">Afternoon</option>
-              <option value="evening">Evening</option>
-              <option value="night">Night</option>
-              <option value="suggestedContent">Suggested content</option>
-              <option value="others">Others</option>
-            </Select>
-          </div>
-          <div className="Utils__VerticalForm__Group">
-            <IconTextTileList>
-              {carePlan &&
-              filterCategory &&
-              filterCategory !== "suggestedContent" &&
-              filterCategory !== "others" ? (
-                getFilteredData(carePlan, filterCategory)
-              ) : carePlan &&
-                filterCategory &&
-                filterCategory === "suggestedContent" ? (
-                <>
-                  {carePlan.suggestedContent?.map((item, index) => (
-                    <IconTextTile
-                      key={`${item.recommendation}-${index}`}
-                      title={item.recommendation}
-                      link={item?.link}
-                      onDelete={() => onDelete("suggestedContent", item.id)}
-                    />
-                  ))}
-                </>
-              ) : carePlan && filterCategory && filterCategory === "others" ? (
-                <>
-                  {carePlan.others?.map((item, index) => (
-                    <IconTextTile
-                      key={`${item.recommendation}-${index}`}
-                      title={item.recommendation}
-                      link={item?.link}
-                      icon={CATEGORY_ICONS.others}
-                      onDelete={() => onDelete("others", item.id)}
-                    />
-                  ))}
-                </>
-              ) : null}
-            </IconTextTileList>
-          </div>
-        </div>
+        <IconTextTileList>
+          {carePlan ? (
+            <>
+              {carePlan.prescription.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  link={item?.link}
+                  onDelete={() => onDelete("prescription", item.id)}
+                />
+              ))}
+              {carePlan.medication.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  details={item.details}
+                  icon={CATEGORY_ICONS.medication}
+                  onDelete={() => onDelete("medication", item.id)}
+                />
+              ))}
+              {carePlan.diet.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  details={item.details}
+                  icon={CATEGORY_ICONS.diet}
+                  onDelete={() => onDelete("diet", item.id)}
+                />
+              ))}
+              {carePlan.physicalActivity.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  details={item.details}
+                  icon={CATEGORY_ICONS.physicalActivity}
+                  onDelete={() => onDelete("physicalActivity", item.id)}
+                />
+              ))}
+              {carePlan.others.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  details={item.details}
+                  icon={CATEGORY_ICONS.others}
+                  onDelete={() => onDelete("others", item.id)}
+                />
+              ))}
+              {carePlan.suggestedContent.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  link={item?.link}
+                  onDelete={() => onDelete("suggestedContent", item.id)}
+                />
+              ))}
+            </>
+          ) : null}
+        </IconTextTileList>
       )}
     />
   );

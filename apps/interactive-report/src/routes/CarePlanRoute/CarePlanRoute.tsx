@@ -12,7 +12,7 @@ import { Navbar, IconTextTile } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./CarePlanRoute.css";
-import { LoadingSpinner } from "components/LoadingSpinner";
+import { LoadingSpinner } from "@loophealth/ui";
 
 export const CarePlanRoute = () => {
   const { patient } = usePatient();
@@ -38,9 +38,22 @@ export const CarePlanRoute = () => {
     <>
       <Navbar />
       {!carePlan ? (
-        <div className="CareLoaderMargin"><LoadingSpinner /></div>
+        <div className="CareLoaderMargin">
+          <LoadingSpinner />
+        </div>
       ) : (
         <main className="CarePlanRoute">
+          {carePlan?.prescription && carePlan.prescription.length > 0 ? (
+            <div className="CarePlanRoute__CategoryList">
+              <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
+                Prescription
+              </h1>
+              <TileList
+                items={carePlan?.prescription ?? []}
+                category="prescription"
+              />
+            </div>
+          ) : null}
           <div className="CarePlanRoute__CategoryList">
             <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
               Diet
@@ -104,7 +117,11 @@ const TileList = ({
           title={item.recommendation}
           details={item.details}
           link={item?.link}
-          icon={category !== "suggestedContent" ? CATEGORY_ICONS[category] : ""}
+          icon={
+            category !== "suggestedContent" && category !== "prescription"
+              ? CATEGORY_ICONS[category]
+              : ""
+          }
         />
       ))}
       {items.length === 0 ? (

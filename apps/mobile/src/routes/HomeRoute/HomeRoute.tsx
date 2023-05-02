@@ -8,12 +8,17 @@ import { CarePlanChecklist } from "components/CarePlanChecklist";
 import { signOut } from "lib/firebaseHelpers";
 
 import "./HomeRoute.css";
+import { resetLocalStorageOnLogout } from "lib/useCarePlanTodoList";
+import { LoadingSpinner } from "@loophealth/ui";
 
 export const HomeRoute = () => {
-  const { user } = useAuth();
-  const { patient } = usePatient();
+  const { user, setUser } = useAuth();
+  const { patient, setPatient } = usePatient();
 
   const onLogOut = async () => {
+    setUser(null);
+    setPatient(null);
+    resetLocalStorageOnLogout();
     await signOut();
   };
 
@@ -22,7 +27,11 @@ export const HomeRoute = () => {
   );
 
   if (!patient) {
-    return null;
+    return (
+      <div className="LoaderContainer">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
@@ -35,32 +44,36 @@ export const HomeRoute = () => {
           <div className="HomeRoute__Dot HomeRoute__Dot--Active" />
           <CarePlanChecklist />
         </div>
-
-        <div className="HomeRoute__FollowUps">
-          <div className="CarePlanChecklist__Title">Upcoming</div>
-          {/* TODO: extract this list into a separate component */}
-          {futureFollowUps?.map((followUp) => (
-            <div
-              key={followUp.title}
-              className="HomeRoute__FollowUps__FollowUp"
-            >
-              <div className="HomeRoute__Dot HomeRoute__Dot--Inactive" />
-              <div className="Utils__Label HomeRoute__FollowUps__FollowUp__Date">
-                {format(followUp.date.toDate(), "do MMMM, yyyy")}
+        {futureFollowUps && futureFollowUps?.length !== 0 ? (
+          <div className="HomeRoute__FollowUps">
+            <div className="CarePlanChecklist__Title">Upcoming</div>
+            {/* TODO: extract this list into a separate component */}
+            {futureFollowUps?.map((followUp) => (
+              <div
+                key={followUp.title}
+                className="HomeRoute__FollowUps__FollowUp"
+              >
+                <div className="HomeRoute__Dot HomeRoute__Dot--Inactive" />
+                <div className="Utils__Label HomeRoute__FollowUps__FollowUp__Date">
+                  {format(followUp.date.toDate(), "do MMMM, yyyy")}
+                </div>
+                <div className="HomeRoute__FollowUps__FollowUp__Reason">
+                  {followUp.title}
+                </div>
               </div>
-              <div className="HomeRoute__FollowUps__FollowUp__Reason">
-                {followUp.title}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : null}
 
-        <div className="HomeRoute__RiskFactors">
-          <div className="Utils__Label">Your future risk factors</div>
-          {patient?.profile?.riskFactors?.map((riskFactor) => (
-            <RiskFactorTile key={riskFactor.name} riskFactor={riskFactor} />
-          ))}
-        </div>
+        {patient?.profile?.riskFactors &&
+        patient?.profile?.riskFactors?.length !== 0 ? (
+          <div className="HomeRoute__RiskFactors">
+            <div className="Utils__Label">Your future risk factors</div>
+            {patient?.profile?.riskFactors?.map((riskFactor) => (
+              <RiskFactorTile key={riskFactor.name} riskFactor={riskFactor} />
+            ))}
+          </div>
+        ) : null}
 
         <div className="HomeRoute__Logout">
           <Button

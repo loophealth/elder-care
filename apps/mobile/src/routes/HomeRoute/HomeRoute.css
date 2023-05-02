@@ -24,6 +24,7 @@
 
 .HomeRoute__CarePlan {
   position: relative;
+  min-height: 60vh;
 }
 
 .HomeRoute__Logout {
@@ -86,4 +87,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.LoaderContainer {
+  display: flex;
+  height: 80vh;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,10 +1,9 @@
 import { usePatient } from "@loophealth/api";
-import { ReportOverviewGrid } from "@loophealth/ui";
+import { LoadingSpinner, ReportOverviewGrid } from "@loophealth/ui";
 
 import { Navbar } from "components";
 
 import "./ReportOverviewRoute.css";
-import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const ReportOverviewRoute = () => {
   const { patient } = usePatient();

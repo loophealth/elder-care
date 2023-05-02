@@ -111,12 +111,14 @@ export interface CarePlan {
   medication: CarePlanItem[];
   suggestedContent: CarePlanItem[];
   others: CarePlanItem[];
+  prescription: CarePlanItem[];
 }
 
 export type CarePlanCategory =
   | "diet"
   | "physicalActivity"
   | "medication"
+  | "prescription"
   | "suggestedContent"
   | "others";
 

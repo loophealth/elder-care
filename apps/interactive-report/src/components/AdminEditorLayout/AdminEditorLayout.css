@@ -42,4 +42,7 @@
     border-left: dashed 1px var(--color-gray-light);
     border-top: none;
   }
+  .AdminEditorLayout__Content__Right {
+    max-width: 30vw;
+  }
 }

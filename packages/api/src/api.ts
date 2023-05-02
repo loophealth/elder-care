@@ -272,6 +272,7 @@ export const findOrCreateCarePlan = async (
         medication: [],
         suggestedContent: [],
         others: [],
+        prescription: []
       });
       return carePlan;
     }
