@@ -30,7 +30,7 @@ export const parseExcelHealthReport = async (
   }
 
   // Parse basic information.
-  const createdOn = basicInformationWorksheet["B1"].v || new Date();
+  const createdOn = basicInformationWorksheet["B1"]?.v || new Date();
   const fullName = basicInformationWorksheet["B2"].v;
   const age = basicInformationWorksheet["B3"].v;
 
@@ -58,8 +58,12 @@ export const parseExcelHealthReport = async (
     const unit = detailedReportWorksheet[`C${i}`]?.v ?? "";
     const category = detailedReportWorksheet[`D${i}`]?.v;
 
-    if (!category || !name || !value) {
+    if (!category || !name) {
       break;
+    }
+
+    if(!value){
+      continue;
     }
 
     const lowerRange = detailedReportWorksheet[`E${i}`]?.v ?? null;

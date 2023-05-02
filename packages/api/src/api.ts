@@ -75,8 +75,12 @@ export const findHealthReport = async (
   );
   const snapshot = await getDocs(q);
   const reports = snapshot.docs
-    .map((doc) => doc.data() as HealthReport)
-    .sort((a: any, b: any) => b.createdOn.toDate() - a.createdOn.toDate());
+    .map((doc, index) => ({ data: doc.data() as HealthReport, index }))
+    .sort(
+      (a: any, b: any) => b.data.createdOn.toDate() - a.data.createdOn.toDate()
+    );
+
+  let selectedIndex = reports[0]?.index;
 
   if (reports.length === 0) {
     throw new ApiError(
@@ -84,8 +88,7 @@ export const findHealthReport = async (
       ApiErrorCode.NotFound
     );
   }
-
-  return { ref: snapshot.docs[0].ref, data: reports[0] };
+  return { ref: snapshot.docs[selectedIndex].ref, data: reports[0].data };
 };
 
 /**
@@ -104,20 +107,38 @@ export const createHealthReportAndUserProfile = async (
     userProfile.age
   );
 
-  const newHealthReport = await createHealthReport(healthReport);
+  const newHealthReport = await UpdateOrCreateHealthReport(healthReport);
   return newHealthReport;
 };
 
 /**
  * Creates a new health report.
  */
-export const createHealthReport = async (
+export const UpdateOrCreateHealthReport = async (
   healthReport: HealthReport
 ): Promise<ApiResponse<HealthReport>> => {
   const healthReportsRef = collection(db, "healthReports");
-  const newReportRef = await addDoc(healthReportsRef, healthReport);
-  const newReport = await getDoc(newReportRef);
-  return { ref: newReportRef, data: newReport.data() as HealthReport };
+
+  //Added query to check if report already exsist for given phoneNumber & date
+  const q = query(
+    collection(db, "healthReports"),
+    where("phoneNumber", "==", healthReport.phoneNumber),
+    where("createdOn", "==", healthReport.createdOn)
+  );
+  const snapshot = await getDocs(q);
+  const reports = snapshot.docs.map((doc) => doc.data() as HealthReport);
+
+  if (reports.length !== 0) {
+    await updateDoc(snapshot.docs[0].ref, { ...healthReport });
+    return {
+      ref: snapshot.docs[0].ref,
+      data: { ...healthReport } as HealthReport,
+    };
+  } else {
+    const newReportRef = await addDoc(healthReportsRef, healthReport);
+    const newReport = await getDoc(newReportRef);
+    return { ref: newReportRef, data: newReport.data() as HealthReport };
+  }
 };
 
 /**

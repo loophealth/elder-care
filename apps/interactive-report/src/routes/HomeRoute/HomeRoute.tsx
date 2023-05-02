@@ -191,7 +191,7 @@ const CreateReportTile = () => {
 
     if (createdReport) {
       alert(
-        "Report created successfully. You can now search for it using the patient's phone number."
+        "Report created/updated successfully. You can now search for it using the patient's phone number."
       );
       onReset();
     }

@@ -40,7 +40,9 @@ export const CarePlanChecklist = () => {
   }, [carePlanChecklistItems]);
 
   const convertToEmbedUrl = (url: string) => {
-    return url.replace("watch?v=", "embed/").replace("&t", "?start");
+    return (
+      url.replace("watch?v=", "embed/").replace("&t", "?start") + "?controls=0"
+    );
   };
 
   return (
@@ -86,6 +88,9 @@ export const CarePlanChecklist = () => {
         </div>
       ))}
       <div className="CarePlanChecklist__Container_Margin">
+        <div className="Utils__Label CarePlanChecklist__TodayLabel">
+          {"SUGGESTED CONTENT"}
+        </div>
         {carePlan?.suggestedContent.map((item) => (
           <div
             key={item.recommendation}
@@ -104,7 +109,6 @@ export const CarePlanChecklist = () => {
                         src={convertToEmbedUrl(item.link)}
                         width={window.innerWidth}
                         height={0.57 * window.innerWidth}
-                        allowFullScreen={true}
                         loading="eager"
                         seamless={true}
                       />

@@ -7,7 +7,6 @@ import { ValuePill } from "../ValuePill";
 import { ColorTheme } from "../../types";
 
 import "./RangedMeasurementTile.css";
-import { SimpleMeasurementTile } from "../SimpleMeasurementTile";
 
 interface RangedMeasurementTileProps {
   measurement: Measurement;
@@ -84,13 +83,18 @@ const RangedMeasurementTileZones = ({
     return null;
   });
 
+  const color = getOffsetColor(measurement);
+
   return (
     <div className="RangedMeasurementTileZones">
       {typeof measurementValueOffset !== "undefined" && (
         <div className="RangedMeasurementTileZones__MeasurementDot">
           <div
             className="RangedMeasurementTileZones__MeasurementDot__Foreground"
-            style={{ left: `${measurementValueOffset}%` }}
+            style={{
+              left: `${measurementValueOffset}%`,
+              backgroundColor: `${color}`,
+            }}
           />
           <div
             className="RangedMeasurementTileZones__MeasurementDot__Background"
@@ -134,7 +138,9 @@ const RangedMeasurementTileZones = ({
   );
 };
 
-export const getMeasurementValueOffset = (measurement: Measurement): number | null => {
+export const getMeasurementValueOffset = (
+  measurement: Measurement
+): number | null => {
   if (typeof measurement.value === "number" && measurement.range !== null) {
     return getOffsetPercent(
       measurement.range?.lower,
@@ -152,6 +158,45 @@ const getOffsetPercent = (
   value: number
 ): number => {
   return ((value - lower) / (upper - lower)) * 100;
+};
+
+const getOffsetColor = (measurement: Measurement): string => {
+  if (!measurement.range) {
+    return "var(--color-ok)";
+  }
+
+  let color = `var(--color-ok)`;
+  const value =
+    typeof measurement.value !== "number"
+      ? parseFloat(measurement.value)
+      : measurement.value;
+  if (measurement.range.lowerDanger && value < measurement.range.lowerDanger) {
+    color = `var(--color-danger)`;
+  } else if (
+    measurement.range.lowerWarning &&
+    value < measurement.range.lowerWarning
+  ) {
+    color = `var(--color-warning)`;
+  } else if (
+    measurement.range.upperWarning &&
+    value < measurement.range.upperWarning
+  ) {
+    color = `var(--color-ok)`;
+  } else if (
+    !measurement.range.upperWarning &&
+    measurement.range.upperDanger &&
+    value < measurement.range.upperDanger
+  ) {
+    color = `var(--color-ok)`;
+  } else if (
+    measurement.range.upperDanger &&
+    value < measurement.range.upperDanger
+  ) {
+    color = `var(--color-warning)`;
+  } else if (measurement.range.upper && value <= measurement.range.upper) {
+    color = `var(--color-danger)`;
+  }
+  return color;
 };
 
 const getLinearGradient = (measurement: Measurement): string => {

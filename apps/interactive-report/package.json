@@ -8,7 +8,7 @@
     "start": "HOST=0.0.0.0 PORT=3001 BROWSER=none craco start",
     "test": "craco test",
     "emulator": "firebase emulators:start",
-    "deploy": "firebase deploy --only hosting:elder-care-mvp"
+    "deploy": "craco build && firebase deploy --only hosting:elder-care-mvp"
   },
   "browserslist": {
     "production": [
