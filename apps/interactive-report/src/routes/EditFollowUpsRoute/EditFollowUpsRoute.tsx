@@ -31,6 +31,10 @@ export const EditFollowUpsRoute = () => {
   const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
     []
   );
+  const [selectedData, setSelectedData] = useState<
+    FollowUp | undefined | null
+  >();
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
 
   // Subscribe to follow ups updates.
   useEffect(() => {
@@ -63,6 +67,7 @@ export const EditFollowUpsRoute = () => {
     setTitle("");
     setDate("");
     setDescription("");
+    setSelectedData(null);
   };
 
   const updateFollowUpNotification = (date: Date, id: string) => {
@@ -79,8 +84,7 @@ export const EditFollowUpsRoute = () => {
       scheduledTimeArray,
       source: notificationSource.followUp,
     };
-    const newNotifications = [...notifications, newNotification];
-    return newNotifications;
+    return newNotification;
   };
 
   // Add a new follow up to the user profile.
@@ -91,45 +95,52 @@ export const EditFollowUpsRoute = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const newDate: Date = new Date(date);
-      //FollowUp Notification will be scheduled at 12 afternoon
-      newDate.setHours(12);
-      newDate.setMinutes(0);
-      const newFollowUpId = generateId();
-      const firebaseDate = Timestamp.fromDate(newDate);
-      const newFollowUp: FollowUp = {
-        id: newFollowUpId,
-        title,
-        description,
-        date: firebaseDate,
-      };
-      const newFollowUps = [...followUps, newFollowUp];
+    if (selectedData) {
+      onUpdateFollowUp(selectedIndex || 0);
+    } else {
+      setIsLoading(true);
+      try {
+        const newDate: Date = new Date(date);
+        //FollowUp Notification will be scheduled at 12 afternoon
+        newDate.setHours(12);
+        newDate.setMinutes(0);
+        const newFollowUpId = generateId();
+        const firebaseDate = Timestamp.fromDate(newDate);
+        const newFollowUp: FollowUp = {
+          id: newFollowUpId,
+          title,
+          description,
+          date: firebaseDate,
+        };
+        const newFollowUps = [...followUps, newFollowUp];
 
-      // Sort new follow ups by date.
-      newFollowUps.sort((a, b) => {
-        if (a.date.seconds < b.date.seconds) {
-          return -1;
-        }
-        if (a.date.seconds > b.date.seconds) {
-          return 1;
-        }
-        return 0;
-      });
+        // Sort new follow ups by date.
+        newFollowUps.sort((a, b) => {
+          if (a.date.seconds < b.date.seconds) {
+            return -1;
+          }
+          if (a.date.seconds > b.date.seconds) {
+            return 1;
+          }
+          return 0;
+        });
 
-      await updateDoc(patient.profileRef, { followUps: newFollowUps });
-      await updateDoc(patient.notificationRef, {
-        notifications: updateFollowUpNotification(newDate, newFollowUpId),
-      });
-      resetData();
-    } catch (e) {
-      alert(
-        "There was an error adding the follow up. Please check your network and try again. If the error persists, please contact support."
-      );
-      console.error(e);
-    } finally {
-      setIsLoading(false);
+        await updateDoc(patient.profileRef, { followUps: newFollowUps });
+        await updateDoc(patient.notificationRef, {
+          notifications: [
+            ...notifications,
+            updateFollowUpNotification(newDate, newFollowUpId),
+          ],
+        });
+        resetData();
+      } catch (e) {
+        alert(
+          "There was an error adding the follow up. Please check your network and try again. If the error persists, please contact support."
+        );
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -154,9 +165,77 @@ export const EditFollowUpsRoute = () => {
           notifications: newNotifications,
         });
       }
+      resetData();
     } catch (e) {
       alert(
         "There was an error deleting this follow up. Please check your network and try again. If the error persists, please contact support."
+      );
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //update data on edit
+  const updateFollowUpData = (item: FollowUp, index: number) => {
+    resetData();
+    setSelectedData(item);
+    setSelectedIndex(index);
+    if (item?.title) {
+      setTitle(item.title);
+    }
+    if (item?.description) {
+      setDescription(item.description);
+    }
+    if (item?.date) {
+      const formattedDate = format(item.date.toDate(), "yyyy-MM-dd");
+      setDate(formattedDate);
+    }
+  };
+
+  // Update item.
+  const onUpdateFollowUp = async (index: number) => {
+    if (!patient) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      let newFollowUps = [...followUps];
+      const followUpId = newFollowUps[index]?.id;
+      newFollowUps.splice(index, 1);
+
+      const newDate: Date = new Date(date);
+      //FollowUp Notification will be scheduled at 12 afternoon
+      newDate.setHours(12);
+      newDate.setMinutes(0);
+      const firebaseDate = Timestamp.fromDate(newDate);
+      const updatedFollowUp: FollowUp = {
+        id: followUpId,
+        title,
+        description,
+        date: firebaseDate,
+      };
+      newFollowUps = [...newFollowUps, updatedFollowUp];
+
+      await updateDoc(patient.profileRef, { followUps: newFollowUps });
+
+      if (followUpId) {
+        let newNotifications = [...notifications];
+        newNotifications = newNotifications.filter(
+          (data) => !data.id || (data.id && data.id !== followUpId)
+        );
+
+        newNotifications = [...newNotifications, updateFollowUpNotification(newDate, followUpId)];
+
+        await updateDoc(patient.notificationRef, {
+          notifications: newNotifications,
+        });
+      }
+      resetData();
+    } catch (e) {
+      alert(
+        "There was an error updating this follow up. Please check your network and try again. If the error persists, please contact support."
       );
       console.error(e);
     } finally {
@@ -218,7 +297,7 @@ export const EditFollowUpsRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              Add follow up
+              {selectedData ? "Update follow up" : "Add follow up"}
             </Button>
           </div>
         </form>
@@ -231,6 +310,7 @@ export const EditFollowUpsRoute = () => {
               title={followUp.title}
               details={format(followUp.date.toDate(), "d MMMM, yyyy")}
               onDelete={() => onDeleteFollowUp(index)}
+              onUpdate={() => updateFollowUpData(followUp, index)}
               isLoading={isLoading}
             />
           ))}

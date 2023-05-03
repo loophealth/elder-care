@@ -7,6 +7,7 @@ import {
   CarePlanCategory,
   CarePlanReminder,
   PatientNotificationItem,
+  CarePlanItem,
 } from "@loophealth/api";
 
 import {
@@ -36,6 +37,9 @@ export const EditCarePlanRoute = () => {
   const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
     []
   );
+  const [selectedData, setSelectedData] = useState<
+    CarePlanItem | undefined | null
+  >();
 
   // Subscribe to care plan updates.
   useEffect(() => {
@@ -74,8 +78,7 @@ export const EditCarePlanRoute = () => {
       time: (carePlanCategoryTime as any)[reminder],
       source: notificationSource.carePlan,
     };
-    const newNotifications = [...notifications, newNotification];
-    return newNotifications;
+    return newNotification;
   };
 
   // Handle form submission.
@@ -86,41 +89,48 @@ export const EditCarePlanRoute = () => {
       return;
     }
 
-    setIsLoading(true);
+    if (selectedData) {
+      onUpdate(category, selectedData.id);
+    } else {
+      setIsLoading(true);
 
-    try {
-      const newCarePlanId = generateId();
+      try {
+        const newCarePlanId = generateId();
 
-      const newCarePlanItem = {
-        id: newCarePlanId,
-        recommendation,
-        details,
-        reminder,
-        link,
-      };
-      const newCarePlan =
-        category === "prescription"
-          ? [newCarePlanItem]
-          : [...carePlan[category], newCarePlanItem];
-      await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
-      if (
-        category !== "suggestedContent" &&
-        category !== "others" &&
-        category !== "prescription" &&
-        reminder
-      ) {
-        await updateDoc(patient.notificationRef, {
-          notifications: updateCarePlanNotification(reminder, newCarePlanId),
-        });
+        const newCarePlanItem = {
+          id: newCarePlanId,
+          recommendation,
+          details,
+          reminder,
+          link,
+        };
+        const newCarePlan =
+          category === "prescription"
+            ? [newCarePlanItem]
+            : [...carePlan[category], newCarePlanItem];
+        await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
+        if (
+          category !== "suggestedContent" &&
+          category !== "others" &&
+          category !== "prescription" &&
+          reminder
+        ) {
+          await updateDoc(patient.notificationRef, {
+            notifications: [
+              ...notifications,
+              updateCarePlanNotification(reminder, newCarePlanId),
+            ],
+          });
+        }
+        onReset();
+      } catch (e) {
+        alert(
+          "There was an error while adding this item to the care plan, please contact support"
+        );
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-      onReset();
-    } catch (e) {
-      alert(
-        "There was an error while adding this item to the care plan, please contact support"
-      );
-      console.error(e);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -130,17 +140,19 @@ export const EditCarePlanRoute = () => {
     setRecommendation("");
     setDetails("");
     setReminder("");
+    setLink("");
+    setSelectedData(null);
   };
 
   // Delete an item.
   const onDelete = async (category: CarePlanCategory, id: string) => {
-    if (!patient) {
+    if (!patient || !carePlan) {
       return;
     }
 
     setIsLoading(true);
     try {
-      let newCategoryItems = [...patient.carePlan[category]];
+      let newCategoryItems = [...carePlan[category]];
       newCategoryItems = newCategoryItems.filter((item) => item.id !== id);
       await updateDoc(patient.carePlanRef, { [category]: newCategoryItems });
 
@@ -152,9 +164,73 @@ export const EditCarePlanRoute = () => {
       await updateDoc(patient.notificationRef, {
         notifications: newNotifications,
       });
+      onReset();
     } catch (e) {
       alert(
         "There was an error while deleting this item from the care plan, please contact support"
+      );
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //update data on edit
+  const updateData = (category: CarePlanCategory, item: CarePlanItem) => {
+    onReset();
+    setSelectedData(item);
+    setCategory(category);
+    if (item?.recommendation) {
+      setRecommendation(item.recommendation);
+    }
+    if (item?.details) {
+      setDetails(item.details);
+    }
+    if (item?.reminder) {
+      setReminder(item.reminder as CarePlanReminder);
+    }
+    if (item?.link) {
+      setLink(item.link);
+    }
+  };
+
+  // Update item.
+  const onUpdate = async (category: CarePlanCategory, id: string) => {
+    if (!patient || !carePlan) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      let categoryItems = [...carePlan[category]];
+      const filteredData = categoryItems.filter((item) => item.id !== id);
+      const newCarePlanItem = {
+        id,
+        recommendation,
+        details,
+        reminder,
+        link,
+      };
+      categoryItems = [...filteredData, newCarePlanItem];
+      await updateDoc(patient.carePlanRef, { [category]: categoryItems });
+      if (reminder && id) {
+        //Update Care plan Notification
+        let newNotifications = [...notifications];
+        newNotifications = newNotifications.filter(
+          (data) => !data.id || (data.id && data.id !== id)
+        );
+        newNotifications = [
+          ...newNotifications,
+          updateCarePlanNotification(reminder, id),
+        ];
+        await updateDoc(patient.notificationRef, {
+          notifications: newNotifications,
+        });
+      }
+      onReset();
+    } catch (e) {
+      alert(
+        "There was an error while updating this item, please contact support"
       );
       console.error(e);
     } finally {
@@ -261,7 +337,7 @@ export const EditCarePlanRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              Add to care plan
+              {selectedData ? "Update care plan" : "Add to care plan"}
             </Button>
           </div>
         </form>
@@ -276,6 +352,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   link={item?.link}
                   onDelete={() => onDelete("prescription", item.id)}
+                  onUpdate={() => updateData("prescription", item)}
                 />
               ))}
               {carePlan.medication.map((item) => (
@@ -285,6 +362,7 @@ export const EditCarePlanRoute = () => {
                   details={item.details}
                   icon={CATEGORY_ICONS.medication}
                   onDelete={() => onDelete("medication", item.id)}
+                  onUpdate={() => updateData("medication", item)}
                 />
               ))}
               {carePlan.diet.map((item) => (
@@ -294,6 +372,7 @@ export const EditCarePlanRoute = () => {
                   details={item.details}
                   icon={CATEGORY_ICONS.diet}
                   onDelete={() => onDelete("diet", item.id)}
+                  onUpdate={() => updateData("diet", item)}
                 />
               ))}
               {carePlan.physicalActivity.map((item) => (
@@ -303,6 +382,7 @@ export const EditCarePlanRoute = () => {
                   details={item.details}
                   icon={CATEGORY_ICONS.physicalActivity}
                   onDelete={() => onDelete("physicalActivity", item.id)}
+                  onUpdate={() => updateData("physicalActivity", item)}
                 />
               ))}
               {carePlan.others.map((item) => (
@@ -312,6 +392,7 @@ export const EditCarePlanRoute = () => {
                   details={item.details}
                   icon={CATEGORY_ICONS.others}
                   onDelete={() => onDelete("others", item.id)}
+                  onUpdate={() => updateData("others", item)}
                 />
               ))}
               {carePlan.suggestedContent.map((item) => (
@@ -320,6 +401,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   link={item?.link}
                   onDelete={() => onDelete("suggestedContent", item.id)}
+                  onUpdate={() => updateData("suggestedContent", item)}
                 />
               ))}
             </>

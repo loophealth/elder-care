@@ -10,6 +10,7 @@ interface IconTextTileProps {
   isLoading?: boolean;
   onReorder?: (direction: 1 | -1) => void;
   onDelete?: () => void;
+  onUpdate?: () => void;
   link?: string;
 }
 
@@ -22,6 +23,7 @@ export const IconTextTile = ({
   isLoading,
   onReorder,
   onDelete,
+  onUpdate,
 }: IconTextTileProps) => {
   return (
     <div className="IconTextTile">
@@ -73,6 +75,16 @@ export const IconTextTile = ({
             alt="Delete item"
             disabled={isLoading}
             onClick={onDelete}
+          />
+        </div>
+      ) : null}
+      {onUpdate ? (
+        <div className="IconTextTile__ButtonContainer">
+          <IconButton
+            icon="/img/edit.svg"
+            alt="Update item"
+            disabled={isLoading}
+            onClick={onUpdate}
           />
         </div>
       ) : null}
