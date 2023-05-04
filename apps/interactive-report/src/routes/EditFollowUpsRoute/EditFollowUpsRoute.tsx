@@ -14,6 +14,7 @@ import {
 
 import "./EditFollowUpsRoute.css";
 import {
+  convertFollowupDate,
   followUpRules,
   generateId,
   notificationSource,
@@ -34,7 +35,7 @@ export const EditFollowUpsRoute = () => {
   const [selectedData, setSelectedData] = useState<
     FollowUp | undefined | null
   >();
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>();
 
   // Subscribe to follow ups updates.
   useEffect(() => {
@@ -68,6 +69,7 @@ export const EditFollowUpsRoute = () => {
     setDate("");
     setDescription("");
     setSelectedData(null);
+    setSelectedIndex(null);
   };
 
   const updateFollowUpNotification = (date: Date, id: string) => {
@@ -100,17 +102,14 @@ export const EditFollowUpsRoute = () => {
     } else {
       setIsLoading(true);
       try {
-        const newDate: Date = new Date(date);
-        //FollowUp Notification will be scheduled at 12 afternoon
-        newDate.setHours(12);
-        newDate.setMinutes(0);
         const newFollowUpId = generateId();
-        const firebaseDate = Timestamp.fromDate(newDate);
+        const { firebaseFollowUpDate, followUpDate } =
+          convertFollowupDate(date);
         const newFollowUp: FollowUp = {
           id: newFollowUpId,
           title,
           description,
-          date: firebaseDate,
+          date: firebaseFollowUpDate,
         };
         const newFollowUps = [...followUps, newFollowUp];
 
@@ -129,7 +128,7 @@ export const EditFollowUpsRoute = () => {
         await updateDoc(patient.notificationRef, {
           notifications: [
             ...notifications,
-            updateFollowUpNotification(newDate, newFollowUpId),
+            updateFollowUpNotification(followUpDate, newFollowUpId),
           ],
         });
         resetData();
@@ -165,7 +164,6 @@ export const EditFollowUpsRoute = () => {
           notifications: newNotifications,
         });
       }
-      resetData();
     } catch (e) {
       alert(
         "There was an error deleting this follow up. Please check your network and try again. If the error persists, please contact support."
@@ -203,22 +201,19 @@ export const EditFollowUpsRoute = () => {
     try {
       let newFollowUps = [...followUps];
       const followUpId = newFollowUps[index]?.id;
-      newFollowUps.splice(index, 1);
 
-      const newDate: Date = new Date(date);
-      //FollowUp Notification will be scheduled at 12 afternoon
-      newDate.setHours(12);
-      newDate.setMinutes(0);
-      const firebaseDate = Timestamp.fromDate(newDate);
-      const updatedFollowUp: FollowUp = {
-        id: followUpId,
-        title,
-        description,
-        date: firebaseDate,
-      };
-      newFollowUps = [...newFollowUps, updatedFollowUp];
+      const { firebaseFollowUpDate, followUpDate } = convertFollowupDate(date);
 
-      await updateDoc(patient.profileRef, { followUps: newFollowUps });
+      const updatedData = newFollowUps.map((item) => {
+        if (item.id === followUpId) {
+          item.date = firebaseFollowUpDate;
+          item.title = title;
+          item.description = description;
+        }
+        return item;
+      });
+
+      await updateDoc(patient.profileRef, { followUps: updatedData });
 
       if (followUpId) {
         let newNotifications = [...notifications];
@@ -226,7 +221,10 @@ export const EditFollowUpsRoute = () => {
           (data) => !data.id || (data.id && data.id !== followUpId)
         );
 
-        newNotifications = [...newNotifications, updateFollowUpNotification(newDate, followUpId)];
+        newNotifications = [
+          ...newNotifications,
+          updateFollowUpNotification(followUpDate, followUpId),
+        ];
 
         await updateDoc(patient.notificationRef, {
           notifications: newNotifications,
@@ -297,8 +295,17 @@ export const EditFollowUpsRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              {selectedData ? "Update follow up" : "Add follow up"}
+              {selectedData ? "Done" : "Add follow up"}
             </Button>
+            {selectedData ? (
+              <Button
+                onClick={resetData}
+                isPrimary={false}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </form>
       )}

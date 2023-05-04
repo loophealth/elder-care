@@ -27,6 +27,10 @@ export const EditTimelineRoute = () => {
   const [approximateTime, setApproximateTime] = useState("");
   const [event, setEvent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedData, setSelectedData] = useState<
+    HealthTimelineEvent | undefined | null
+  >();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>();
 
   // Subscribe to timeline updates.
   useEffect(() => {
@@ -52,21 +56,26 @@ export const EditTimelineRoute = () => {
     if (!patient) {
       return;
     }
-
-    setIsLoading(true);
-    try {
-      const newTimelineEvent: HealthTimelineEvent = { approximateTime, event };
-      const newTimeline = [...healthTimeline, newTimelineEvent];
-      await updateDoc(patient.profileRef, { healthTimeline: newTimeline });
-      setApproximateTime("");
-      setEvent("");
-    } catch (e) {
-      alert(
-        "There was an error adding the timeline item. Please check your network and try again. If the error persists, please contact support."
-      );
-      console.error(e);
-    } finally {
-      setIsLoading(false);
+    if (selectedData) {
+      onUpdate();
+    } else {
+      setIsLoading(true);
+      try {
+        const newTimelineEvent: HealthTimelineEvent = {
+          approximateTime,
+          event,
+        };
+        const newTimeline = [...healthTimeline, newTimelineEvent];
+        await updateDoc(patient.profileRef, { healthTimeline: newTimeline });
+        onReset();
+      } catch (e) {
+        alert(
+          "There was an error adding the timeline item. Please check your network and try again. If the error persists, please contact support."
+        );
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -118,6 +127,54 @@ export const EditTimelineRoute = () => {
     }
   };
 
+  // Reset form.
+  const onReset = () => {
+    setApproximateTime("");
+    setEvent("");
+    setSelectedData(null);
+    setSelectedIndex(null);
+  };
+
+  //update data on edit
+  const updateData = (item: HealthTimelineEvent, index: number) => {
+    onReset();
+    setSelectedData(item);
+    setSelectedIndex(index);
+    if (item?.event) {
+      setEvent(item.event);
+    }
+    if (item?.approximateTime) {
+      setApproximateTime(item.approximateTime);
+    }
+  };
+
+  // Update item.
+  const onUpdate = async () => {
+    if (!patient || !selectedData) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const newTimeline = [...healthTimeline];
+      newTimeline[selectedIndex || 0] = {
+        approximateTime,
+        event,
+      };
+      await updateDoc(patient.profileRef, {
+        healthTimeline: newTimeline,
+      });
+      onReset();
+    } catch (e) {
+      alert(
+        "There was an error updating timeline. Please check your network and try again. If the error persists, please contact support."
+      );
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AdminEditorLayout
       title="Timeline"
@@ -158,8 +215,13 @@ export const EditTimelineRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              Add to timeline
+              {selectedData ? "Done" : "Add to timeline"}
             </Button>
+            {selectedData ? (
+              <Button onClick={onReset} isPrimary={false} disabled={isLoading}>
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </form>
       )}
@@ -172,6 +234,7 @@ export const EditTimelineRoute = () => {
               details={event.approximateTime}
               onReorder={(direction) => onMoveEvent(index, direction)}
               onDelete={() => onDeleteEvent(index)}
+              onUpdate={() => updateData(event, index)}
               isLoading={isLoading}
             />
           ))}

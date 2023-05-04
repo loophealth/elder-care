@@ -164,7 +164,6 @@ export const EditCarePlanRoute = () => {
       await updateDoc(patient.notificationRef, {
         notifications: newNotifications,
       });
-      onReset();
     } catch (e) {
       alert(
         "There was an error while deleting this item from the care plan, please contact support"
@@ -203,16 +202,18 @@ export const EditCarePlanRoute = () => {
     setIsLoading(true);
     try {
       let categoryItems = [...carePlan[category]];
-      const filteredData = categoryItems.filter((item) => item.id !== id);
-      const newCarePlanItem = {
-        id,
-        recommendation,
-        details,
-        reminder,
-        link,
-      };
-      categoryItems = [...filteredData, newCarePlanItem];
-      await updateDoc(patient.carePlanRef, { [category]: categoryItems });
+
+      const updatedData = categoryItems.map((item) => {
+        if (item.id === id) {
+          item.details = details;
+          item.link = link;
+          item.recommendation = recommendation;
+          item.reminder = reminder;
+        }
+        return item;
+      });
+
+      await updateDoc(patient.carePlanRef, { [category]: updatedData });
       if (reminder && id) {
         //Update Care plan Notification
         let newNotifications = [...notifications];
@@ -337,8 +338,13 @@ export const EditCarePlanRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              {selectedData ? "Update care plan" : "Add to care plan"}
+              {selectedData ? "Done" : "Add to care plan"}
             </Button>
+            {selectedData ? (
+              <Button onClick={onReset} isPrimary={false} disabled={isLoading}>
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </form>
       )}

@@ -34,6 +34,9 @@ export const NotificationRoute = () => {
   const [body, setBody] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [selectedData, setSelectedData] = useState<
+    PatientNotificationItem | undefined | null
+  >();
 
   // Subscribe to notification updates.
   useEffect(() => {
@@ -59,7 +62,37 @@ export const NotificationRoute = () => {
     setBody("");
     setDate("");
     setTime("");
+    setType("");
+    setSelectedData(null);
   };
+
+  const setAdditionalParams = (newNotification: PatientNotificationItem) => {
+    let customDate, firebaseDate;
+    if (date && time && type !== "recurring") {
+      customDate = new Date(date + " " + time);
+      firebaseDate = Timestamp.fromDate(parseISO(customDate.toISOString()));
+      newNotification = {
+        ...newNotification,
+        scheduledTime: firebaseDate,
+        time,
+      };
+    } else if ((!date && time) || type === "recurring") {
+      newNotification = {
+        ...newNotification,
+        scheduledTime: "",
+        time,
+      };
+    } else if (!date && !time) {
+      newNotification = {
+        ...newNotification,
+        scheduledTime: "",
+        time: "",
+        sent: true,
+      };
+    }
+    return newNotification;
+  };
+
   // Add a new notification to the user profile.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,67 +100,49 @@ export const NotificationRoute = () => {
     if (!patient) {
       return;
     }
-
-    setIsLoading(true);
-    try {
-      let customDate, firebaseDate;
-      let newNotification: PatientNotificationItem = {
-        id: generateId(),
-        title,
-        body,
-        sent: false,
-        type,
-        source: notificationSource.notification,
-      };
-      if (date && time) {
-        customDate = new Date(date + " " + time);
-        firebaseDate = Timestamp.fromDate(parseISO(customDate.toISOString()));
-        newNotification = {
-          ...newNotification,
-          scheduledTime: firebaseDate,
-          time,
-        };
-      } else if (!date && time) {
-        newNotification = {
-          ...newNotification,
-          scheduledTime: "",
-          time,
-        };
-      } else if (!date && !time) {
-        newNotification = {
-          ...newNotification,
-          scheduledTime: "",
-          time: "",
-          sent: true,
-        };
-      }
-
-      const newNotifications = [...notifications, newNotification];
-
-      await updateDoc(patient.notificationRef, {
-        notifications: newNotifications,
-      });
-
-      if (
-        !newNotification?.scheduledTime &&
-        !newNotification?.time &&
-        patient?.profile?.fcmToken
-      ) {
-        const notificationData = {
+    if (selectedData) {
+      onUpdateNotification();
+    } else {
+      setIsLoading(true);
+      try {
+        let newNotification: PatientNotificationItem = {
+          id: generateId(),
           title,
           body,
-          fcmToken: patient?.profile?.fcmToken,
+          sent: false,
+          type,
+          source: notificationSource.notification,
         };
-        sendNotification(notificationData);
+
+        newNotification = setAdditionalParams(newNotification);
+
+        const newNotifications = [...notifications, newNotification];
+
+        await updateDoc(patient.notificationRef, {
+          notifications: newNotifications,
+        });
+
+        if (
+          !newNotification?.scheduledTime &&
+          !newNotification?.time &&
+          patient?.profile?.fcmToken
+        ) {
+          const notificationData = {
+            title,
+            body,
+            fcmToken: patient?.profile?.fcmToken,
+          };
+          sendNotification(notificationData);
+        }
+        resetData();
+      } catch (e) {
+        alert(
+          `There was an error adding the notification. Please check your network and try again. If the error persists, please contact support.`
+        );
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-      resetData();
-    } catch (e) {
-      alert(
-        `There was an error adding the notification. Please check your network and try again. If the error persists, please contact support.`
-      );
-      console.error(e);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -156,10 +171,74 @@ export const NotificationRoute = () => {
     }
   };
 
+  //update data on edit
+  const updateNotificationData = (item: PatientNotificationItem) => {
+    resetData();
+    setSelectedData(item);
+    if (item?.title) {
+      setTitle(item.title);
+    }
+    if (item?.type) {
+      setType(item.type);
+    }
+    if (item?.body) {
+      setBody(item.body);
+    }
+    if (item?.scheduledTime) {
+      setDate(format(item.scheduledTime.toDate(), "yyyy-MM-dd"));
+      setTime(format(item.scheduledTime.toDate(), "hh:mm"));
+    }
+    if (!item.scheduledTime && item.time) {
+      setTime(item.time);
+    }
+  };
+
+  // Update item.
+  const onUpdateNotification = async () => {
+    if (!patient || !selectedData) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      let newNotifications = [...notifications];
+      let updatedNotification: PatientNotificationItem = {
+        id: selectedData.id,
+        title,
+        body,
+        sent: false,
+        type,
+        source: notificationSource.notification,
+      };
+
+      updatedNotification = setAdditionalParams(updatedNotification);
+
+      newNotifications = newNotifications.map((data) => {
+        if (data.id && data.id === selectedData.id) {
+          data = { ...updatedNotification };
+        }
+        return data;
+      });
+      await updateDoc(patient.notificationRef, {
+        notifications: newNotifications,
+      });
+      resetData();
+    } catch (e) {
+      alert(
+        "There was an error updating this notification. Please check your network and try again. If the error persists, please contact support."
+      );
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const filteredNotification = useMemo(() => {
     return notifications.filter(
       (notification: PatientNotificationItem) =>
-        notification && notification.source === notificationSource.notification
+        notification &&
+        notification.source === notificationSource.notification &&
+        notification.type !== "immediate"
     );
   }, [notifications]);
 
@@ -251,8 +330,17 @@ export const NotificationRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              Add
+              {selectedData ? "Done" : "Add notification"}
             </Button>
+            {selectedData ? (
+              <Button
+                onClick={resetData}
+                isPrimary={false}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </form>
       )}
@@ -272,6 +360,7 @@ export const NotificationRoute = () => {
                     : notification.time
                 }`}
                 onDelete={() => onDeleteNotification(notification.id)}
+                onUpdate={() => updateNotificationData(notification)}
                 isLoading={isLoading}
               />
             ))}

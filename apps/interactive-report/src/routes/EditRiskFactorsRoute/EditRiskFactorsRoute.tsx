@@ -23,6 +23,10 @@ export const EditRiskFactorsRoute = () => {
   const [riskFactorName, setRiskFactorName] = useState("");
   const [reasons, setReasons] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedData, setSelectedData] = useState<
+    RiskFactor | undefined | null
+  >();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>();
 
   // Subscribe to risk factor updates.
   useEffect(() => {
@@ -47,26 +51,27 @@ export const EditRiskFactorsRoute = () => {
     if (!patient) {
       return;
     }
-
-    setIsLoading(true);
-    try {
-      const newRiskFactor: RiskFactor = {
-        name: riskFactorName,
-        reasons,
-        description,
-      };
-      const newRiskFactors = [...riskFactors, newRiskFactor];
-      await updateDoc(patient.profileRef, { riskFactors: newRiskFactors });
-      setRiskFactorName("");
-      setReasons("");
-      setDescription("");
-    } catch (e) {
-      alert(
-        "There was an error adding the risk factor. Please check your network and try again. If the error persists, please contact support."
-      );
-      console.error(e);
-    } finally {
-      setIsLoading(false);
+    if (selectedData) {
+      onUpdate();
+    } else {
+      setIsLoading(true);
+      try {
+        const newRiskFactor: RiskFactor = {
+          name: riskFactorName,
+          reasons,
+          description,
+        };
+        const newRiskFactors = [...riskFactors, newRiskFactor];
+        await updateDoc(patient.profileRef, { riskFactors: newRiskFactors });
+        onReset();
+      } catch (e) {
+        alert(
+          "There was an error adding the risk factor. Please check your network and try again. If the error persists, please contact support."
+        );
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -108,6 +113,61 @@ export const EditRiskFactorsRoute = () => {
       const newRiskFactors = [...riskFactors];
       newRiskFactors.splice(index, 1);
       await updateDoc(patient.profileRef, { riskFactors: newRiskFactors });
+    } catch (e) {
+      alert(
+        "There was an error deleting this risk factor. Please check your network and try again. If the error persists, please contact support."
+      );
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Reset form.
+  const onReset = () => {
+    setRiskFactorName("");
+    setReasons("");
+    setDescription("");
+    setSelectedData(null);
+    setSelectedIndex(null);
+  };
+
+  //update data on edit
+  const updateData = (item: RiskFactor, index: number) => {
+    onReset();
+    setSelectedData(item);
+    setSelectedIndex(index);
+    if (item?.name) {
+      setRiskFactorName(item.name);
+    }
+    if (item?.description) {
+      setDescription(item.description);
+    }
+    if (item?.reasons) {
+      setReasons(item.reasons);
+    }
+  };
+
+  // Update item.
+  const onUpdate = async () => {
+    if (!patient || !selectedData) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const newRiskFactors = [...riskFactors];
+      newRiskFactors[selectedIndex || 0] = {
+        name: riskFactorName,
+        reasons,
+        description,
+      };
+
+      await updateDoc(patient.profileRef, {
+        riskFactors: newRiskFactors,
+      });
+      onReset();
     } catch (e) {
       alert(
         "There was an error deleting this risk factor. Please check your network and try again. If the error persists, please contact support."
@@ -172,8 +232,13 @@ export const EditRiskFactorsRoute = () => {
 
           <div className="Utils__VerticalForm__ButtonsContainer">
             <Button type="submit" isPrimary disabled={isLoading}>
-              Add risk factor
+              {selectedData ? "Done" : "Add risk factor"}
             </Button>
+            {selectedData ? (
+              <Button onClick={onReset} isPrimary={false} disabled={isLoading}>
+                Cancel
+              </Button>
+            ) : null}
           </div>
         </form>
       )}
@@ -186,6 +251,7 @@ export const EditRiskFactorsRoute = () => {
               details={riskFactor.reasons}
               onReorder={(direction) => onMoveRiskFactor(index, direction)}
               onDelete={() => onDeleteRiskFactor(index)}
+              onUpdate={() => updateData(riskFactor, index)}
               isLoading={isLoading}
             />
           ))}
