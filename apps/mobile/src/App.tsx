@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -19,11 +19,13 @@ import { router } from "router";
 import "fonts/ApercuPro/ApercuPro.css";
 import "utils.css";
 import "index.css";
-import { NotificationView } from './components/NotificationView';
+import { NotificationView } from "./components/NotificationView";
+import { InstallPWADialog } from "components/InstallDialog";
 
 export const App = () => {
   const { user, setUser, setRequestStatus } = useAuth();
   const { setPatient } = usePatient();
+  const [isOpen, setIsOpen] = useState(true);
 
   // Handle auth state changes. Doing it here lets us call sign in and sign out
   // from anywhere else in the app, and be sure that any components that depend
@@ -52,5 +54,11 @@ export const App = () => {
     }
   }, [user, setPatient]);
 
-  return (<><RouterProvider router={router} /><NotificationView /></>);
+  return (
+    <>
+      <RouterProvider router={router} />
+      <NotificationView />
+      {isOpen && <InstallPWADialog setIsOpen={setIsOpen} />}
+    </>
+  );
 };

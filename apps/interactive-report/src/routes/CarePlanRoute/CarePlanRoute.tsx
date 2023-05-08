@@ -73,18 +73,6 @@ export const CarePlanRoute = () => {
             </h1>
             <TileList items={carePlan?.others ?? []} category="others" />
           </div>
-          {carePlan?.suggestedContent &&
-          carePlan.suggestedContent.length > 0 ? (
-            <div className="CarePlanRoute__CategoryList">
-              <h1 className="Utils__Label Utils__Label--Bold CarePlanRoute__CategoryList__CategoryTitle">
-                Suggested Content
-              </h1>
-              <TileList
-                items={carePlan?.suggestedContent ?? []}
-                category="suggestedContent"
-              />
-            </div>
-          ) : null}
         </main>
       )}
     </>
