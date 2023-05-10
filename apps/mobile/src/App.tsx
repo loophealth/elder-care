@@ -8,6 +8,7 @@ import {
   auth,
   usePatient,
   Patient,
+  logUser,
 } from "@loophealth/api";
 import "@loophealth/ui/src/styles/reset.css";
 import "@loophealth/ui/src/styles/utopia.css";
@@ -47,6 +48,12 @@ export const App = () => {
         user?.phoneNumber || ""
       );
       setPatient(foundPatient);
+      const logUserData = {
+        full_name: foundPatient?.profile?.fullName,
+        phone_number: foundPatient?.profile?.phoneNumber,
+        is_subscriber: true,
+      }
+      logUser(logUserData);
     };
 
     if (user) {

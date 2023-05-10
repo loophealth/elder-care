@@ -23,6 +23,7 @@ export const InstallPWADialog = ({ setIsOpen }: any) => {
         setIsOpen(false);
       });
     };
+    // eslint-disable-next-line
   }, [webInstallPrompt]);
 
   if (!iosInstallPrompt && !webInstallPrompt) {

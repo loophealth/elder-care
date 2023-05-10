@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import {
+  getAnalytics,
+  logEvent,
+  setUserProperties,
+  CustomEventName,
+} from "firebase/analytics";
 import {
   Auth,
   getAuth,
@@ -112,3 +117,32 @@ if (Capacitor.isNativePlatform()) {
 }
 
 export const db = getFirestore(app);
+
+export const logCustomEvent = (
+  eventName: CustomEventName<string>,
+  eventParams?: {
+    [key: string]: any;
+  }
+) => {
+  if (eventName) {
+    logEvent(analytics, eventName, eventParams);
+  }
+};
+
+export const logCurrentScreen = (
+  screenName: string,
+  eventParams?: {
+    [key: string]: any;
+  }
+) => {
+  if (screenName) {
+    logEvent(analytics, "screen_view" as string, {
+      screen_name: screenName,
+      ...eventParams,
+    });
+  }
+};
+
+export const logUser = (userData: { [key: string]: any }) => {
+  setUserProperties(analytics, userData, {global: true});
+};

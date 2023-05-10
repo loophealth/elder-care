@@ -13,6 +13,7 @@ export const LinkThatLooksLikeAButton = ({
   to: string;
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 }) => {
   const appliedClassName = clsx("LinkThatLooksLikeAButton", className);
 

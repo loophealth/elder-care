@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-import { useAuth, usePatient } from "@loophealth/api";
+import { logCustomEvent, useAuth, usePatient } from "@loophealth/api";
 
 import { Button, ButtonVariant } from "components/Button";
 import { RiskFactorTile } from "components/RiskFactorTile";
@@ -16,6 +16,7 @@ export const HomeRoute = () => {
   const { patient, setPatient } = usePatient();
 
   const onLogOut = async () => {
+    logCustomEvent("click_event", { name: "logout", category: "Home" });
     setUser(null);
     setPatient(null);
     resetLocalStorageOnLogout();

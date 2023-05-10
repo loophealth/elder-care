@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CarePlan, usePatient } from "@loophealth/api";
+import { CarePlan, logCustomEvent, usePatient } from "@loophealth/api";
 
 import { Checkbox } from "components/Checkbox";
 import {
@@ -64,6 +64,7 @@ export const CarePlanChecklist = () => {
   };
 
   const onDownloadPrescription = () => {
+    logCustomEvent("click_event", { name: "Download prescription", category: "Home" });
     const prescription = carePlan?.prescription;
     if (prescription) {
       window.open(prescription[prescription.length-1].link, "_blank");

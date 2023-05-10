@@ -9,6 +9,7 @@ interface LinkListLink {
   title: string;
   description: string;
   icon: ReactNode;
+  onClick: (title: string) => void;
 }
 
 interface LinkListProps {
@@ -18,9 +19,17 @@ interface LinkListProps {
 export const LinkList = ({ links }: LinkListProps) => {
   return (
     <ul className="LinkList">
-      {links.map(({ href, title, description, icon }, index: number) => (
+      {links.map(({ href, title, description, icon, onClick }, index: number) => (
         <li key={index} className="LinkList__Item">
-          <a href={href} className="LinkList__Item__Link">
+          <a
+            href={href}
+            className="LinkList__Item__Link"
+            onClick={(e) => {
+              e.preventDefault();
+              onClick(title);
+              window.open(href, "_blank");
+            }}
+          >
             <div className="LinkList__Item__Link__Icon">
               {icon || <DefaultIcon />}
             </div>
