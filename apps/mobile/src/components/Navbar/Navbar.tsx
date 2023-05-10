@@ -26,6 +26,7 @@ const NavbarLink = ({ to, children }: { to: string; children: ReactNode }) => {
   return (
     <NavLink
       to={to}
+      state={{from: "Navbar"}}
       className={({ isActive }) =>
         isActive ? "Navbar__Item Navbar__Item--Active" : "Navbar__Item"
       }

@@ -10,10 +10,40 @@ import { signOut } from "lib/firebaseHelpers";
 import "./HomeRoute.css";
 import { resetLocalStorageOnLogout } from "lib/useCarePlanTodoList";
 import { LoadingSpinner } from "@loophealth/ui";
+import { useMemo } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
 export const HomeRoute = () => {
   const { user, setUser } = useAuth();
   const { patient, setPatient } = usePatient();
+  const location = useLocation();
+  const { state } = location;
+
+  const isCarePlanEmpty = useMemo(() => {
+    if (patient) {
+      const {
+        diet,
+        physicalActivity,
+        medication,
+        suggestedContent,
+        others,
+        prescription,
+      } = patient?.carePlan;
+
+      return !(
+        diet?.length > 0 ||
+        physicalActivity?.length > 0 ||
+        medication?.length > 0 ||
+        suggestedContent?.length > 0 ||
+        others?.length > 0 ||
+        prescription?.length > 0
+      );
+    }
+  }, [patient]);
+
+  if (patient && isCarePlanEmpty && !state?.from) {
+    return <Navigate to="/report" />;
+  }
 
   const onLogOut = async () => {
     logCustomEvent("click_event", { name: "logout", category: "Home" });
