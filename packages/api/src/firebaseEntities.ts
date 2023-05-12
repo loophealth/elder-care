@@ -20,6 +20,13 @@ import {
   MessagePayload,
   Messaging,
 } from "firebase/messaging";
+import {
+  getStorage,
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 import { firebaseConfig, notificationKeys } from "./firebaseConfig";
 
@@ -117,6 +124,7 @@ if (Capacitor.isNativePlatform()) {
 }
 
 export const db = getFirestore(app);
+export const storage = getStorage(app, "gs://elder-care-mvp.appspot.com");
 
 export const logCustomEvent = (
   eventName: CustomEventName<string>,
@@ -144,5 +152,55 @@ export const logCurrentScreen = (
 };
 
 export const logUser = (userData: { [key: string]: any }) => {
-  setUserProperties(analytics, userData, {global: true});
+  setUserProperties(analytics, userData, { global: true });
 };
+
+// Upload file to Firebase storage
+export const getUrlFromFile = async (
+  file: File,
+  metadata?: any,
+  limit: number = 2048,
+  folderName: string = "prescription"
+): Promise<string | undefined> => {
+  const fileSize = file?.size ? Math.round(file.size / 1024) : 0;
+
+  const metaData = {
+    customMetadata: { ...metadata },
+    contentType: file?.type,
+  };
+
+  if (file && fileSize <= limit) {
+    const ext = file.name.split(".").reverse()[0];
+    const storageRef = ref(
+      storage,
+      `${folderName}/${new Date().getTime()}.${ext}`
+    );
+
+    await uploadBytes(storageRef, file, metaData);
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } else {
+    alert(`File too Big, please select a file less than ${limit / 1024} Mb`);
+  }
+};
+
+// Delete file to Firebase storage
+export const deleteFileFromUrl = (urlStr: string) => {
+  return new Promise((res, rej) => {
+    const filePath = decodeURIComponent(
+      urlStr.split("/").reverse().join("").split("?")[0]
+    );
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, filePath);
+
+    // Delete the file
+    deleteObject(desertRef)
+      .then(() => {
+        res("Deleted Successfully");
+      })
+      .catch((error) => {
+        rej(error);
+      });
+  });
+};
+

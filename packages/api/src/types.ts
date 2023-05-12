@@ -99,6 +99,7 @@ export interface CarePlanItem {
   details?: string;
   reminder?: string;
   link?: string;
+  prescriptionData?: string;
 }
 
 /**

@@ -16,8 +16,11 @@ export const convertFollowupDate = (date: string) => {
   //FollowUp Notification will be scheduled at 12 afternoon
   newDate.setHours(12);
   newDate.setMinutes(0);
-  return {firebaseFollowUpDate: Timestamp.fromDate(newDate), followUpDate: newDate};
-}
+  return {
+    firebaseFollowUpDate: Timestamp.fromDate(newDate),
+    followUpDate: newDate,
+  };
+};
 
 //FollowUp is before 1 week(i.e. 7 days), before 2 days(i.e. 2 days), before 2 day, selected date
 export const followUpRules = [7, 2, 1, 0];

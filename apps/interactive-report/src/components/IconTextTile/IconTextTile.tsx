@@ -61,7 +61,7 @@ export const IconTextTile = ({
                 rel="noreferrer"
                 className="IconTextTile__Tile__TextContent__Details"
               >
-                {link}
+                Click Here
               </a>
             </div>
           ) : null}

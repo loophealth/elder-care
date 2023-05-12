@@ -8,6 +8,8 @@ import {
   CarePlanReminder,
   PatientNotificationItem,
   CarePlanItem,
+  deleteFileFromUrl,
+  getUrlFromFile,
 } from "@loophealth/api";
 
 import {
@@ -40,6 +42,9 @@ export const EditCarePlanRoute = () => {
   const [selectedData, setSelectedData] = useState<
     CarePlanItem | undefined | null
   >();
+
+  const [prescriptionFile, setPrescriptionFile] = useState("");
+  const [prescriptionData, setPrescriptionData] = useState<File | null>();
 
   // Subscribe to care plan updates.
   useEffect(() => {
@@ -93,16 +98,28 @@ export const EditCarePlanRoute = () => {
       onUpdate(category, selectedData.id);
     } else {
       setIsLoading(true);
+      let fileUrl = "";
 
       try {
         const newCarePlanId = generateId();
+
+        //If link exsist skip prescription file upload
+        if (prescriptionData && !link) {
+          const metadata = {
+            id: newCarePlanId,
+            category: category,
+            phoneNumber: patient.profile.phoneNumber,
+            createdAt: new Date(),
+          };
+          fileUrl = (await getUrlFromFile(prescriptionData, metadata)) || "";
+        }
 
         const newCarePlanItem = {
           id: newCarePlanId,
           recommendation,
           details,
           reminder,
-          link,
+          link: link || fileUrl,
         };
         const newCarePlan =
           category === "prescription"
@@ -142,10 +159,12 @@ export const EditCarePlanRoute = () => {
     setReminder("");
     setLink("");
     setSelectedData(null);
+    setPrescriptionFile("");
+    setPrescriptionData(null);
   };
 
   // Delete an item.
-  const onDelete = async (category: CarePlanCategory, id: string) => {
+  const onDelete = async (category: CarePlanCategory, item: CarePlanItem) => {
     if (!patient || !carePlan) {
       return;
     }
@@ -153,17 +172,18 @@ export const EditCarePlanRoute = () => {
     setIsLoading(true);
     try {
       let newCategoryItems = [...carePlan[category]];
-      newCategoryItems = newCategoryItems.filter((item) => item.id !== id);
+      newCategoryItems = newCategoryItems.filter((data) => data.id !== item.id);
       await updateDoc(patient.carePlanRef, { [category]: newCategoryItems });
 
       //Delete Care plan Notification
       let newNotifications = [...notifications];
       newNotifications = newNotifications.filter(
-        (data) => !data.id || (data.id && data.id !== id)
+        (data) => !data.id || (data.id && data.id !== item.id)
       );
       await updateDoc(patient.notificationRef, {
         notifications: newNotifications,
       });
+      if (item.link) await deleteFileFromUrl(item.link);
     } catch (e) {
       alert(
         "There was an error while deleting this item from the care plan, please contact support"
@@ -200,13 +220,25 @@ export const EditCarePlanRoute = () => {
     }
 
     setIsLoading(true);
+    let fileUrl = "";
+
     try {
+      //If link exsist skip prescription file upload
+      if (prescriptionData && !link) {
+        const metadata = {
+          id,
+          category: category,
+          phoneNumber: patient.profile.phoneNumber,
+          createdAt: new Date(),
+        };
+        fileUrl = (await getUrlFromFile(prescriptionData, metadata)) || "";
+      }
       let categoryItems = [...carePlan[category]];
 
       const updatedData = categoryItems.map((item) => {
         if (item.id === id) {
           item.details = details;
-          item.link = link;
+          item.link = link || fileUrl;
           item.recommendation = recommendation;
           item.reminder = reminder;
         }
@@ -297,6 +329,26 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
+          {category === "prescription" ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="prescriptionFile">
+                Select prescription
+              </label>
+              <Input
+                id="prescriptionFile"
+                type="file"
+                accept="image/*,.pdf"
+                value={prescriptionFile}
+                onChange={async (e) => {
+                  setPrescriptionFile(e.target.value);
+                  setPrescriptionData(e.target.files?.[0]);
+                }}
+                placeholder="Select prescription"
+                disabled={isLoading}
+                multiple={false}
+              />
+            </div>
+          ) : null}
           {category !== "suggestedContent" && category !== "prescription" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="details">
@@ -356,8 +408,9 @@ export const EditCarePlanRoute = () => {
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
+                  icon={CATEGORY_ICONS.prescription}
                   link={item?.link}
-                  onDelete={() => onDelete("prescription", item.id)}
+                  onDelete={() => onDelete("prescription", item)}
                   onUpdate={() => updateData("prescription", item)}
                 />
               ))}
@@ -367,7 +420,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   details={item.details}
                   icon={CATEGORY_ICONS.medication}
-                  onDelete={() => onDelete("medication", item.id)}
+                  onDelete={() => onDelete("medication", item)}
                   onUpdate={() => updateData("medication", item)}
                 />
               ))}
@@ -377,7 +430,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   details={item.details}
                   icon={CATEGORY_ICONS.diet}
-                  onDelete={() => onDelete("diet", item.id)}
+                  onDelete={() => onDelete("diet", item)}
                   onUpdate={() => updateData("diet", item)}
                 />
               ))}
@@ -387,7 +440,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   details={item.details}
                   icon={CATEGORY_ICONS.physicalActivity}
-                  onDelete={() => onDelete("physicalActivity", item.id)}
+                  onDelete={() => onDelete("physicalActivity", item)}
                   onUpdate={() => updateData("physicalActivity", item)}
                 />
               ))}
@@ -397,7 +450,7 @@ export const EditCarePlanRoute = () => {
                   title={item.recommendation}
                   details={item.details}
                   icon={CATEGORY_ICONS.others}
-                  onDelete={() => onDelete("others", item.id)}
+                  onDelete={() => onDelete("others", item)}
                   onUpdate={() => updateData("others", item)}
                 />
               ))}
@@ -406,7 +459,7 @@ export const EditCarePlanRoute = () => {
                   key={item.id}
                   title={item.recommendation}
                   link={item?.link}
-                  onDelete={() => onDelete("suggestedContent", item.id)}
+                  onDelete={() => onDelete("suggestedContent", item)}
                   onUpdate={() => updateData("suggestedContent", item)}
                 />
               ))}

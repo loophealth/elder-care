@@ -49,8 +49,8 @@ export const App = () => {
       );
       setPatient(foundPatient);
       const logUserData = {
-        full_name: foundPatient?.profile?.fullName,
-        phone_number: foundPatient?.profile?.phoneNumber,
+        user_name: foundPatient?.profile?.fullName,
+        user_phone_number: foundPatient?.profile?.phoneNumber,
         is_subscriber: true,
       }
       logUser(logUserData);

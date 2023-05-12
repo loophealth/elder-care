@@ -3,4 +3,5 @@ export const CATEGORY_ICONS = {
   physicalActivity: "/img/walk.svg",
   medication: "/img/capsule.svg",
   others: "/img/calendar.svg",
+  prescription: "/img/prescription.svg"
 };

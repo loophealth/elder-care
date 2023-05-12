@@ -64,10 +64,14 @@ export const CarePlanChecklist = () => {
   };
 
   const onDownloadPrescription = () => {
-    logCustomEvent("click_event", { name: "Download prescription", category: "Home" });
+    logCustomEvent("click_event", {
+      name: "Download prescription",
+      category: "Home",
+    });
     const prescription = carePlan?.prescription;
     if (prescription) {
-      window.open(prescription[prescription.length-1].link, "_blank");
+      const lastPrescription = prescription[prescription.length - 1];
+      window.open(lastPrescription.link, "_blank");
     }
   };
 
