@@ -10,6 +10,8 @@ import {
   parseExcelHealthReport,
   isApiError,
   createHealthReportAndUserProfile,
+  findLinkedUserProfile,
+  UserProfile,
 } from "@loophealth/api";
 
 import { Button, Input, FilePicker } from "components";
@@ -36,15 +38,11 @@ const OpenReportTile = () => {
   const { patient, setPatient } = usePatient();
 
   const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>(
-    patient?.report.phoneNumber || ""
-  );
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [foundPatient, setFoundPatient] = useState<Patient | null>(
-    patient || null
-  );
+  const [foundPatient, setFoundPatient] = useState<UserProfile[] | null>(null);
 
-  const [, setValue] = useLocalStorage(PATIENT_PHONE_NUMBER_KEY, "")
+  const [, setValue] = useLocalStorage(PATIENT_PHONE_NUMBER_KEY, "");
   useEffect(() => {
     // When shouldRedirect transitions to true, and we have a healthReport,
     // redirect to the report page.
@@ -60,16 +58,12 @@ const OpenReportTile = () => {
 
     try {
       const phoneNumberWithCountryCode = `+91${phoneNumber}`;
-      const newPatient = await Patient.fromPhoneNumber(
-        phoneNumberWithCountryCode
-      );
-      setFoundPatient(newPatient);
-      setValue(phoneNumber);
+      const { data } = await findLinkedUserProfile(phoneNumberWithCountryCode);
+      setFoundPatient(data);
     } catch (e: any) {
       const message = isApiError(e)
         ? e.message
         : "An unknown error occurred, please contact support";
-      setValue("");
       alert(message);
       console.error(e);
     } finally {
@@ -88,15 +82,31 @@ const OpenReportTile = () => {
   };
 
   // Open the report for the found patient and redirect to the report page.
-  const onOpenReport = async (e: FormEvent) => {
-    e.preventDefault();
+  const onOpenReport = async (user: UserProfile) => {
+    setIsSearching(true);
 
-    if (!foundPatient) {
-      return;
+    try {
+      const phoneNumberWithCountryCode = `+91${phoneNumber}`;
+      const newPatient = await Patient.fromPhoneNumber(
+        phoneNumberWithCountryCode,
+        user?.relation
+      );
+      if (!newPatient) {
+        return;
+      }
+      setPatient(newPatient);
+      setValue(phoneNumber);
+      setShouldRedirect(true);
+    } catch (e: any) {
+      const message = isApiError(e)
+        ? e.message
+        : "An unknown error occurred, please contact support";
+      setValue("");
+      alert(message);
+      console.error(e);
+    } finally {
+      setIsSearching(false);
     }
-
-    setPatient(foundPatient);
-    setShouldRedirect(true);
   };
 
   return (
@@ -136,15 +146,22 @@ const OpenReportTile = () => {
         <>
           <div className="HomeRoute__Tile__Group">
             <h2 className="Utils__Label">Found patient</h2>
-            <p>
-              {foundPatient.profile.fullName} ({foundPatient.profile.age} years
-              old)
-            </p>
-          </div>
-          <div className="HomeRoute__Tile__ButtonsContainer">
-            <Button onClick={onOpenReport} isPrimary>
-              Open report
-            </Button>
+            {foundPatient.map((user, index) => (
+              <div key={index} className="Found__Patient__Container">
+                <span>
+                  {user.fullName} ({user.age} years old)
+                </span>
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpenReport(user);
+                  }}
+                  isPrimary
+                >
+                  Open report
+                </Button>
+              </div>
+            ))}
           </div>
         </>
       )}

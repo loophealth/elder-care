@@ -74,6 +74,9 @@ export interface HealthReport {
   categories: MeasurementCategory[];
   measurements: Measurement[];
   summary: SummaryItem[];
+  relation?: string;
+  parentId?: string;
+  userId?: string;
 }
 
 /**
@@ -88,6 +91,9 @@ export interface UserProfile {
   riskFactors?: RiskFactor[];
   followUps?: FollowUp[];
   fcmToken?: string;
+  relation?: string;
+  parentId?: string;
+  id?: string;
 }
 
 /**
@@ -113,6 +119,9 @@ export interface CarePlan {
   suggestedContent: CarePlanItem[];
   others: CarePlanItem[];
   prescription: CarePlanItem[];
+  relation?: string;
+  parentId?: string;
+  userId?: string;
 }
 
 export type CarePlanCategory =
@@ -174,6 +183,9 @@ export interface PatientNotificationItem {
 export interface PatientNotification {
   phoneNumber: string;
   notifications: PatientNotificationItem[],
+  relation?: string;
+  parentId?: string;
+  userId?: string;
 }
 
 export type NotificationCategory =

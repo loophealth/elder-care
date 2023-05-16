@@ -6,9 +6,11 @@ import {
   getDoc,
   getDocs,
   query,
+  QuerySnapshot,
   where,
   updateDoc,
 } from "firebase/firestore";
+import { customAlphabet } from "nanoid";
 
 import { db } from "./firebaseEntities";
 import {
@@ -67,28 +69,43 @@ export interface ApiResponse<T> {
  * Finds a health report using the patient's phone number.
  */
 export const findHealthReport = async (
-  phoneNumber: string
+  phoneNumber: string,
+  userData?: UserProfile
 ): Promise<ApiResponse<HealthReport>> => {
-  const q = query(
-    collection(db, "healthReports"),
-    where("phoneNumber", "==", phoneNumber)
-  );
-  const snapshot = await getDocs(q);
-  const reports = snapshot.docs
-    .map((doc, index) => ({ data: doc.data() as HealthReport, index }))
-    .sort(
-      (a: any, b: any) => b.data.createdOn.toDate() - a.data.createdOn.toDate()
+  let q;
+  if (userData?.relation) {
+    q = query(
+      collection(db, "healthReports"),
+      where("phoneNumber", "==", phoneNumber),
+      where("relation", "==", userData.relation)
     );
+  } else {
+    q = query(
+      collection(db, "healthReports"),
+      where("phoneNumber", "==", phoneNumber)
+    );
+  }
+  const snapshot = await getDocs(q);
+  // const reports = snapshot.docs
+  //   .map((doc, index) => ({ data: doc.data() as HealthReport, index }))
+  //   .sort(
+  //     (a: any, b: any) => b.data.createdOn.toDate() - a.data.createdOn.toDate()
+  //   );
 
-  let selectedIndex = reports[0]?.index;
+  const filteredReports = filteredDoc(snapshot, userData?.relation);
+  const sortedReport = filteredReports.sort(
+    (a: any, b: any) => b.data.createdOn.toDate() - a.data.createdOn.toDate()
+  );
 
-  if (reports.length === 0) {
+  let selectedIndex = sortedReport[0]?.index;
+
+  if (sortedReport.length === 0) {
     throw new ApiError(
       "No report found with that phone number",
       ApiErrorCode.NotFound
     );
   }
-  return { ref: snapshot.docs[selectedIndex].ref, data: reports[0].data };
+  return { ref: snapshot.docs[selectedIndex].ref, data: sortedReport[0].data };
 };
 
 /**
@@ -101,13 +118,17 @@ export const createHealthReportAndUserProfile = async (
   const healthReport = toHealthReport(excelHealthReport);
   const userProfile = toUserProfile(excelHealthReport);
 
-  await findOrCreateUserProfile(
+  const profile = await findOrCreateUserProfile(
     userProfile.phoneNumber,
     userProfile.fullName,
-    userProfile.age
+    userProfile.age,
+    userProfile.relation
   );
 
-  const newHealthReport = await UpdateOrCreateHealthReport(healthReport);
+  const newHealthReport = await UpdateOrCreateHealthReport(
+    healthReport,
+    profile.data
+  );
   return newHealthReport;
 };
 
@@ -115,27 +136,57 @@ export const createHealthReportAndUserProfile = async (
  * Creates a new health report.
  */
 export const UpdateOrCreateHealthReport = async (
-  healthReport: HealthReport
+  healthReport: HealthReport,
+  userData?: UserProfile
 ): Promise<ApiResponse<HealthReport>> => {
   const healthReportsRef = collection(db, "healthReports");
 
   //Added query to check if report already exsist for given phoneNumber & date
-  const q = query(
-    collection(db, "healthReports"),
-    where("phoneNumber", "==", healthReport.phoneNumber),
-    where("createdOn", "==", healthReport.createdOn)
-  );
+  let q;
+  if (userData?.relation) {
+    q = query(
+      collection(db, "healthReports"),
+      where("phoneNumber", "==", healthReport.phoneNumber),
+      where("createdOn", "==", healthReport.createdOn),
+      where("relation", "==", userData.relation)
+    );
+  } else {
+    q = query(
+      collection(db, "healthReports"),
+      where("phoneNumber", "==", healthReport.phoneNumber),
+      where("createdOn", "==", healthReport.createdOn)
+    );
+  }
   const snapshot = await getDocs(q);
-  const reports = snapshot.docs.map((doc) => doc.data() as HealthReport);
+  // const reports = snapshot.docs.map((doc) => doc.data() as HealthReport);
+  const filteredReports = filteredDoc(snapshot, userData?.relation);
 
-  if (reports.length !== 0) {
-    await updateDoc(snapshot.docs[0].ref, { ...healthReport });
+  let updatedHealthReport = { ...healthReport };
+
+  if (userData?.relation) {
+    updatedHealthReport = {
+      ...updatedHealthReport,
+      relation: userData?.relation,
+      userId: userData?.id,
+      parentId: healthReport.phoneNumber, // TODO: Need to replace with parent userid in future
+    };
+  }
+
+  if (filteredReports.length !== 0) {
+    const selectedIndex = filteredReports?.[0].index;
+    await updateDoc(snapshot.docs[selectedIndex].ref, {
+      ...updatedHealthReport,
+    });
     return {
-      ref: snapshot.docs[0].ref,
-      data: { ...healthReport } as HealthReport,
+      ref: snapshot.docs[selectedIndex].ref,
+      data: {
+        ...updatedHealthReport,
+      } as HealthReport,
     };
   } else {
-    const newReportRef = await addDoc(healthReportsRef, healthReport);
+    const newReportRef = await addDoc(healthReportsRef, {
+      ...updatedHealthReport,
+    });
     const newReport = await getDoc(newReportRef);
     return { ref: newReportRef, data: newReport.data() as HealthReport };
   }
@@ -145,8 +196,49 @@ export const UpdateOrCreateHealthReport = async (
  * Finds a user profile using the patient's phone number.
  */
 export const findUserProfile = async (
-  phoneNumber: string
+  phoneNumber: string,
+  relation?: string | null
 ): Promise<ApiResponse<UserProfile>> => {
+  let q;
+  if (relation) {
+    q = query(
+      collection(db, "userProfiles"),
+      where("phoneNumber", "==", phoneNumber),
+      where("relation", "==", relation)
+    );
+  } else {
+    q = query(
+      collection(db, "userProfiles"),
+      where("phoneNumber", "==", phoneNumber)
+    );
+  }
+  const snapshot = await getDocs(q);
+  // const profiles = snapshot.docs.map((doc) => doc.data() as UserProfile);
+  const filteredProfile = filteredDoc(snapshot, relation);
+
+  if (filteredProfile.length === 0) {
+    throw new ApiError(
+      "No profile found with that phone number",
+      ApiErrorCode.NotFound
+    );
+  } else if (filteredProfile.length > 1) {
+    throw new ApiError(
+      "Multiple profiles found with that phone number, please contact support",
+      ApiErrorCode.MultipleFound
+    );
+  }
+  const profiles = filteredProfile?.[0].data;
+  const selectedIndex = filteredProfile?.[0].index;
+  
+  return { ref: snapshot.docs[selectedIndex].ref, data: profiles };
+};
+
+/**
+ * Finds a linked user profile using the patient's phone number.
+ */
+export const findLinkedUserProfile = async (
+  phoneNumber: string
+): Promise<{ data: UserProfile[] }> => {
   const q = query(
     collection(db, "userProfiles"),
     where("phoneNumber", "==", phoneNumber)
@@ -159,14 +251,9 @@ export const findUserProfile = async (
       "No profile found with that phone number",
       ApiErrorCode.NotFound
     );
-  } else if (profiles.length > 1) {
-    throw new ApiError(
-      "Multiple profiles found with that phone number, please contact support",
-      ApiErrorCode.MultipleFound
-    );
   }
 
-  return { ref: snapshot.docs[0].ref, data: profiles[0] };
+  return { data: profiles };
 };
 
 /**
@@ -175,15 +262,25 @@ export const findUserProfile = async (
 export const createUserProfile = async (
   phoneNumber: string,
   fullName: string | null = null,
-  age: number | null = null
+  age: number | null = null,
+  relation: string | null = null
 ): Promise<ApiResponse<UserProfile>> => {
-  const userProfile: UserProfile = {
+  let userProfile: UserProfile = {
     fullName,
     age,
     phoneNumber,
     role: "patient",
     healthTimeline: [],
   };
+
+  if (relation) {
+    userProfile = {
+      ...userProfile,
+      relation,
+      parentId: phoneNumber, // TODO: Need to replace with parent userid in future
+      id: createLoopId("LRU"),
+    };
+  }
 
   const userProfilesRef = collection(db, "userProfiles");
   const newProfile = await addDoc(userProfilesRef, userProfile);
@@ -198,14 +295,20 @@ export const createUserProfile = async (
 export const findOrCreateUserProfile = async (
   phoneNumber: string,
   fullName: string | null = null,
-  age: number | null = null
+  age: number | null = null,
+  relation: string | null = null
 ): Promise<ApiResponse<UserProfile>> => {
   try {
-    const profile = await findUserProfile(phoneNumber);
+    const profile = await findUserProfile(phoneNumber, relation);
     return profile;
   } catch (error: any) {
     if (isApiError(error) && error.apiErrorCode === ApiErrorCode.NotFound) {
-      const profile = await createUserProfile(phoneNumber, fullName, age);
+      const profile = await createUserProfile(
+        phoneNumber,
+        fullName,
+        age,
+        relation
+      );
       return profile;
     }
 
@@ -217,36 +320,58 @@ export const findOrCreateUserProfile = async (
  * Finds a care plan using the patient's phone number.
  */
 export const findCarePlan = async (
-  phoneNumber: string
+  phoneNumber: string,
+  relation?: string | null
 ): Promise<ApiResponse<CarePlan>> => {
-  const q = query(
-    collection(db, "carePlans"),
-    where("phoneNumber", "==", phoneNumber)
-  );
+  let q;
+  if (relation) {
+    q = query(
+      collection(db, "carePlans"),
+      where("phoneNumber", "==", phoneNumber),
+      where("relation", "==", relation)
+    );
+  } else {
+    q = query(
+      collection(db, "carePlans"),
+      where("phoneNumber", "==", phoneNumber)
+    );
+  }
   const snapshot = await getDocs(q);
-  const carePlans = snapshot.docs.map((doc) => doc.data() as CarePlan);
-
-  if (carePlans.length === 0) {
+  // const carePlans = snapshot.docs.map((doc) => doc.data() as CarePlan);
+  const filteredCarePlans = filteredDoc(snapshot, relation);
+  
+  if (filteredCarePlans.length === 0) {
     throw new ApiError(
       "No care plan found associated with that phone number",
       ApiErrorCode.NotFound
     );
-  } else if (carePlans.length > 1) {
+  } else if (filteredCarePlans.length > 1) {
     throw new ApiError(
       "Multiple care plans found with that phone number, please contact support",
       ApiErrorCode.MultipleFound
     );
   }
+  const carePlans = filteredCarePlans?.[0]?.data;
+  const selectedIndex = filteredCarePlans?.[0]?.index;
 
-  return { ref: snapshot.docs[0].ref, data: carePlans[0] };
+  return { ref: snapshot.docs[selectedIndex].ref, data: carePlans };
 };
 
 /**
  * Creates a new care plan.
  */
 export const createCarePlan = async (
-  carePlan: CarePlan
+  carePlan: CarePlan,
+  userData?: UserProfile
 ): Promise<ApiResponse<CarePlan>> => {
+  if (userData?.relation) {
+    carePlan = {
+      ...carePlan,
+      relation: userData?.relation,
+      userId: userData?.id,
+      parentId: userData?.phoneNumber, // TODO: Need to replace with parent userid in future
+    };
+  }
   const carePlansRef = collection(db, "carePlans");
   const newCarePlan = await addDoc(carePlansRef, carePlan);
 
@@ -258,22 +383,26 @@ export const createCarePlan = async (
  * creates a new care plan with the given phone number.
  */
 export const findOrCreateCarePlan = async (
-  phoneNumber: string
+  phoneNumber: string,
+  userData?: UserProfile
 ): Promise<ApiResponse<CarePlan>> => {
   try {
-    const carePlan = await findCarePlan(phoneNumber);
+    const carePlan = await findCarePlan(phoneNumber, userData?.relation);
     return carePlan;
   } catch (error: any) {
     if (isApiError(error) && error.apiErrorCode === ApiErrorCode.NotFound) {
-      const carePlan = await createCarePlan({
-        phoneNumber,
-        diet: [],
-        physicalActivity: [],
-        medication: [],
-        suggestedContent: [],
-        others: [],
-        prescription: []
-      });
+      const carePlan = await createCarePlan(
+        {
+          phoneNumber,
+          diet: [],
+          physicalActivity: [],
+          medication: [],
+          suggestedContent: [],
+          others: [],
+          prescription: [],
+        },
+        userData
+      );
       return carePlan;
     }
 
@@ -306,38 +435,61 @@ export const updateUserToken = async (
  * Finds a notification using the patient's phone number.
  */
 export const findNotification = async (
-  phoneNumber: string
+  phoneNumber: string,
+  relation?: string | null
 ): Promise<ApiResponse<PatientNotification>> => {
-  const q = query(
-    collection(db, "notification"),
-    where("phoneNumber", "==", phoneNumber)
-  );
+  let q;
+  if (relation) {
+    q = query(
+      collection(db, "notification"),
+      where("phoneNumber", "==", phoneNumber),
+      where("relation", "==", relation)
+    );
+  } else {
+    q = query(
+      collection(db, "notification"),
+      where("phoneNumber", "==", phoneNumber)
+    );
+  }
   const snapshot = await getDocs(q);
-  const notifications = snapshot.docs.map(
-    (doc) => doc.data() as PatientNotification
-  );
+  // const notifications = snapshot.docs.map(
+  //   (doc) => doc.data() as PatientNotification
+  // );
+  const filteredNotifications = filteredDoc(snapshot, relation);
 
-  if (notifications.length === 0) {
+  if (filteredNotifications.length === 0) {
     throw new ApiError(
       "No notification found associated with that phone number",
       ApiErrorCode.NotFound
     );
-  } else if (notifications.length > 1) {
+  } else if (filteredNotifications.length > 1) {
     throw new ApiError(
       "Multiple notifications found with that phone number, please contact support",
       ApiErrorCode.MultipleFound
     );
   }
 
-  return { ref: snapshot.docs[0].ref, data: notifications[0] };
+  const notifications = filteredNotifications?.[0]?.data;
+  const selectedIndex = filteredNotifications?.[0]?.index;
+
+  return { ref: snapshot.docs[selectedIndex].ref, data: notifications };
 };
 
 /**
  * Creates a new notification.
  */
 export const createNotification = async (
-  notification: PatientNotification
+  notification: PatientNotification,
+  userData?: UserProfile
 ): Promise<ApiResponse<PatientNotification>> => {
+  if (userData?.relation) {
+    notification = {
+      ...notification,
+      relation: userData?.relation,
+      userId: userData?.id,
+      parentId: userData?.phoneNumber, // TODO: Need to replace with parent userid in future
+    };
+  }
   const notificationsRef = collection(db, "notification");
   const newNotification = await addDoc(notificationsRef, notification);
 
@@ -349,20 +501,52 @@ export const createNotification = async (
  * creates a new notification with the given phone number.
  */
 export const findOrCreateNotification = async (
-  phoneNumber: string
+  phoneNumber: string,
+  userData?: UserProfile
 ): Promise<ApiResponse<PatientNotification>> => {
   try {
-    const notification = await findNotification(phoneNumber);
+    const notification = await findNotification(
+      phoneNumber,
+      userData?.relation
+    );
     return notification;
   } catch (error: any) {
     if (isApiError(error) && error.apiErrorCode === ApiErrorCode.NotFound) {
-      const notification = await createNotification({
-        phoneNumber,
-        notifications: [],
-      });
+      const notification = await createNotification(
+        {
+          phoneNumber,
+          notifications: [],
+        },
+        userData
+      );
       return notification;
     }
 
     throw error;
   }
+};
+
+export const createLoopId = (prefix: string): string => {
+  if (!prefix) {
+    throw new Error("Invalid Prefix Argument");
+  }
+  const nanoId6 = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 6);
+  const documentId = `${prefix}-` + nanoId6().toLocaleUpperCase();
+  return documentId;
+};
+
+const filteredDoc = (
+  snapshot: QuerySnapshot<DocumentData>,
+  relation?: string | null
+) => {
+  const filteredData = snapshot.docs
+    .map((doc: DocumentData, index: number) => {
+      const docData = doc.data();
+      if (!relation) {
+        return !docData.parentId ? { data: docData, index } : null;
+      }
+      return { data: docData, index };
+    })
+    .filter((data: any) => data) as { data: any; index: number }[];
+  return filteredData;
 };

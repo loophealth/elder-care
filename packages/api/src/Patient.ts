@@ -13,11 +13,11 @@ export class Patient {
   notification: PatientNotification;
   notificationRef: DocumentReference<DocumentData>;
 
-  static async fromPhoneNumber(phoneNumber: string) {
-    const profile = await findUserProfile(phoneNumber);
-    const report = await findHealthReport(phoneNumber);
-    const carePlan = await findOrCreateCarePlan(phoneNumber);
-    const notification = await findOrCreateNotification(phoneNumber);
+  static async fromPhoneNumber(phoneNumber: string, relation?: string) {
+    const profile = await findUserProfile(phoneNumber, relation);
+    const report = await findHealthReport(phoneNumber, profile.data);
+    const carePlan = await findOrCreateCarePlan(phoneNumber, profile.data);
+    const notification = await findOrCreateNotification(phoneNumber, profile.data);
     return new Patient(
       profile.data,
       profile.ref,

@@ -53,3 +53,11 @@
   flex-direction: column;
   gap: var(--space-2xs);
 }
+
+.Found__Patient__Container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-xs);
+  align-items: center;
+  justify-content: space-between;
+}

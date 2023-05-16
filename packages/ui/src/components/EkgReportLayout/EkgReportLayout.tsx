@@ -45,10 +45,10 @@ export const EkgReportLayout = ({
         />
       </div>
       <div className="EkgReportLayout__Ekg">
-        <img src={ekgImages[0]} alt="EKG 1" />
-        <img src={ekgImages[1]} alt="EKG 2" />
-        <img src={ekgImages[2]} alt="EKG 3" />
-        <img src={ekgImages[3]} alt="EKG 4" />
+        {ekgImages[0] && <img src={ekgImages[0]} alt="EKG 1" />}
+        {ekgImages[1] && <img src={ekgImages[1]} alt="EKG 2" />}
+        {ekgImages[2] && <img src={ekgImages[2]} alt="EKG 3" />}
+        {ekgImages[3] && <img src={ekgImages[3]} alt="EKG 4" />}
       </div>
     </div>
   );

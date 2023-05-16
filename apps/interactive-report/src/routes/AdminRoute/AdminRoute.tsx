@@ -2,8 +2,10 @@ import { Navbar } from "components/Navbar";
 import { LinkThatLooksLikeButton } from "components";
 
 import "./AdminRoute.css";
+import { usePatient } from "@loophealth/api";
 
 export const AdminRoute = () => {
+  const { patient } = usePatient();
   return (
     <>
       <Navbar />
@@ -33,12 +35,14 @@ export const AdminRoute = () => {
           >
             Follow ups
           </LinkThatLooksLikeButton>
-          <LinkThatLooksLikeButton
-            to="/admin/notification"
-            icon="/img/chevron-right.svg"
-          >
-            Notification
-          </LinkThatLooksLikeButton>
+          {!patient?.profile?.parentId ? (
+            <LinkThatLooksLikeButton
+              to="/admin/notification"
+              icon="/img/chevron-right.svg"
+            >
+              Notification
+            </LinkThatLooksLikeButton>
+          ) : null}
         </div>
       </main>
     </>
