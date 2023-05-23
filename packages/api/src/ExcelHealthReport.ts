@@ -34,6 +34,7 @@ export const parseExcelHealthReport = async (
   const fullName = basicInformationWorksheet["B2"].v;
   const age = basicInformationWorksheet["B3"].v;
   const relation = basicInformationWorksheet["B5"].v || "";
+  const plan = basicInformationWorksheet["B6"].v || "";
 
   let phoneNumber = String(basicInformationWorksheet["B4"].v);
   if (!phoneNumber.startsWith("+91")) {
@@ -117,6 +118,7 @@ export const parseExcelHealthReport = async (
     age,
     phoneNumber,
     relation: relation !== "Self" ? relation : "",
+    plan,
     categories,
     measurements,
     summary,
@@ -138,6 +140,7 @@ const ExcelHealthReportSchema = z.object({
   age: z.number(),
   phoneNumber: z.string().length(13),
   relation: z.string(),
+  plan: z.string(),
   categories: z.array(
     z.object({
       name: z.string(),
@@ -207,5 +210,6 @@ export const toUserProfile = (excelReport: ExcelHealthReport): UserProfile => {
     role: "patient",
     healthTimeline: [],
     relation: excelReport?.relation,
+    plan: excelReport?.plan,
   };
 };

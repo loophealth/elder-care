@@ -12,6 +12,7 @@ import { resetLocalStorageOnLogout } from "lib/useCarePlanTodoList";
 import { LoadingSpinner } from "@loophealth/ui";
 import { useMemo } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { PageHeader } from "components/PageHeader";
 
 export const HomeRoute = () => {
   const { user, setUser } = useAuth();
@@ -67,6 +68,7 @@ export const HomeRoute = () => {
 
   return (
     <main className="HomeRoute">
+      <PageHeader label="Home" showProfile={true} />
       <div className="HomeRoute__Timeline">
         <div className="HomeRoute__Timeline__TimelineTicks" />
       </div>

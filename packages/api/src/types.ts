@@ -94,6 +94,7 @@ export interface UserProfile {
   relation?: string;
   parentId?: string;
   id?: string;
+  plan?: string;
 }
 
 /**

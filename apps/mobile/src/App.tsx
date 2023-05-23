@@ -9,6 +9,7 @@ import {
   usePatient,
   Patient,
   logUser,
+  findLinkedUserProfile,
 } from "@loophealth/api";
 import "@loophealth/ui/src/styles/reset.css";
 import "@loophealth/ui/src/styles/utopia.css";
@@ -25,7 +26,7 @@ import { InstallPWADialog } from "components/InstallDialog";
 
 export const App = () => {
   const { user, setUser, setRequestStatus } = useAuth();
-  const { setPatient } = usePatient();
+  const { setPatient, setFoundPatient } = usePatient();
   const [isOpen, setIsOpen] = useState(true);
 
   // Handle auth state changes. Doing it here lets us call sign in and sign out
@@ -52,13 +53,22 @@ export const App = () => {
         user_name: foundPatient?.profile?.fullName,
         user_phone_number: foundPatient?.profile?.phoneNumber,
         is_subscriber: true,
-      }
+      };
       logUser(logUserData);
+    };
+
+    const findLinkedProfile = async () => {
+      if (user?.phoneNumber) {
+        const { data } = await findLinkedUserProfile(user?.phoneNumber);
+        setFoundPatient(data);
+      }
     };
 
     if (user) {
       findPatient();
+      findLinkedProfile();
     }
+    // eslint-disable-next-line
   }, [user, setPatient]);
 
   return (

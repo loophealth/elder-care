@@ -1,0 +1,87 @@
+.sidebar {
+  position: fixed;
+  top: 0%;
+  left: 0;
+}
+
+.sidebar_icon {
+  position: fixed;
+  right: 0;
+  color: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* transition: width 0.5s ease-in-out; */
+}
+
+.sidebar_icon i {
+  font-size: 1.7rem;
+}
+
+.sidebar_items {
+  background-color: #fff;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0px;
+  position: fixed;
+  z-index: 2;
+  height: 100vh;
+  transition: all 5s ease-in-out;
+}
+
+.selected_item {
+  border-right: 4px solid #e06900;
+  background-color: rgba(224, 105, 0, 0.2);
+}
+
+.sidebar_item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  flex-direction: row;
+  padding: 10px 0;
+}
+
+.sidebar_item:hover {
+  background-color: #e06900;
+}
+
+.sidebar_item i {
+  font-size: 1.3rem;
+  margin-right: 10px;
+}
+
+.sidebar_item p {
+  font-size: 1rem;
+}
+.blur {
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+}
+
+.User_Icon {
+  margin: 2% 5%;
+  min-width: var(--space-l);
+  min-height: var(--space-l);
+}
+.User_Relation {
+  color: #8c8c8c;
+  font-weight: 400;
+}
+.User_Full_Name {
+  font-weight: 500;
+}
+.Profile_Container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}

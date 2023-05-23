@@ -11,7 +11,7 @@ export const ReportOverviewRoute = () => {
 
   return (
     <main className="ReportOverviewRoute">
-      <PageHeader label="Your Health" />
+      <PageHeader label="Your Health" showProfile={true} />
       <ReportOverviewGrid
         colorTheme={ColorTheme.Light}
         categories={patient?.report.categories || []}

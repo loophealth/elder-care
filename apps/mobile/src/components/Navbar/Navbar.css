@@ -62,3 +62,7 @@
 .Navbar__Item--Active .Navbar__Item__Icon--You {
   background-image: url("~/public/img/user-orange.svg");
 }
+
+.hide {
+  display: none;
+}

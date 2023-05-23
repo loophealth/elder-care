@@ -122,7 +122,8 @@ export const createHealthReportAndUserProfile = async (
     userProfile.phoneNumber,
     userProfile.fullName,
     userProfile.age,
-    userProfile.relation
+    userProfile.relation,
+    userProfile.plan
   );
 
   const newHealthReport = await UpdateOrCreateHealthReport(
@@ -229,7 +230,7 @@ export const findUserProfile = async (
   }
   const profiles = filteredProfile?.[0].data;
   const selectedIndex = filteredProfile?.[0].index;
-  
+
   return { ref: snapshot.docs[selectedIndex].ref, data: profiles };
 };
 
@@ -252,6 +253,12 @@ export const findLinkedUserProfile = async (
       ApiErrorCode.NotFound
     );
   }
+  if (profiles.length > 1) {
+    const parentProfileIndex = profiles.findIndex((data) => !data.relation);
+    const tempProfile = profiles[0];
+    profiles[0] = profiles[parentProfileIndex];
+    profiles[parentProfileIndex] = tempProfile;
+  }
 
   return { data: profiles };
 };
@@ -263,7 +270,8 @@ export const createUserProfile = async (
   phoneNumber: string,
   fullName: string | null = null,
   age: number | null = null,
-  relation: string | null = null
+  relation: string | null = null,
+  plan: string | null = null
 ): Promise<ApiResponse<UserProfile>> => {
   let userProfile: UserProfile = {
     fullName,
@@ -272,6 +280,13 @@ export const createUserProfile = async (
     role: "patient",
     healthTimeline: [],
   };
+
+  if (plan) {
+    userProfile = {
+      ...userProfile,
+      plan,
+    };
+  }
 
   if (relation) {
     userProfile = {
@@ -296,7 +311,8 @@ export const findOrCreateUserProfile = async (
   phoneNumber: string,
   fullName: string | null = null,
   age: number | null = null,
-  relation: string | null = null
+  relation: string | null = null,
+  plan: string | null = null
 ): Promise<ApiResponse<UserProfile>> => {
   try {
     const profile = await findUserProfile(phoneNumber, relation);
@@ -307,7 +323,8 @@ export const findOrCreateUserProfile = async (
         phoneNumber,
         fullName,
         age,
-        relation
+        relation,
+        plan
       );
       return profile;
     }
@@ -339,7 +356,7 @@ export const findCarePlan = async (
   const snapshot = await getDocs(q);
   // const carePlans = snapshot.docs.map((doc) => doc.data() as CarePlan);
   const filteredCarePlans = filteredDoc(snapshot, relation);
-  
+
   if (filteredCarePlans.length === 0) {
     throw new ApiError(
       "No care plan found associated with that phone number",
