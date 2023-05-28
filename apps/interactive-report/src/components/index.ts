@@ -10,6 +10,7 @@ import { Navbar } from "./Navbar";
 import { Select } from "./Select";
 import { TextArea } from "./TextArea";
 import { Timeline } from "./Timeline";
+import { MultiSelect } from "./MultiSelect";
 
 export {
     AdminEditorLayout,
@@ -23,5 +24,6 @@ export {
     Navbar,
     Select,
     TextArea,
-    Timeline
+    Timeline,
+    MultiSelect
 };

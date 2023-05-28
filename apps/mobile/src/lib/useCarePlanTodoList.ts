@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { concat } from "lodash";
+// import { concat } from "lodash";
 import { formatISO } from "date-fns";
 
-import { CarePlan, CarePlanItem } from "@loophealth/api";
+import { CarePlan, CarePlanItem, CarePlanTask } from "@loophealth/api";
 
 export interface CarePlanChecklistItem extends CarePlanItem {
   category: string;
@@ -24,26 +24,40 @@ const setChecklistState = (carePlan: CarePlan) => {
   const existingChecklistJson = window.localStorage.getItem(
     CHECKLIST_LOCAL_STORAGE_KEY
   );
-  let existingChecklist = [] as CarePlanChecklistItem[];
+  let existingChecklist = [] as CarePlanTask[];
   if (existingChecklistJson) {
-    existingChecklist = JSON.parse(
-      existingChecklistJson
-    ) as CarePlanChecklistItem[];
+    existingChecklist = JSON.parse(existingChecklistJson) as CarePlanTask[];
   }
 
   // Add metadata to items passed in from the user.
-  const passedInItems = concat(
-    carePlan?.diet.map(extendItem("diet")),
-    carePlan?.medication.map(extendItem("medication")),
-    carePlan?.physicalActivity.map(extendItem("physicalActivity")),
-    carePlan?.others.map(extendItem("others"))
-    // carePlan?.suggestedContent.map(extendItem("suggestedContent"))
-  ).filter((item) => !!item) as CarePlanChecklistItem[];
+  // const passedInItems = concat(
+  //   carePlan?.diet.map(extendItem("diet")),
+  //   carePlan?.medication.map(extendItem("medication")),
+  //   carePlan?.physicalActivity.map(extendItem("physicalActivity")),
+  //   carePlan?.others.map(extendItem("others"))
+  // ).filter((item) => !!item) as CarePlanChecklistItem[];
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrow = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1
+  );
+  const passedInItems = carePlan?.tasks?.filter(
+    (item) =>
+      item &&
+      item.scheduledTime.toDate() > today &&
+      item.scheduledTime.toDate() < tomorrow &&
+      (item.category === "diet" ||
+        item.category === "medication" ||
+        item.category === "physicalActivity")
+  );
 
   //Sort based on time
-  passedInItems.sort((a: CarePlanChecklistItem, b: CarePlanChecklistItem) => {
-    const aReminder = a.reminder as string,
-      bReminder = b.reminder as string;
+  passedInItems.sort((a: CarePlanTask, b: CarePlanTask) => {
+    const aReminder = a.time.toLowerCase() as string,
+      bReminder = b.time.toLowerCase() as string;
     return reminderLookup[aReminder] - reminderLookup[bReminder];
   });
 
@@ -57,9 +71,10 @@ const setChecklistState = (carePlan: CarePlan) => {
         existingItem.recommendation === passedInItem.recommendation &&
         existingItem.category === passedInItem.category &&
         existingItem.details === passedInItem.details &&
-        existingItem.reminder === passedInItem.reminder &&
-        existingItem.id === passedInItem.id &&
-        existingItem.link === passedInItem.link
+        existingItem.time === passedInItem.time &&
+        existingItem.scheduledTime === passedInItem.scheduledTime &&
+        existingItem.refId === passedInItem.refId &&
+        existingItem.checked === passedInItem.checked
     );
     if (existingItem) {
       return existingItem;
@@ -69,9 +84,9 @@ const setChecklistState = (carePlan: CarePlan) => {
   });
 
   // If the modified date has changed, reset all items to not done.
-  if (hasDateChanged()) {
-    mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
-  }
+  // if (hasDateChanged()) {
+  //   mergedItems = mergedItems.map((item) => ({ ...item, isDone: false }));
+  // }
 
   // Store the merged items back into localStorage.
   window.localStorage.setItem(
@@ -84,7 +99,7 @@ const setChecklistState = (carePlan: CarePlan) => {
 
 export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   const [carePlanChecklistItems, setCarePlanChecklistItems] = useState<
-    CarePlanChecklistItem[]
+    CarePlanTask[]
   >([]);
 
   useEffect(() => {
@@ -95,7 +110,7 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   }, [carePlan]);
 
   const setAndPersistCarePlanChecklist = (
-    newCarePlanChecklist: CarePlanChecklistItem[]
+    newCarePlanChecklist: CarePlanTask[]
   ) => {
     setCarePlanChecklistItems(newCarePlanChecklist);
     window.localStorage.setItem(
@@ -147,18 +162,18 @@ export const useCarePlanChecklistItems = (carePlan?: CarePlan) => {
   return [carePlanChecklistItems, setAndPersistCarePlanChecklist] as const;
 };
 
-const extendItem = (category: string) => (item: CarePlanItem) => {
-  if (category === "others") {
-    return {
-      ...item,
-      category,
-      isDone: false,
-      reminder: category,
-    };
-  } else {
-    return { ...item, category, isDone: false };
-  }
-};
+// const extendItem = (category: string) => (item: CarePlanItem) => {
+//   if (category === "others") {
+//     return {
+//       ...item,
+//       category,
+//       isDone: false,
+//       reminder: category,
+//     };
+//   } else {
+//     return { ...item, category, isDone: false };
+//   }
+// };
 
 const hasDateChanged = () => {
   const lastModifiedString = window.localStorage.getItem(

@@ -107,6 +107,13 @@ export interface CarePlanItem {
   reminder?: string;
   link?: string;
   prescriptionData?: string;
+  days?: string[];
+  time?: string[];
+  meal?: string[];
+  dateRange?: {
+    from: string;
+    to: string;
+  };
 }
 
 /**
@@ -123,6 +130,19 @@ export interface CarePlan {
   relation?: string;
   parentId?: string;
   userId?: string;
+  tasks: CarePlanTask[];
+}
+
+export interface CarePlanTask {
+  refId: string;
+  recommendation: string;
+  meal: string[];
+  category: "diet" | "physicalActivity" | "medication";
+  date: Timestamp;
+  scheduledTime: Timestamp;
+  checked: boolean;
+  time: CarePlanReminder;
+  details?: string;
 }
 
 export type CarePlanCategory =
@@ -133,19 +153,7 @@ export type CarePlanCategory =
   | "suggestedContent"
   | "others";
 
-export type CarePlanReminder =
-  | "morning"
-  | "afternoon"
-  | "evening"
-  | "night";
-
-export type CarePlanFilterCategory =
-  | "morning"
-  | "afternoon"
-  | "evening"
-  | "night"
-  | "suggestedContent"
-  | "others";
+export type CarePlanReminder = "morning" | "afternoon" | "evening" | "night";
 
 /**
  * A single risk factor for a patient.
@@ -183,14 +191,10 @@ export interface PatientNotificationItem {
 
 export interface PatientNotification {
   phoneNumber: string;
-  notifications: PatientNotificationItem[],
+  notifications: PatientNotificationItem[];
   relation?: string;
   parentId?: string;
   userId?: string;
 }
 
-export type NotificationCategory =
-  | "immediate"
-  | "scheduled"
-  | "recurring";
-
+export type NotificationCategory = "immediate" | "scheduled" | "recurring";

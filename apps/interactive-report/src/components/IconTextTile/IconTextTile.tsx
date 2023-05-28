@@ -1,6 +1,7 @@
 import { IconButton } from "components/IconButton";
 
 import "./IconTextTile.css";
+import { Input } from "components/Input";
 
 interface IconTextTileProps {
   title: string;
@@ -12,6 +13,11 @@ interface IconTextTileProps {
   onDelete?: () => void;
   onUpdate?: () => void;
   link?: string;
+  description_line_1?: string;
+  description_line_2?: string;
+  description_line_3?: string;
+  checked?: boolean;
+  onCheck?: () => void;
 }
 
 export const IconTextTile = ({
@@ -24,6 +30,11 @@ export const IconTextTile = ({
   onReorder,
   onDelete,
   onUpdate,
+  description_line_1,
+  description_line_2,
+  description_line_3,
+  checked = false,
+  onCheck,
 }: IconTextTileProps) => {
   return (
     <div className="IconTextTile">
@@ -44,6 +55,18 @@ export const IconTextTile = ({
         </div>
       ) : null}
 
+      {onCheck ? (
+        <div className="IconTextTile__ButtonContainer">
+          <Input
+            type="checkbox"
+            onChange={onCheck}
+            disabled={isLoading}
+            checked={checked}
+            className="customCheckbox"
+          />
+        </div>
+      ) : null}
+
       <div className="Utils__Tile IconTextTile__Tile">
         {icon ? (
           <img src={icon} alt={iconAlt} className="IconTextTile__Tile__Icon" />
@@ -53,6 +76,21 @@ export const IconTextTile = ({
           <div className="IconTextTile__Tile__TextContent__Details">
             {details}
           </div>
+          {description_line_1 && (
+            <div className="IconTextTile__Tile__TextContent__Details">
+              {description_line_1}
+            </div>
+          )}
+          {description_line_2 && (
+            <div className="IconTextTile__Tile__TextContent__Details">
+              {description_line_2}
+            </div>
+          )}
+          {description_line_3 && (
+            <div className="IconTextTile__Tile__TextContent__Details">
+              {description_line_3}
+            </div>
+          )}
           {link ? (
             <div className="IconTextTile__Tile__TextContent__Details">
               <a

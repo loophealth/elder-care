@@ -10,3 +10,9 @@
 .Hide_Label {
   visibility: hidden;
 }
+
+.Date_Range_Input {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-s);
+}

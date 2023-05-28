@@ -24,7 +24,7 @@
 .IconTextTile__Tile__TextContent__Details {
   font-size: var(--step--1);
   color: var(--color-gray-light);
-  line-height: 1.25;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -32,4 +32,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.customCheckbox{
+  transform: scale(2);
+}
+
+input.customCheckbox:checked {
+  accent-color: #FBC01F;
 }

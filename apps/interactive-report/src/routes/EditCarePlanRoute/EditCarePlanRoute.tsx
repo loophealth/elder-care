@@ -5,7 +5,6 @@ import {
   usePatient,
   CarePlan,
   CarePlanCategory,
-  CarePlanReminder,
   PatientNotificationItem,
   CarePlanItem,
   deleteFileFromUrl,
@@ -20,11 +19,19 @@ import {
   TextArea,
   IconTextTile,
   IconTextTileList,
+  MultiSelect,
 } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./EditCarePlanRoute.css";
-import { carePlanCategoryTime, generateId, notificationSource } from "utils";
+import {
+  // carePlanCategoryTime,
+  createTask,
+  formatDateRange,
+  generateId,
+  getTodayDate,
+  // notificationSource,
+} from "utils";
 
 export const EditCarePlanRoute = () => {
   const { patient } = usePatient();
@@ -33,7 +40,6 @@ export const EditCarePlanRoute = () => {
   const [category, setCategory] = useState<CarePlanCategory | "">("");
   const [recommendation, setRecommendation] = useState("");
   const [details, setDetails] = useState("");
-  const [reminder, setReminder] = useState<CarePlanReminder | "">("");
   const [link, setLink] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState<PatientNotificationItem[]>(
@@ -45,6 +51,13 @@ export const EditCarePlanRoute = () => {
 
   const [prescriptionFile, setPrescriptionFile] = useState("");
   const [prescriptionData, setPrescriptionData] = useState<File | null>();
+
+  const [time, setTime] = useState<string[] | []>([]);
+  const [meal, setMeal] = useState<string[] | []>([]);
+  const [days, setDays] = useState<string[] | []>([]);
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   // Subscribe to care plan updates.
   useEffect(() => {
@@ -73,18 +86,18 @@ export const EditCarePlanRoute = () => {
     };
   }, [patient]);
 
-  const updateCarePlanNotification = (reminder: string, id: string) => {
-    // Care Plan Notification daily
-    let newNotification: PatientNotificationItem = {
-      id,
-      title: recommendation,
-      body: details,
-      sent: false,
-      time: (carePlanCategoryTime as any)[reminder],
-      source: notificationSource.carePlan,
-    };
-    return newNotification;
-  };
+  // const updateCarePlanNotification = (reminder: string, id: string) => {
+  //   // Care Plan Notification daily
+  //   let newNotification: PatientNotificationItem = {
+  //     id,
+  //     title: recommendation,
+  //     body: details,
+  //     sent: false,
+  //     time: (carePlanCategoryTime as any)[reminder],
+  //     source: notificationSource.carePlan,
+  //   };
+  //   return newNotification;
+  // };
 
   // Handle form submission.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -114,31 +127,52 @@ export const EditCarePlanRoute = () => {
           fileUrl = (await getUrlFromFile(prescriptionData, metadata)) || "";
         }
 
-        const newCarePlanItem = {
-          id: newCarePlanId,
+        const careData = {
           recommendation,
           details,
-          reminder,
+          days,
+          time,
+          meal,
+          dateRange: {
+            from: startDate,
+            to: endDate,
+          },
+        };
+        const newCarePlanItem = {
+          ...careData,
+          id: newCarePlanId,
           link: link || fileUrl,
         };
         const newCarePlan =
           category === "prescription"
             ? [newCarePlanItem]
             : [...carePlan[category], newCarePlanItem];
-        await updateDoc(patient.carePlanRef, { [category]: newCarePlan });
-        if (
-          category !== "suggestedContent" &&
-          category !== "others" &&
-          category !== "prescription" &&
-          reminder
-        ) {
-          await updateDoc(patient.notificationRef, {
-            notifications: [
-              ...notifications,
-              updateCarePlanNotification(reminder, newCarePlanId),
-            ],
-          });
-        }
+
+        const careTaskData = {
+          ...careData,
+          refId: newCarePlanId,
+          category,
+        };
+        const tasks = createTask(careTaskData);
+        const newTask = carePlan.tasks ? [...carePlan.tasks, ...tasks] : tasks;
+        await updateDoc(patient.carePlanRef, {
+          [category]: newCarePlan,
+          tasks: newTask,
+        });
+
+        // if (
+        //   category !== "suggestedContent" &&
+        //   category !== "others" &&
+        //   category !== "prescription" &&
+        //   reminder
+        // ) {
+        //   await updateDoc(patient.notificationRef, {
+        //     notifications: [
+        //       ...notifications,
+        //       updateCarePlanNotification(reminder, newCarePlanId),
+        //     ],
+        //   });
+        // }
         onReset();
       } catch (e) {
         alert(
@@ -156,11 +190,15 @@ export const EditCarePlanRoute = () => {
     setCategory("");
     setRecommendation("");
     setDetails("");
-    setReminder("");
     setLink("");
     setSelectedData(null);
     setPrescriptionFile("");
     setPrescriptionData(null);
+    setStartDate("");
+    setEndDate("");
+    setTime([]);
+    setMeal([]);
+    setDays([]);
   };
 
   // Delete an item.
@@ -172,8 +210,16 @@ export const EditCarePlanRoute = () => {
     setIsLoading(true);
     try {
       let newCategoryItems = [...carePlan[category]];
+      let newTask = carePlan.tasks ? [...carePlan.tasks] : [];
       newCategoryItems = newCategoryItems.filter((data) => data.id !== item.id);
-      await updateDoc(patient.carePlanRef, { [category]: newCategoryItems });
+      newTask = newTask?.filter(
+        (data) =>
+          data.scheduledTime.toDate() < new Date() || data?.refId !== item.id
+      );
+      await updateDoc(patient.carePlanRef, {
+        [category]: newCategoryItems,
+        tasks: newTask,
+      });
 
       //Delete Care plan Notification
       let newNotifications = [...notifications];
@@ -204,9 +250,6 @@ export const EditCarePlanRoute = () => {
     }
     if (item?.details) {
       setDetails(item.details);
-    }
-    if (item?.reminder) {
-      setReminder(item.reminder as CarePlanReminder);
     }
     if (item?.link) {
       setLink(item.link);
@@ -240,26 +283,25 @@ export const EditCarePlanRoute = () => {
           item.details = details;
           item.link = link || fileUrl;
           item.recommendation = recommendation;
-          item.reminder = reminder;
         }
         return item;
       });
 
       await updateDoc(patient.carePlanRef, { [category]: updatedData });
-      if (reminder && id) {
-        //Update Care plan Notification
-        let newNotifications = [...notifications];
-        newNotifications = newNotifications.filter(
-          (data) => !data.id || (data.id && data.id !== id)
-        );
-        newNotifications = [
-          ...newNotifications,
-          updateCarePlanNotification(reminder, id),
-        ];
-        await updateDoc(patient.notificationRef, {
-          notifications: newNotifications,
-        });
-      }
+      // if (reminder && id) {
+      //   //Update Care plan Notification
+      //   let newNotifications = [...notifications];
+      //   newNotifications = newNotifications.filter(
+      //     (data) => !data.id || (data.id && data.id !== id)
+      //   );
+      //   newNotifications = [
+      //     ...newNotifications,
+      //     updateCarePlanNotification(reminder, id),
+      //   ];
+      //   await updateDoc(patient.notificationRef, {
+      //     notifications: newNotifications,
+      //   });
+      // }
       onReset();
     } catch (e) {
       alert(
@@ -270,6 +312,11 @@ export const EditCarePlanRoute = () => {
       setIsLoading(false);
     }
   };
+
+  const isTask = () =>
+    category === "medication" ||
+    category === "diet" ||
+    category === "physicalActivity";
 
   return (
     <AdminEditorLayout
@@ -303,14 +350,18 @@ export const EditCarePlanRoute = () => {
 
           <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label" htmlFor="recommendation">
-              Heading
+              {category === "medication" ? "Medicine" : "Heading"}
             </label>
             <Input
               id="recommendation"
               type="text"
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
-              placeholder="Enter the main text"
+              placeholder={
+                category === "medication"
+                  ? "Medicine Name"
+                  : "Enter the main text"
+              }
               required
               disabled={isLoading}
             />
@@ -332,7 +383,7 @@ export const EditCarePlanRoute = () => {
           {category === "prescription" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="prescriptionFile">
-                Select prescription
+                Select prescription (upto 2Mb)
               </label>
               <Input
                 id="prescriptionFile"
@@ -349,7 +400,9 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category !== "suggestedContent" && category !== "prescription" ? (
+          {category !== "suggestedContent" &&
+          category !== "prescription" &&
+          category !== "medication" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="details">
                 Additional info
@@ -366,26 +419,76 @@ export const EditCarePlanRoute = () => {
           {category !== "suggestedContent" &&
           category !== "others" &&
           category !== "prescription" ? (
-            <div className="Utils__VerticalForm__Group">
-              <label className="Utils__Label" htmlFor="reminder">
-                Set reminder
-              </label>
-              <Select
-                name="reminder"
-                id="reminder"
-                value={reminder}
-                onChange={(e) =>
-                  setReminder(e.target.value as CarePlanReminder)
-                }
-                disabled={isLoading}
-              >
-                <option value="">Select reminder</option>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="evening">Evening</option>
-                <option value="night">Night</option>
-              </Select>
-            </div>
+            <>
+              <div className="Utils__VerticalForm__Group">
+                <label className="Utils__Label" htmlFor="time">
+                  Time
+                </label>
+                <MultiSelect
+                  id="time"
+                  name="Care_Time_Multiselect"
+                  data={["Morning", "Afternoon", "Evening", "Night"]}
+                  value={time}
+                  onChange={setTime}
+                  required={isTask()}
+                />
+              </div>
+              {category === "medication" ? (
+                <div className="Utils__VerticalForm__Group">
+                  <label className="Utils__Label" htmlFor="food">
+                    With meal?
+                  </label>
+                  <MultiSelect
+                    id="food"
+                    name="Care_Meal_Multiselect"
+                    data={["After food", "On empty stomach", "No preference"]}
+                    value={meal}
+                    onChange={setMeal}
+                    multiple={false}
+                    required={isTask()}
+                  />
+                </div>
+              ) : null}
+              <div className="Utils__VerticalForm__Group">
+                <label className="Utils__Label" htmlFor="days">
+                  Days applicable
+                </label>
+                <MultiSelect
+                  id="days"
+                  name="Care_Day_Multiselect"
+                  data={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+                  value={days}
+                  onChange={setDays}
+                  required={isTask()}
+                />
+              </div>
+              <div className="Utils__VerticalForm__Group">
+                <label className="Utils__Label" htmlFor="dateRange">
+                  Dates that this will run for:
+                </label>
+                <div className="Date_Range_Input" id="dateRange">
+                  <Input
+                    id="startDate"
+                    type="date"
+                    placeholder="Select Start Date"
+                    value={startDate}
+                    min={getTodayDate()}
+                    onChange={(event) => setStartDate(event.target.value)}
+                    disabled={isLoading}
+                    required={isTask()}
+                  />
+                  <Input
+                    id="endDate"
+                    type="date"
+                    placeholder="Select End Date"
+                    value={endDate}
+                    onChange={(event) => setEndDate(event.target.value)}
+                    disabled={isLoading}
+                    required={isTask()}
+                  />
+                </div>
+              </div>
+            </>
           ) : null}
 
           <div className="Utils__VerticalForm__ButtonsContainer">
@@ -418,10 +521,12 @@ export const EditCarePlanRoute = () => {
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
-                  details={item.details}
+                  details={item?.days?.toString()}
+                  description_line_1={item?.time?.toString()}
+                  description_line_2={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.medication}
                   onDelete={() => onDelete("medication", item)}
-                  onUpdate={() => updateData("medication", item)}
+                  // onUpdate={() => updateData("medication", item)}
                 />
               ))}
               {carePlan.diet.map((item) => (
@@ -429,9 +534,12 @@ export const EditCarePlanRoute = () => {
                   key={item.id}
                   title={item.recommendation}
                   details={item.details}
+                  description_line_1={item?.days?.toString()}
+                  description_line_2={item?.time?.toString()}
+                  description_line_3={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.diet}
                   onDelete={() => onDelete("diet", item)}
-                  onUpdate={() => updateData("diet", item)}
+                  // onUpdate={() => updateData("diet", item)}
                 />
               ))}
               {carePlan.physicalActivity.map((item) => (
@@ -439,9 +547,12 @@ export const EditCarePlanRoute = () => {
                   key={item.id}
                   title={item.recommendation}
                   details={item.details}
+                  description_line_1={item?.days?.toString()}
+                  description_line_2={item?.time?.toString()}
+                  description_line_3={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.physicalActivity}
                   onDelete={() => onDelete("physicalActivity", item)}
-                  onUpdate={() => updateData("physicalActivity", item)}
+                  // onUpdate={() => updateData("physicalActivity", item)}
                 />
               ))}
               {carePlan.others.map((item) => (

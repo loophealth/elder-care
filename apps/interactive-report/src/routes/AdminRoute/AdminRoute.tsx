@@ -12,6 +12,12 @@ export const AdminRoute = () => {
       <main className="AdminRoute">
         <div className="AdminRoute__ButtonContainer">
           <LinkThatLooksLikeButton
+            to="/admin/today-plan"
+            icon="/img/chevron-right.svg"
+          >
+            Today's plan
+          </LinkThatLooksLikeButton>
+          <LinkThatLooksLikeButton
             to="/admin/care-plan"
             icon="/img/chevron-right.svg"
           >

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { CarePlan, logCustomEvent, usePatient } from "@loophealth/api";
+import { CarePlan, CarePlanTask, logCustomEvent, usePatient } from "@loophealth/api";
 
 import { Checkbox } from "components/Checkbox";
 import {
-  CarePlanChecklistItem,
+  // CarePlanChecklistItem,
   useCarePlanChecklistItems,
 } from "lib/useCarePlanTodoList";
 
@@ -21,7 +21,7 @@ export const CarePlanChecklist = () => {
   const { patient } = usePatient();
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
 
-  const [carePlanChecklistItems, setCarePlanChecklistItems] =
+  const [carePlanChecklistItems] =
     useCarePlanChecklistItems(carePlan || undefined);
 
   // Subscribe to care plan updates.
@@ -40,20 +40,21 @@ export const CarePlanChecklist = () => {
     };
   }, [patient]);
 
-  const onCheck = (id: string) => {
-    let newCarePlanChecklistItems = [...carePlanChecklistItems];
-    newCarePlanChecklistItems = newCarePlanChecklistItems.map((item: any) => {
-      if (item.id === id) {
-        item["isDone"] = !item["isDone"];
-      }
-      return item;
-    });
-    setCarePlanChecklistItems(newCarePlanChecklistItems);
-  };
+  //TODO: Need to check personal or parent care & update task.
+  // const onCheck = (id: string) => {
+  //   let newCarePlanChecklistItems = [...carePlanChecklistItems];
+  //   newCarePlanChecklistItems = newCarePlanChecklistItems.map((item: any) => {
+  //     if (item.id === id) {
+  //       item["isDone"] = !item["isDone"];
+  //     }
+  //     return item;
+  //   });
+  //   setCarePlanChecklistItems(newCarePlanChecklistItems);
+  // };
 
   const getGroupedChecklistItem: any = useMemo(() => {
     return carePlanChecklistItems
-      ? groupBy(carePlanChecklistItems, "reminder")
+      ? groupBy(carePlanChecklistItems, "time")
       : [];
   }, [carePlanChecklistItems]);
 
@@ -101,7 +102,7 @@ export const CarePlanChecklist = () => {
               </div>
               <div className="CarePlanChecklist__Items">
                 {getGroupedChecklistItem[data].map(
-                  (item: CarePlanChecklistItem, index: number) => {
+                  (item: CarePlanTask, index: number) => {
                     const icon = icons.get(item.category) || "";
 
                     return (
@@ -112,8 +113,9 @@ export const CarePlanChecklist = () => {
                         <Checkbox
                           type="checkbox"
                           className="CarePlanChecklist__Items__Item__Checkbox"
-                          checked={item.isDone}
-                          onChange={() => onCheck(item.id)}
+                          checked={item?.checked}
+                          readOnly={true}
+                          // onChange={() => onCheck(item.refId)}
                         />
                         <div>
                           <div className="CarePlanChecklist__Items__Item__Name">
