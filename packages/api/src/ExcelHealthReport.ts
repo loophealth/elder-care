@@ -33,8 +33,8 @@ export const parseExcelHealthReport = async (
   const createdOn = basicInformationWorksheet["B1"]?.v || new Date();
   const fullName = basicInformationWorksheet["B2"].v;
   const age = basicInformationWorksheet["B3"].v;
-  const relation = basicInformationWorksheet["B5"].v || "";
-  const plan = basicInformationWorksheet["B6"].v || "";
+  const relation = basicInformationWorksheet["B5"]?.v || "";
+  const plan = basicInformationWorksheet["B6"]?.v || "";
 
   let phoneNumber = String(basicInformationWorksheet["B4"].v);
   if (!phoneNumber.startsWith("+91")) {
