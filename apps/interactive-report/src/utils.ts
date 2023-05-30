@@ -66,7 +66,7 @@ export const createTask = (task: any) => {
         category,
         details,
         date: dates[d],
-        scheduledTime: careDate,
+        scheduledTime: Timestamp.fromDate(careDate),
         checked: false,
         time: time[t],
       });

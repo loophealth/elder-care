@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./MultiSelect.css";
 
@@ -21,6 +21,10 @@ export const MultiSelect = ({
   name,
 }: MultiSelectInterface) => {
   const [values, setValues] = useState<string[]>(value);
+
+  useEffect(() => {
+    setValues(value);
+  }, [value]);
 
   const logValue = (e: any) => {
     const currentVal = e.target.value;

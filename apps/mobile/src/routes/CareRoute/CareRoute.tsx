@@ -32,7 +32,7 @@ export const CareRoute = () => {
           },
         ]}
       />
-      <h2 className="CareRoute__Label CareRoute__Label--TopMargin Utils__Label">
+      {/* <h2 className="CareRoute__Label CareRoute__Label--TopMargin Utils__Label">
         Make a Booking
       </h2>
       <LinkList
@@ -45,7 +45,7 @@ export const CareRoute = () => {
             onClick: onCareClick,
           },
         ]}
-      />
+      /> */}
     </main>
   );
 };

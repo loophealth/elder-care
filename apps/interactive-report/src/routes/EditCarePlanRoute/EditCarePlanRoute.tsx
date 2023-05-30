@@ -9,6 +9,7 @@ import {
   CarePlanItem,
   deleteFileFromUrl,
   getUrlFromFile,
+  CarePlanTask,
 } from "@loophealth/api";
 
 import {
@@ -254,6 +255,19 @@ export const EditCarePlanRoute = () => {
     if (item?.link) {
       setLink(item.link);
     }
+    if (item?.days) {
+      setDays([...item.days]);
+    }
+    if (item?.dateRange) {
+      setStartDate(item?.dateRange?.from);
+      setEndDate(item?.dateRange?.to);
+    }
+    if (item?.time) {
+      setTime([...item.time]);
+    }
+    if (item?.meal) {
+      setMeal([...item.meal]);
+    }
   };
 
   // Update item.
@@ -283,11 +297,49 @@ export const EditCarePlanRoute = () => {
           item.details = details;
           item.link = link || fileUrl;
           item.recommendation = recommendation;
+          item.days = days;
+          item.time = time;
+          item.meal = meal;
+          if (item.dateRange) {
+            item.dateRange.from = startDate;
+            item.dateRange.to = endDate;
+          }
         }
         return item;
       });
+      // Update Care task
+      let careTask = carePlan.tasks ? [...carePlan.tasks] : [];
+      careTask = careTask?.filter(
+        (data) => data.scheduledTime.toDate() < new Date() || data?.refId !== id
+      );
+      const careData = {
+        recommendation,
+        details,
+        days,
+        time,
+        meal,
+        dateRange: {
+          from: startDate,
+          to: endDate,
+        },
+      };
 
-      await updateDoc(patient.carePlanRef, { [category]: updatedData });
+      const careTaskData = {
+        ...careData,
+        refId: id,
+        category,
+      };
+      const tasks = createTask(careTaskData);
+      careTask = [...careTask, ...tasks] as CarePlanTask[];
+      careTask.sort(
+        (a: CarePlanTask, b: CarePlanTask) =>
+          a.scheduledTime.toDate().valueOf() -
+          b.scheduledTime.toDate().valueOf()
+      ) as CarePlanTask[];
+      await updateDoc(patient.carePlanRef, {
+        [category]: updatedData,
+        tasks: careTask,
+      });
       // if (reminder && id) {
       //   //Update Care plan Notification
       //   let newNotifications = [...notifications];
@@ -526,7 +578,7 @@ export const EditCarePlanRoute = () => {
                   description_line_2={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.medication}
                   onDelete={() => onDelete("medication", item)}
-                  // onUpdate={() => updateData("medication", item)}
+                  onUpdate={() => updateData("medication", item)}
                 />
               ))}
               {carePlan.diet.map((item) => (
@@ -539,7 +591,7 @@ export const EditCarePlanRoute = () => {
                   description_line_3={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.diet}
                   onDelete={() => onDelete("diet", item)}
-                  // onUpdate={() => updateData("diet", item)}
+                  onUpdate={() => updateData("diet", item)}
                 />
               ))}
               {carePlan.physicalActivity.map((item) => (
@@ -552,7 +604,7 @@ export const EditCarePlanRoute = () => {
                   description_line_3={formatDateRange(item?.dateRange)}
                   icon={CATEGORY_ICONS.physicalActivity}
                   onDelete={() => onDelete("physicalActivity", item)}
-                  // onUpdate={() => updateData("physicalActivity", item)}
+                  onUpdate={() => updateData("physicalActivity", item)}
                 />
               ))}
               {carePlan.others.map((item) => (
