@@ -1,0 +1,12 @@
+.containerStyles {
+  height: var(--space-xs);
+  width: 100%;
+  background-color: #e0e0de;
+  border-radius: 15px;
+}
+
+.fillerStyles {
+  height: 100%;
+  border-radius: inherit;
+  text-align: right;
+}

@@ -16,7 +16,7 @@ export const Navbar = () => {
       </NavbarLink>
       <NavbarLink to="/report">
         <div className="Navbar__Item__Icon Navbar__Item__Icon--You" />
-        <div className="Navbar__Item__Label">You</div>
+        <div className="Navbar__Item__Label">Health</div>
       </NavbarLink>
     </div>
   );

@@ -12,7 +12,8 @@ import { AdminEditorLayout, IconTextTile, IconTextTileList } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./TodayPlanRoute.css";
-import { timeOrderMap } from "utils";
+import { getDatesFromWeek, getTaskBetweenDate, timeOrderMap } from "utils";
+import { groupBy } from "lodash";
 
 export const TodayPlanRoute = () => {
   const { patient } = usePatient();
@@ -55,27 +56,10 @@ export const TodayPlanRoute = () => {
   };
 
   const renderTodayTask = () => {
-    const now = new Date();
-    const today = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    const tomorrow = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1
-    );
-    const filteredTasks = carePlan?.tasks?.filter(
-      (data) =>
-        data.scheduledTime.toDate() > today &&
-        data.scheduledTime.toDate() < tomorrow
-    );
-    filteredTasks?.sort(
-      (a, b) =>
-      timeOrderMap[a.time.toLowerCase() as CarePlanReminder] -
-      timeOrderMap[b.time.toLowerCase() as CarePlanReminder]
-    );
+    const today = new Date();
+    const filteredTasks = carePlan?.tasks
+      ? getTaskBetweenDate(today, today, carePlan?.tasks)
+      : [];
     return (
       <>
         {filteredTasks?.map((item: CarePlanTask, index: number) => (

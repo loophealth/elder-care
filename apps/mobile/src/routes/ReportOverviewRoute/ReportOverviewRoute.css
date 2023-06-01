@@ -5,3 +5,9 @@
 .ReportOverviewRoute__Link {
   margin-top: var(--space-l);
 }
+.Report__Description {
+  font-weight: 400;
+  font-size: var(--step-0);
+  line-height: 20px;
+  padding: var(--space-xs) 0;
+}

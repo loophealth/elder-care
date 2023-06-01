@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { CarePlan, CarePlanTask, logCustomEvent, usePatient } from "@loophealth/api";
+import {
+  CarePlan,
+  CarePlanTask,
+  logCustomEvent,
+  usePatient,
+} from "@loophealth/api";
 
 import { Checkbox } from "components/Checkbox";
-import {
-  // CarePlanChecklistItem,
-  useCarePlanChecklistItems,
-} from "lib/useCarePlanTodoList";
+import { useCarePlanChecklistItems } from "lib/useCarePlanTodoList";
 
 import "./CarePlanChecklist.css";
 
@@ -14,15 +16,16 @@ import { ReactComponent as MedicationIcon } from "images/pill.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/walk.svg";
 import { ReactComponent as OthersIcon } from "images/sun.svg";
 import { groupBy } from "lodash";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, updateDoc } from "firebase/firestore";
 import { Button, ButtonVariant } from "components/Button";
 
 export const CarePlanChecklist = () => {
   const { patient } = usePatient();
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
 
-  const [carePlanChecklistItems] =
-    useCarePlanChecklistItems(carePlan || undefined);
+  const [carePlanChecklistItems] = useCarePlanChecklistItems(
+    carePlan || undefined
+  );
 
   // Subscribe to care plan updates.
   useEffect(() => {
@@ -40,17 +43,24 @@ export const CarePlanChecklist = () => {
     };
   }, [patient]);
 
-  //TODO: Need to check personal or parent care & update task.
-  // const onCheck = (id: string) => {
-  //   let newCarePlanChecklistItems = [...carePlanChecklistItems];
-  //   newCarePlanChecklistItems = newCarePlanChecklistItems.map((item: any) => {
-  //     if (item.id === id) {
-  //       item["isDone"] = !item["isDone"];
-  //     }
-  //     return item;
-  //   });
-  //   setCarePlanChecklistItems(newCarePlanChecklistItems);
-  // };
+  const onCheck = async (task: CarePlanTask) => {
+    if (!patient || !carePlan) {
+      return;
+    }
+    const newTask = carePlan?.tasks.map((data) => {
+      if (
+        data.recommendation === task.recommendation &&
+        data.scheduledTime === task.scheduledTime
+      ) {
+        data["checked"] = !data["checked"];
+        return data;
+      }
+      return data;
+    });
+    await updateDoc(patient.carePlanRef, {
+      tasks: newTask,
+    });
+  };
 
   const getGroupedChecklistItem: any = useMemo(() => {
     return carePlanChecklistItems
@@ -112,10 +122,16 @@ export const CarePlanChecklist = () => {
                       >
                         <Checkbox
                           type="checkbox"
-                          className="CarePlanChecklist__Items__Item__Checkbox"
+                          className={
+                            patient?.profile?.parentId
+                              ? "CarePlanChecklist__Items__Item__Checkbox CarePlanChecklist_Disabled_Checkbox"
+                              : "CarePlanChecklist__Items__Item__Checkbox"
+                          }
                           checked={item?.checked}
-                          readOnly={true}
-                          // onChange={() => onCheck(item.refId)}
+                          readOnly={patient?.profile?.parentId ? true : false}
+                          onChange={() =>
+                            !patient?.profile?.parentId ? onCheck(item) : null
+                          }
                         />
                         <div>
                           <div className="CarePlanChecklist__Items__Item__Name">
@@ -139,6 +155,34 @@ export const CarePlanChecklist = () => {
           return null;
         }
       })}
+      {carePlan?.others && carePlan?.others?.length !== 0 ? (
+        <div className="CarePlanChecklist__Container_Margin">
+          <div className="Utils__Label CarePlanChecklist__TodayLabel">
+            {"OTHERS"}
+          </div>
+          {carePlan?.others.map((item) => {
+            const icon = icons.get("others") || "";
+            return (
+              <label
+                key={item.recommendation}
+                className="CarePlanChecklist__Items__Item"
+              >
+                <div>
+                  <div className="CarePlanChecklist__Items__Item__Name">
+                    {item.recommendation}
+                  </div>
+                  {item.details ? (
+                    <div className="CarePlanChecklist__Items__Item__Description">
+                      {item.details}
+                    </div>
+                  ) : null}
+                </div>
+                {icon}
+              </label>
+            );
+          })}
+        </div>
+      ) : null}
       {carePlan?.suggestedContent &&
       carePlan?.suggestedContent?.length !== 0 ? (
         <div className="CarePlanChecklist__Container_Margin">

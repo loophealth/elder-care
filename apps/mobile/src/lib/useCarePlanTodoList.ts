@@ -29,14 +29,6 @@ const setChecklistState = (carePlan: CarePlan) => {
     existingChecklist = JSON.parse(existingChecklistJson) as CarePlanTask[];
   }
 
-  // Add metadata to items passed in from the user.
-  // const passedInItems = concat(
-  //   carePlan?.diet.map(extendItem("diet")),
-  //   carePlan?.medication.map(extendItem("medication")),
-  //   carePlan?.physicalActivity.map(extendItem("physicalActivity")),
-  //   carePlan?.others.map(extendItem("others"))
-  // ).filter((item) => !!item) as CarePlanChecklistItem[];
-
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const tomorrow = new Date(

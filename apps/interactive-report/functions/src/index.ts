@@ -57,10 +57,13 @@ exports.taskRunner = functions
                 fcmToken = await getTokenForProfile(profile);
               }
 
+              const categoryStr = category?.replace(/([A-Z])/g, " $1");
+              const categoryRes = categoryStr?.charAt(0)?.toUpperCase() + categoryStr?.slice(1);
+
               // using firebase-admin messaging function to send notification to our subscribed topic i.e. `all` with required `data`/payload
               const job = await admin.messaging().send({
                 notification: {
-                  title: category,
+                  title: categoryRes,
                   body: recommendation,
                 },
                 token: fcmToken,

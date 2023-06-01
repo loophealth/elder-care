@@ -26,3 +26,8 @@
 .Checkbox:checked::before {
   transform: scale(1);
 }
+
+.CarePlanChecklist_Disabled_Checkbox {
+  background-color: var(--color-gray-lighter);
+  opacity: 0.8;
+}
