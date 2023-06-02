@@ -9,7 +9,6 @@ import { ReactComponent as PhysicalActivityIcon } from "images/exercise.svg";
 import { onSnapshot } from "firebase/firestore";
 import "./WeeklyProgress.css";
 
-
 interface IProgressData {
   category: string;
   totalTask: number;
@@ -43,6 +42,8 @@ export const WeeklyProgress = () => {
     const tasks = carePlan?.tasks || [];
     if (tasks && tasks.length > 0) {
       getWeeklyTask(tasks);
+    } else {
+      setProgressData([]);
     }
   }, [carePlan]);
 
@@ -74,17 +75,16 @@ export const WeeklyProgress = () => {
     }
     setProgressData(newTasks);
   };
-
-  return (
-    <main className="WeeklyProgress">
-      <div className="WeeklyProgress__Title">Weekly Progress</div>
-      {progressData &&
-        progressData?.map((item: IProgressData, index: number) => {
+  if (progressData && progressData.length > 0) {
+    return (
+      <main className="WeeklyProgress">
+        <div className="WeeklyProgress__Title">Weekly Progress</div>
+        {progressData?.map((item: IProgressData, index: number) => {
           const icon = icons.get(item.category) || "";
           return (
             <div key={index.toString()}>
               <div className="Utils__Label WeeklyProgress__TodayLabel">
-                {item?.category.toLowerCase() == "physicalactivity"
+                {item?.category.toLowerCase() === "physicalactivity"
                   ? "EXERCISE"
                   : item?.category.toUpperCase()}
               </div>
@@ -107,8 +107,11 @@ export const WeeklyProgress = () => {
             </div>
           );
         })}
-    </main>
-  );
+      </main>
+    );
+  } else {
+    return null;
+  }
 };
 
 const icons = new Map([
