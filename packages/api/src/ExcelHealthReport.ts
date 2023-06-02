@@ -30,7 +30,12 @@ export const parseExcelHealthReport = async (
   }
 
   // Parse basic information.
-  const createdOn = basicInformationWorksheet["B1"]?.v || new Date();
+  const today = new Date();
+  // Added dafault date for updating report for a day by removing created time.
+  const defaultDate = new Date(
+    `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`
+  );
+  const createdOn = basicInformationWorksheet["B1"]?.v || defaultDate;
   const fullName = basicInformationWorksheet["B2"].v;
   const age = basicInformationWorksheet["B3"].v;
   const relation = basicInformationWorksheet["B5"]?.v || "";
@@ -64,7 +69,7 @@ export const parseExcelHealthReport = async (
       break;
     }
 
-    if(!value){
+    if (!value) {
       continue;
     }
 
