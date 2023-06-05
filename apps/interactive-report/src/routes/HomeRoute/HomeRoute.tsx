@@ -39,7 +39,7 @@ const OpenReportTile = () => {
 
   const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>(
-    patient?.report.phoneNumber || ""
+    patient?.report.phoneNumber?.replace("+91", "") || ""
   );
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [foundPatient, setFoundPatient] = useState<UserProfile[] | null>(null);

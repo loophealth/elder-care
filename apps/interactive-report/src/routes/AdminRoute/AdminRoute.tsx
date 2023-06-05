@@ -41,6 +41,12 @@ export const AdminRoute = () => {
           >
             Follow ups
           </LinkThatLooksLikeButton>
+          <LinkThatLooksLikeButton
+            to="/admin/weekly-summary"
+            icon="/img/chevron-right.svg"
+          >
+            Weekly Summary
+          </LinkThatLooksLikeButton>
           {!patient?.profile?.parentId ? (
             <LinkThatLooksLikeButton
               to="/admin/notification"

@@ -6,6 +6,7 @@ import { PageHeader } from "components/PageHeader";
 
 import "./ReportOverviewRoute.css";
 import { WeeklyProgress } from "routes/WeeklyProgress";
+import { WeeklySummary } from "routes/WeeklySummary";
 
 export const ReportOverviewRoute = () => {
   const { patient } = usePatient();
@@ -14,6 +15,7 @@ export const ReportOverviewRoute = () => {
     <main className="ReportOverviewRoute">
       <PageHeader label="Your Health" showProfile={true} />
       <WeeklyProgress />
+      <WeeklySummary />
       <p className="Report__Description">
         Based on your report, these categories are personalised to what is most
         important for you to keep track of

@@ -127,10 +127,12 @@ export interface CarePlan {
   suggestedContent: CarePlanItem[];
   others: CarePlanItem[];
   prescription: CarePlanItem[];
+  physioPrescription: CarePlanItem[];
   relation?: string;
   parentId?: string;
   userId?: string;
   tasks: CarePlanTask[];
+  summary: CarePlanSummary[];
 }
 
 export interface CarePlanTask {
@@ -138,18 +140,29 @@ export interface CarePlanTask {
   recommendation: string;
   meal: string[];
   category: "diet" | "physicalActivity" | "medication";
-  date: Timestamp;
+  date: Date;
   scheduledTime: Timestamp;
   checked: boolean;
   time: CarePlanReminder;
   details?: string;
 }
 
+export interface CarePlanSummary {
+  id: string;
+  title: string;
+  details: string;
+  category: CarePlanSummaryCategory;
+  createdOn: Timestamp;
+}
+
+export type CarePlanSummaryCategory = "MA Summary" | "Advice";
+
 export type CarePlanCategory =
   | "diet"
   | "physicalActivity"
   | "medication"
   | "prescription"
+  | "physioPrescription"
   | "suggestedContent"
   | "others";
 

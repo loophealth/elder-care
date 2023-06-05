@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 
-import {
-  usePatient,
-  CarePlan,
-  CarePlanTask,
-  CarePlanReminder,
-} from "@loophealth/api";
+import { usePatient, CarePlan, CarePlanTask } from "@loophealth/api";
 
 import { AdminEditorLayout, IconTextTile, IconTextTileList } from "components";
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./TodayPlanRoute.css";
-import { getDatesFromWeek, getTaskBetweenDate, timeOrderMap } from "utils";
-import { groupBy } from "lodash";
+import { getTaskBetweenDate } from "utils";
 
 export const TodayPlanRoute = () => {
   const { patient } = usePatient();

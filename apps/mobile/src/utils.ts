@@ -7,17 +7,21 @@ export const timeOrderMap = {
   night: 3,
 };
 
-export const getDatesFromWeek = (week: number) => {
-  const curr = new Date(); // get current date
+export const getWeekDatesFromDate = (date: Date) => {
+  const curr = date; // get current date
+  curr.setHours(0,0,0,0);
   const firstDate = new Date(
-    curr.setDate(curr.getDate() + week * 7 - curr.getDay() + 1)
+    curr.setDate(
+      curr.getDay()
+        ? curr.getDate() - curr.getDay() + 1
+        : curr.getDate() - curr.getDay() - 6
+    )
   );
-  const lastDate = new Date(
-    curr.setDate(curr.getDate() + week * 7 - curr.getDay() + 7)
-  );
+  const lastDate = new Date(curr.setDate(curr.getDate() - curr.getDay() + 7));
 
   return { firstDate, lastDate };
 };
+
 
 export const getTaskBetweenDate = (
   fromDate: Date,

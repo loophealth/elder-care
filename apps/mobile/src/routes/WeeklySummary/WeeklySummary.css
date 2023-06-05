@@ -1,0 +1,70 @@
+.WeeklySummary {
+}
+
+.WeeklySummary__Title {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: var(--space-xs);
+}
+
+.WeeklySummaryButton {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--step-2);
+  cursor: pointer;
+}
+.WeeklySummaryButton:focus {
+  opacity: 0.6;
+}
+.WeeklySummaryDateLabel {
+  width: 90%;
+  display: flex;
+  font-size: var(--step-0);
+  justify-content: center;
+  font-weight: 600;
+}
+.disabledButton {
+  opacity: 0.5;
+}
+.Summary__Heading {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.Summary__Week__Controller {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.Summary__Title {
+  font-size: var(--step-0);
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.Summary__Detail {
+  margin: 10px 0;
+  font-weight: 400;
+  font-size: var(--step-0);
+  line-height: 20px;
+}
+.Summary__Content__Container {
+  padding: 10px 0;
+}
+.Summary__Week__Advice__Content__Container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  margin: 8px 0;
+}
+
+.Summary__Container {
+  margin: 0 10px;
+}

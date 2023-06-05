@@ -2,7 +2,7 @@ import { CarePlan, CarePlanTask, usePatient } from "@loophealth/api";
 import { ProgressBar } from "components/ProgressBar";
 import { groupBy } from "lodash";
 import { useEffect, useState } from "react";
-import { getDatesFromWeek, getTaskBetweenDate } from "utils";
+import { getWeekDatesFromDate, getTaskBetweenDate } from "utils";
 import { ReactComponent as DietIcon } from "images/diet.svg";
 import { ReactComponent as MedicationIcon } from "images/medication.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/exercise.svg";
@@ -48,7 +48,7 @@ export const WeeklyProgress = () => {
   }, [carePlan]);
 
   const getWeeklyTask = (careTasks: CarePlanTask[]) => {
-    const { firstDate, lastDate } = getDatesFromWeek(0);
+    const { firstDate, lastDate } = getWeekDatesFromDate(new Date());
     let newTasks = [];
 
     const allTasks = careTasks
@@ -63,15 +63,17 @@ export const WeeklyProgress = () => {
 
     for (let i in taskKeys) {
       const category = taskKeys[i];
-      const totalTask = groupedAllTask[category].length;
-      const completedTask = groupedfilteredTask[category].length;
-      newTasks.push({
-        category,
-        totalTask,
-        completedTask,
-        completed: Math.round((completedTask / totalTask) * 100),
-        bgcolor: "#75E064",
-      });
+      const totalTask = groupedAllTask[category]?.length;
+      const completedTask = groupedfilteredTask[category]?.length || 0;
+      if (totalTask) {
+        newTasks.push({
+          category,
+          totalTask,
+          completedTask,
+          completed: Math.round((completedTask / totalTask) * 100),
+          bgcolor: "#75E064",
+        });
+      }
     }
     setProgressData(newTasks);
   };

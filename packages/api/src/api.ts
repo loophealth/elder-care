@@ -417,7 +417,9 @@ export const findOrCreateCarePlan = async (
           suggestedContent: [],
           others: [],
           prescription: [],
+          physioPrescription: [],
           tasks: [],
+          summary: [],
         },
         userData
       );

@@ -25,14 +25,7 @@ import {
 import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./EditCarePlanRoute.css";
-import {
-  // carePlanCategoryTime,
-  createTask,
-  formatDateRange,
-  generateId,
-  getTodayDate,
-  // notificationSource,
-} from "utils";
+import { createTask, formatDateRange, generateId, getTodayDate } from "utils";
 
 export const EditCarePlanRoute = () => {
   const { patient } = usePatient();
@@ -87,19 +80,6 @@ export const EditCarePlanRoute = () => {
     };
   }, [patient]);
 
-  // const updateCarePlanNotification = (reminder: string, id: string) => {
-  //   // Care Plan Notification daily
-  //   let newNotification: PatientNotificationItem = {
-  //     id,
-  //     title: recommendation,
-  //     body: details,
-  //     sent: false,
-  //     time: (carePlanCategoryTime as any)[reminder],
-  //     source: notificationSource.carePlan,
-  //   };
-  //   return newNotification;
-  // };
-
   // Handle form submission.
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -123,21 +103,20 @@ export const EditCarePlanRoute = () => {
             id: newCarePlanId,
             category: category,
             phoneNumber: patient.profile.phoneNumber,
-            createdAt: new Date(),
+            createdOn: new Date(),
           };
-          fileUrl = (await getUrlFromFile(prescriptionData, metadata)) || "";
+          fileUrl =
+            (await getUrlFromFile(
+              prescriptionData,
+              metadata,
+              2048,
+              category
+            )) || "";
         }
 
         const careData = {
           recommendation,
           details,
-          days,
-          time,
-          meal,
-          dateRange: {
-            from: startDate,
-            to: endDate,
-          },
         };
         const newCarePlanItem = {
           ...careData,
@@ -147,33 +126,31 @@ export const EditCarePlanRoute = () => {
         const newCarePlan =
           category === "prescription"
             ? [newCarePlanItem]
-            : [...carePlan[category], newCarePlanItem];
+            : [...(carePlan[category] || []), newCarePlanItem];
+        let newTask = carePlan?.tasks || [];
 
-        const careTaskData = {
-          ...careData,
-          refId: newCarePlanId,
-          category,
-        };
-        const tasks = createTask(careTaskData);
-        const newTask = carePlan.tasks ? [...carePlan.tasks, ...tasks] : tasks;
+        if (isVisible("task")) {
+          const careTaskData = {
+            ...careData,
+            refId: newCarePlanId,
+            days,
+            time,
+            meal,
+            dateRange: {
+              from: startDate,
+              to: endDate,
+            },
+            category,
+          };
+          const tasks = createTask(careTaskData);
+          newTask = carePlan.tasks ? [...carePlan.tasks, ...tasks] : tasks;
+        }
+
         await updateDoc(patient.carePlanRef, {
           [category]: newCarePlan,
           tasks: newTask,
         });
 
-        // if (
-        //   category !== "suggestedContent" &&
-        //   category !== "others" &&
-        //   category !== "prescription" &&
-        //   reminder
-        // ) {
-        //   await updateDoc(patient.notificationRef, {
-        //     notifications: [
-        //       ...notifications,
-        //       updateCarePlanNotification(reminder, newCarePlanId),
-        //     ],
-        //   });
-        // }
         onReset();
       } catch (e) {
         alert(
@@ -286,7 +263,7 @@ export const EditCarePlanRoute = () => {
           id,
           category: category,
           phoneNumber: patient.profile.phoneNumber,
-          createdAt: new Date(),
+          createdOn: new Date(),
         };
         fileUrl = (await getUrlFromFile(prescriptionData, metadata)) || "";
       }
@@ -340,20 +317,7 @@ export const EditCarePlanRoute = () => {
         [category]: updatedData,
         tasks: careTask,
       });
-      // if (reminder && id) {
-      //   //Update Care plan Notification
-      //   let newNotifications = [...notifications];
-      //   newNotifications = newNotifications.filter(
-      //     (data) => !data.id || (data.id && data.id !== id)
-      //   );
-      //   newNotifications = [
-      //     ...newNotifications,
-      //     updateCarePlanNotification(reminder, id),
-      //   ];
-      //   await updateDoc(patient.notificationRef, {
-      //     notifications: newNotifications,
-      //   });
-      // }
+
       onReset();
     } catch (e) {
       alert(
@@ -365,10 +329,39 @@ export const EditCarePlanRoute = () => {
     }
   };
 
-  const isTask = () =>
-    category === "medication" ||
-    category === "diet" ||
-    category === "physicalActivity";
+  const isVisible = (type: string) => {
+    switch (type) {
+      case "task":
+        return (
+          category === "medication" ||
+          category === "diet" ||
+          category === "physicalActivity"
+        );
+      case "link":
+        return (
+          category === "suggestedContent" ||
+          category === "prescription" ||
+          category === "physioPrescription" ||
+          category === "physicalActivity"
+        );
+      case "prescription":
+        return (
+          category === "prescription" ||
+          category === "physioPrescription" ||
+          category === "physicalActivity"
+        );
+      case "details":
+        return (
+          category === "diet" ||
+          category === "physicalActivity" ||
+          category === "others"
+        );
+      case "medication":
+        return category === "medication";
+      default:
+        return;
+    }
+  };
 
   return (
     <AdminEditorLayout
@@ -394,7 +387,8 @@ export const EditCarePlanRoute = () => {
               <option value="diet">Diet</option>
               <option value="physicalActivity">Physical Activity</option>
               <option value="medication">Medication</option>
-              <option value="prescription">Prescription</option>
+              <option value="prescription">Medical Prescription</option>
+              <option value="physioPrescription">Physio Prescription</option>
               <option value="suggestedContent">Suggested content</option>
               <option value="others">Others</option>
             </Select>
@@ -402,7 +396,7 @@ export const EditCarePlanRoute = () => {
 
           <div className="Utils__VerticalForm__Group">
             <label className="Utils__Label" htmlFor="recommendation">
-              {category === "medication" ? "Medicine" : "Heading"}
+              {isVisible("medication") ? "Medicine" : "Heading"}
             </label>
             <Input
               id="recommendation"
@@ -410,7 +404,7 @@ export const EditCarePlanRoute = () => {
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               placeholder={
-                category === "medication"
+                isVisible("medication")
                   ? "Medicine Name"
                   : "Enter the main text"
               }
@@ -418,7 +412,7 @@ export const EditCarePlanRoute = () => {
               disabled={isLoading}
             />
           </div>
-          {category === "suggestedContent" || category === "prescription" ? (
+          {isVisible("link") ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="link">
                 Enter Link
@@ -432,7 +426,7 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category === "prescription" ? (
+          {isVisible("prescription") ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="prescriptionFile">
                 Select prescription (upto 2Mb)
@@ -452,9 +446,7 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category !== "suggestedContent" &&
-          category !== "prescription" &&
-          category !== "medication" ? (
+          {isVisible("details") ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="details">
                 Additional info
@@ -468,9 +460,7 @@ export const EditCarePlanRoute = () => {
               />
             </div>
           ) : null}
-          {category !== "suggestedContent" &&
-          category !== "others" &&
-          category !== "prescription" ? (
+          {isVisible("task") ? (
             <>
               <div className="Utils__VerticalForm__Group">
                 <label className="Utils__Label" htmlFor="time">
@@ -482,10 +472,10 @@ export const EditCarePlanRoute = () => {
                   data={["Morning", "Afternoon", "Evening", "Night"]}
                   value={time}
                   onChange={setTime}
-                  required={isTask()}
+                  required
                 />
               </div>
-              {category === "medication" ? (
+              {isVisible("medication") ? (
                 <div className="Utils__VerticalForm__Group">
                   <label className="Utils__Label" htmlFor="food">
                     With meal?
@@ -497,7 +487,7 @@ export const EditCarePlanRoute = () => {
                     value={meal}
                     onChange={setMeal}
                     multiple={false}
-                    required={isTask()}
+                    required
                   />
                 </div>
               ) : null}
@@ -511,7 +501,7 @@ export const EditCarePlanRoute = () => {
                   data={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
                   value={days}
                   onChange={setDays}
-                  required={isTask()}
+                  required
                 />
               </div>
               <div className="Utils__VerticalForm__Group">
@@ -527,7 +517,7 @@ export const EditCarePlanRoute = () => {
                     min={getTodayDate()}
                     onChange={(event) => setStartDate(event.target.value)}
                     disabled={isLoading}
-                    required={isTask()}
+                    required
                   />
                   <Input
                     id="endDate"
@@ -536,7 +526,7 @@ export const EditCarePlanRoute = () => {
                     value={endDate}
                     onChange={(event) => setEndDate(event.target.value)}
                     disabled={isLoading}
-                    required={isTask()}
+                    required
                   />
                 </div>
               </div>
@@ -559,7 +549,7 @@ export const EditCarePlanRoute = () => {
         <IconTextTileList>
           {carePlan ? (
             <>
-              {carePlan.prescription.map((item) => (
+              {carePlan.prescription?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -569,7 +559,17 @@ export const EditCarePlanRoute = () => {
                   onUpdate={() => updateData("prescription", item)}
                 />
               ))}
-              {carePlan.medication.map((item) => (
+              {carePlan.physioPrescription?.map((item) => (
+                <IconTextTile
+                  key={item.id}
+                  title={item.recommendation}
+                  icon={CATEGORY_ICONS.prescription}
+                  link={item?.link}
+                  onDelete={() => onDelete("physioPrescription", item)}
+                  onUpdate={() => updateData("physioPrescription", item)}
+                />
+              ))}
+              {carePlan.medication?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -581,7 +581,7 @@ export const EditCarePlanRoute = () => {
                   onUpdate={() => updateData("medication", item)}
                 />
               ))}
-              {carePlan.diet.map((item) => (
+              {carePlan.diet?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -594,7 +594,7 @@ export const EditCarePlanRoute = () => {
                   onUpdate={() => updateData("diet", item)}
                 />
               ))}
-              {carePlan.physicalActivity.map((item) => (
+              {carePlan.physicalActivity?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -607,7 +607,7 @@ export const EditCarePlanRoute = () => {
                   onUpdate={() => updateData("physicalActivity", item)}
                 />
               ))}
-              {carePlan.others.map((item) => (
+              {carePlan.others?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -617,7 +617,7 @@ export const EditCarePlanRoute = () => {
                   onUpdate={() => updateData("others", item)}
                 />
               ))}
-              {carePlan.suggestedContent.map((item) => (
+              {carePlan.suggestedContent?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}

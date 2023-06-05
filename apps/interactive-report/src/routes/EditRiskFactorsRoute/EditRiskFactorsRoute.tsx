@@ -170,7 +170,7 @@ export const EditRiskFactorsRoute = () => {
       onReset();
     } catch (e) {
       alert(
-        "There was an error deleting this risk factor. Please check your network and try again. If the error persists, please contact support."
+        "There was an error updating this risk factor. Please check your network and try again. If the error persists, please contact support."
       );
       console.error(e);
     } finally {

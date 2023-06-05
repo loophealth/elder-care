@@ -72,7 +72,7 @@ export const createTask = (task: any) => {
       });
     }
   }
-  return tasksArr;
+  return tasksArr as CarePlanTask[];
 };
 
 export const getDaysBetweenDates = (
@@ -114,10 +114,17 @@ export const formatDateRange = (range: any) => {
   return "";
 };
 
-export const getDatesFromWeek = (week: number) => {
-  const curr = new Date; // get current date
-  const firstDate = new Date(curr.setDate(curr.getDate() + week * 7 - curr.getDay() + 1));
-  const lastDate = new Date(curr.setDate(curr.getDate() + week * 7 - curr.getDay() + 7));
+export const getWeekDatesFromDate = (date: Date) => {
+  const curr = date; // get current date
+  curr.setHours(0,0,0,0);
+  const firstDate = new Date(
+    curr.setDate(
+      curr.getDay()
+        ? curr.getDate() - curr.getDay() + 1
+        : curr.getDate() - curr.getDay() - 6
+    )
+  );
+  const lastDate = new Date(curr.setDate(curr.getDate() - curr.getDay() + 7));
 
   return { firstDate, lastDate };
 };
