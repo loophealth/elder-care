@@ -97,7 +97,7 @@ const OpenReportTile = () => {
         return;
       }
       setPatient(newPatient);
-      setValue(phoneNumber);
+      setValue(JSON.stringify({ phoneNumber, relation: user?.relation }));
       setShouldRedirect(true);
     } catch (e: any) {
       const message = isApiError(e)
@@ -150,9 +150,22 @@ const OpenReportTile = () => {
             <h2 className="Utils__Label">Found patient</h2>
             {foundPatient.map((user, index) => (
               <div key={index} className="Found__Patient__Container">
-                <span>
-                  {user.fullName} ({user.age} years old)
-                </span>
+                <div className="Found__Patient__Info">
+                  <span>
+                    {user.fullName} ({user.age} years old)
+                  </span>
+                  {user?.plan ? (
+                    <div
+                      className={
+                        user?.plan?.indexOf("Parent") !== -1
+                          ? "Found__Patient__Plan Parent"
+                          : "Found__Patient__Plan"
+                      }
+                    >
+                      {user?.plan}
+                    </div>
+                  ) : null}
+                </div>
                 <Button
                   onClick={(e) => {
                     e.preventDefault();

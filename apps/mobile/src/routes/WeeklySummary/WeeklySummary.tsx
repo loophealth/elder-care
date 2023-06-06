@@ -42,6 +42,7 @@ export const WeeklySummary = () => {
     setFilteredData(
       getSummaryFromDate(summaryDate || format(new Date(), "yyyy-MM-dd"))
     );
+    // eslint-disable-next-line
   }, [weeklySummary]);
 
   const getSummaryFromDate = useCallback(

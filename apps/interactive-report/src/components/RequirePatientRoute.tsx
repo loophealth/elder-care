@@ -15,15 +15,16 @@ export const RequirePatientRoute = ({
   const [storedValue] = useLocalStorage(PATIENT_PHONE_NUMBER_KEY, "");
 
   useEffect(() => {
-    const getPatientFromPhoneNumber = async (phoneNumber: string) => {
+    const getPatientFromPhoneNumber = async (phoneNumber: string, relation: string) => {
       const phoneNumberWithCountryCode = `+91${phoneNumber}`;
-      const newPatient = await Patient.fromPhoneNumber(phoneNumberWithCountryCode);
+      const newPatient = await Patient.fromPhoneNumber(phoneNumberWithCountryCode, relation);
       setPatient(newPatient);
       setLoading(false);
     };
     if (!patient && storedValue && !loading) {
       setLoading(true);
-      getPatientFromPhoneNumber(storedValue);
+      const {phoneNumber, relation} = JSON.parse(storedValue);
+      getPatientFromPhoneNumber(phoneNumber, relation);
     }
     // eslint-disable-next-line
   }, [storedValue]);

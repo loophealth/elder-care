@@ -137,6 +137,17 @@ export const CarePlanChecklist = () => {
                           <div className="CarePlanChecklist__Items__Item__Name">
                             {item.recommendation}
                           </div>
+                          {item.meal ? (
+                            <div className="CarePlanChecklist__Items__Item__Description">
+                              {item.meal.toString()}
+                              {item.dateRange ? (
+                                <span>
+                                  {" "}
+                                  &#x2022; {item.dateRange?.toString()}
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : null}
                           {item.details ? (
                             <div className="CarePlanChecklist__Items__Item__Description">
                               {item.details}

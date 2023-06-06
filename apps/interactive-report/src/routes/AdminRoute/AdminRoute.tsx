@@ -11,12 +11,14 @@ export const AdminRoute = () => {
       <Navbar />
       <main className="AdminRoute">
         <div className="AdminRoute__ButtonContainer">
-          <LinkThatLooksLikeButton
-            to="/admin/today-plan"
-            icon="/img/chevron-right.svg"
-          >
-            Today's plan
-          </LinkThatLooksLikeButton>
+          {patient?.profile?.parentId ? (
+            <LinkThatLooksLikeButton
+              to="/admin/today-plan"
+              icon="/img/chevron-right.svg"
+            >
+              Today's plan
+            </LinkThatLooksLikeButton>
+          ) : null}
           <LinkThatLooksLikeButton
             to="/admin/care-plan"
             icon="/img/chevron-right.svg"
@@ -41,12 +43,14 @@ export const AdminRoute = () => {
           >
             Follow ups
           </LinkThatLooksLikeButton>
-          <LinkThatLooksLikeButton
-            to="/admin/weekly-summary"
-            icon="/img/chevron-right.svg"
-          >
-            Weekly Summary
-          </LinkThatLooksLikeButton>
+          {patient?.profile?.parentId ? (
+            <LinkThatLooksLikeButton
+              to="/admin/weekly-summary"
+              icon="/img/chevron-right.svg"
+            >
+              Weekly Summary
+            </LinkThatLooksLikeButton>
+          ) : null}
           {!patient?.profile?.parentId ? (
             <LinkThatLooksLikeButton
               to="/admin/notification"

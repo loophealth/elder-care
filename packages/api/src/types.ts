@@ -145,6 +145,7 @@ export interface CarePlanTask {
   checked: boolean;
   time: CarePlanReminder;
   details?: string;
+  dateRange?: string;
 }
 
 export interface CarePlanSummary {

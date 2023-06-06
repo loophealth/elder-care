@@ -61,3 +61,23 @@
   align-items: center;
   justify-content: space-between;
 }
+.Found__Patient__Plan {
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: 6px;
+  border: 1px solid #000;
+  background-color: #88ffe7;
+  font-size: 12px;
+  font-weight: 600;
+  color: black;
+  line-height: 15px;
+}
+.Found__Patient__Info {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.Parent {
+  background: #ffa8f1;
+}

@@ -103,7 +103,7 @@ export const EditCarePlanRoute = () => {
             id: newCarePlanId,
             category: category,
             phoneNumber: patient.profile.phoneNumber,
-            createdOn: new Date(),
+            createdAt: new Date(),
           };
           fileUrl =
             (await getUrlFromFile(
@@ -114,10 +114,31 @@ export const EditCarePlanRoute = () => {
             )) || "";
         }
 
-        const careData = {
+        let careData: any = {
           recommendation,
           details,
         };
+        // Below data are required for creating tasks.
+        let newTask = carePlan?.tasks || [];
+        if (isVisible("task")) {
+          careData = {
+            ...careData,
+            days,
+            time,
+            meal,
+            dateRange: {
+              from: startDate,
+              to: endDate,
+            },
+          };
+          const careTaskData = {
+            ...careData,
+            refId: newCarePlanId,
+            category,
+          };
+          const tasks = createTask(careTaskData);
+          newTask = carePlan.tasks ? [...carePlan.tasks, ...tasks] : tasks;
+        }
         const newCarePlanItem = {
           ...careData,
           id: newCarePlanId,
@@ -127,24 +148,6 @@ export const EditCarePlanRoute = () => {
           category === "prescription"
             ? [newCarePlanItem]
             : [...(carePlan[category] || []), newCarePlanItem];
-        let newTask = carePlan?.tasks || [];
-
-        if (isVisible("task")) {
-          const careTaskData = {
-            ...careData,
-            refId: newCarePlanId,
-            days,
-            time,
-            meal,
-            dateRange: {
-              from: startDate,
-              to: endDate,
-            },
-            category,
-          };
-          const tasks = createTask(careTaskData);
-          newTask = carePlan.tasks ? [...carePlan.tasks, ...tasks] : tasks;
-        }
 
         await updateDoc(patient.carePlanRef, {
           [category]: newCarePlan,

@@ -42,12 +42,15 @@ export const createTask = (task: any) => {
     dateRange,
   } = task;
 
+  const fromDate = new Date(dateRange?.from)
+  const toDate = new Date(dateRange?.to)
+
   const dates = getDaysBetweenDates(
-    new Date(dateRange?.from),
-    new Date(dateRange?.to),
+    fromDate,
+    toDate,
     days
   );
-
+  const dateRangeStr = `${format(fromDate, "dd MMM")} - ${format(toDate, "dd MMM")}`;
   let tasksArr = [];
 
   for (let d in dates) {
@@ -66,6 +69,7 @@ export const createTask = (task: any) => {
         category,
         details,
         date: dates[d],
+        dateRange: dateRangeStr,
         scheduledTime: Timestamp.fromDate(careDate),
         checked: false,
         time: time[t],

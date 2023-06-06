@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Timestamp, onSnapshot, updateDoc } from "firebase/firestore";
 
 import {
@@ -60,6 +60,7 @@ export const EditWeeklySummaryRoute = () => {
     setFilteredData(
       getSummaryFromDate(summaryDate || format(new Date(), "yyyy-MM-dd"))
     );
+    // eslint-disable-next-line
   }, [weeklySummary]);
 
   // Add new Summary.
@@ -86,7 +87,7 @@ export const EditWeeklySummaryRoute = () => {
         let result = window.confirm(
           "Summary already exists for current week. Do you want to replace?"
         );
-        if (result == false) {
+        if (result === false) {
           setIsLoading(false);
           return;
         }
