@@ -92,7 +92,8 @@ export const EditCarePlanRoute = () => {
       onUpdate(category, selectedData.id);
     } else {
       setIsLoading(true);
-      let fileUrl = "";
+      let fileUrl = "",
+        currentDate = new Date();
 
       try {
         const newCarePlanId = generateId();
@@ -103,7 +104,7 @@ export const EditCarePlanRoute = () => {
             id: newCarePlanId,
             category: category,
             phoneNumber: patient.profile.phoneNumber,
-            createdAt: new Date(),
+            createdOn: currentDate,
           };
           fileUrl =
             (await getUrlFromFile(
@@ -117,6 +118,7 @@ export const EditCarePlanRoute = () => {
         let careData: any = {
           recommendation,
           details,
+          createdOn: currentDate,
         };
         // Below data are required for creating tasks.
         let newTask = carePlan?.tasks || [];
@@ -144,10 +146,12 @@ export const EditCarePlanRoute = () => {
           id: newCarePlanId,
           link: link || fileUrl,
         };
-        const newCarePlan =
-          category === "prescription"
-            ? [newCarePlanItem]
-            : [...(carePlan[category] || []), newCarePlanItem];
+        // const newCarePlan =
+        //   category === "prescription" || category === "physioPrescription"
+        //     ? [newCarePlanItem]
+        //     : [...(carePlan[category] || []), newCarePlanItem];
+
+        const newCarePlan = [...(carePlan[category] || []), newCarePlanItem];
 
         await updateDoc(patient.carePlanRef, {
           [category]: newCarePlan,
@@ -292,25 +296,30 @@ export const EditCarePlanRoute = () => {
       careTask = careTask?.filter(
         (data) => data.scheduledTime.toDate() < new Date() || data?.refId !== id
       );
-      const careData = {
+      let careData: any = {
         recommendation,
         details,
-        days,
-        time,
-        meal,
-        dateRange: {
-          from: startDate,
-          to: endDate,
-        },
       };
-
-      const careTaskData = {
-        ...careData,
-        refId: id,
-        category,
-      };
-      const tasks = createTask(careTaskData);
-      careTask = [...careTask, ...tasks] as CarePlanTask[];
+      // Below data are required for creating tasks.
+      if (isVisible("task")) {
+        careData = {
+          ...careData,
+          days,
+          time,
+          meal,
+          dateRange: {
+            from: startDate,
+            to: endDate,
+          },
+        };
+        const careTaskData = {
+          ...careData,
+          refId: id,
+          category,
+        };
+        const tasks = createTask(careTaskData);
+        careTask = [...careTask, ...tasks] as CarePlanTask[];
+      }
       careTask.sort(
         (a: CarePlanTask, b: CarePlanTask) =>
           a.scheduledTime.toDate().valueOf() -
@@ -344,15 +353,10 @@ export const EditCarePlanRoute = () => {
         return (
           category === "suggestedContent" ||
           category === "prescription" ||
-          category === "physioPrescription" ||
-          category === "physicalActivity"
+          category === "physioPrescription"
         );
       case "prescription":
-        return (
-          category === "prescription" ||
-          category === "physioPrescription" ||
-          category === "physicalActivity"
-        );
+        return category === "prescription" || category === "physioPrescription";
       case "details":
         return (
           category === "diet" ||

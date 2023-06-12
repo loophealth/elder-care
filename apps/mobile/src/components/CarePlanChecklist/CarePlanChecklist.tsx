@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CarePlan,
+  CarePlanItem,
   CarePlanTask,
   logCustomEvent,
   usePatient,
@@ -15,6 +16,11 @@ import { ReactComponent as DietIcon } from "images/rice-bowl.svg";
 import { ReactComponent as MedicationIcon } from "images/pill.svg";
 import { ReactComponent as PhysicalActivityIcon } from "images/walk.svg";
 import { ReactComponent as OthersIcon } from "images/sun.svg";
+import { ReactComponent as VideoIcon } from "images/video-logo.svg";
+import { ReactComponent as BlogIcon } from "images/blog-logo.svg";
+import { ReactComponent as RightArrowIcon } from "images/right-arrow.svg";
+import { ReactComponent as MedPresIcon } from "images/medical-prescription.svg";
+import { ReactComponent as PhysioPresIcon } from "images/physio-prescription.svg";
 import { groupBy } from "lodash";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 import { Button, ButtonVariant } from "components/Button";
@@ -68,37 +74,102 @@ export const CarePlanChecklist = () => {
       : [];
   }, [carePlanChecklistItems]);
 
-  const convertToEmbedUrl = (url: string) => {
-    return (
-      url.replace("watch?v=", "embed/").replace("&t", "?start") + "?controls=0"
-    );
+  // const convertToEmbedUrl = (url: string) => {
+  //   return (
+  //     url.replace("watch?v=", "embed/").replace("&t", "?start") + "?controls=0"
+  //   );
+  // };
+
+  const getLatestPres = (data: CarePlanItem[]) => {
+    const filteredData = data.sort(
+      (a: CarePlanItem, b: CarePlanItem) =>
+        (b?.createdOn?.valueOf() || 0) - (a?.createdOn?.valueOf() || 0)
+    )[0];
+    return filteredData;
   };
 
-  const onDownloadPrescription = () => {
+  const onDownloadPrescription = (data: any, type: string) => {
     logCustomEvent("click_event", {
-      name: "Download prescription",
+      name: "Download " + type + " prescription",
       category: "Home",
     });
-    const prescription = carePlan?.prescription;
-    if (prescription) {
-      const lastPrescription = prescription[prescription.length - 1];
+    if (data) {
+      const lastPrescription =
+        data.length === 1 ? data[0] : getLatestPres(data);
       window.open(lastPrescription.link, "_blank");
     }
   };
 
+  const openLink = (link?: string, eventName?: string) => {
+    logCustomEvent("click_event", {
+      name: eventName,
+      category: "Home",
+    });
+    if (link) {
+      window.open(link, "_blank");
+    }
+  };
+
+  const PrescriptionButton = ({
+    title,
+    icon,
+    onClicked,
+  }: {
+    title: string;
+    icon: any;
+    onClicked: () => void;
+  }) => {
+    return (
+      <label className="CarePlanChecklist__Items__Item Prescription_Button_Container">
+        {icon}
+        <div>
+          <div className="CarePlanChecklist__Items__Item__Name Prescription_Label">
+            {title}
+          </div>
+        </div>
+        <Button variant={ButtonVariant.Primary} onClick={onClicked}>
+          Download
+        </Button>
+      </label>
+    );
+  };
+  console.log("getGroupedChecklistItem => ", getGroupedChecklistItem);
   return (
     <div className="CarePlanChecklist">
       <div className="CarePlanChecklist__Title">Care plan</div>
+      {(carePlan?.prescription && carePlan?.prescription.length > 0) ||
+      (carePlan?.physioPrescription &&
+        carePlan?.physioPrescription.length > 0) ? (
+        <div className="Prescription__Title">{"Latest Prescriptions"}</div>
+      ) : null}
       {carePlan?.prescription && carePlan?.prescription.length > 0 ? (
-        <div className="HomeRoute__Logout">
-          <Button
-            className="HomeRoute__Logout__Button"
-            variant={ButtonVariant.Primary}
-            onClick={onDownloadPrescription}
-          >
-            Download prescription
-          </Button>
-        </div>
+        <PrescriptionButton
+          title="Physician"
+          icon={
+            <MedPresIcon className="CarePlanChecklist__Items__Item__Icon" />
+          }
+          onClicked={() =>
+            onDownloadPrescription(carePlan?.prescription, "Physician")
+          }
+        />
+      ) : null}
+      {carePlan?.physioPrescription &&
+      carePlan?.physioPrescription.length > 0 ? (
+        <PrescriptionButton
+          title="Physiotherapy"
+          icon={
+            <PhysioPresIcon className="CarePlanChecklist__Items__Item__Icon" />
+          }
+          onClicked={() =>
+            onDownloadPrescription(
+              carePlan?.physioPrescription,
+              "Physiotherapy"
+            )
+          }
+        />
+      ) : null}
+      {Object.keys(getGroupedChecklistItem)?.length > 0 ? (
+        <div className="Prescription__Title">{"Today’s tasks"}</div>
       ) : null}
       {Object.keys(getGroupedChecklistItem).map((data: string) => {
         if (
@@ -117,28 +188,42 @@ export const CarePlanChecklist = () => {
 
                     return (
                       <label
-                        key={item.recommendation}
-                        className="CarePlanChecklist__Items__Item"
+                        key={item.recommendation + "_" + index}
+                        className={
+                          item?.checked
+                            ? "CarePlanChecklist__Items__Item CarePlanChecklist__Items__Item__Checked"
+                            : "CarePlanChecklist__Items__Item"
+                        }
                       >
-                        <Checkbox
-                          type="checkbox"
-                          className={
-                            patient?.profile?.parentId
-                              ? "CarePlanChecklist__Items__Item__Checkbox CarePlanChecklist_Disabled_Checkbox"
-                              : "CarePlanChecklist__Items__Item__Checkbox"
-                          }
-                          checked={item?.checked}
-                          readOnly={patient?.profile?.parentId ? true : false}
-                          onChange={() =>
-                            !patient?.profile?.parentId ? onCheck(item) : null
-                          }
-                        />
+                        {!patient?.profile?.parentId ? (
+                          <Checkbox
+                            type="checkbox"
+                            className={
+                              "CarePlanChecklist__Items__Item__Checkbox"
+                            }
+                            checked={item?.checked}
+                            readOnly={false}
+                            onChange={() => onCheck(item)}
+                          />
+                        ) : null}
                         <div>
-                          <div className="CarePlanChecklist__Items__Item__Name">
+                          <div
+                            className={
+                              item?.checked
+                                ? "CarePlanChecklist__Items__Item__Name Checked__Item__Label"
+                                : "CarePlanChecklist__Items__Item__Name"
+                            }
+                          >
                             {item.recommendation}
                           </div>
-                          {item.meal ? (
-                            <div className="CarePlanChecklist__Items__Item__Description">
+                          {item.meal.toString() ? (
+                            <div
+                              className={
+                                item?.checked
+                                  ? "CarePlanChecklist__Items__Item__Description Checked__Item__Label"
+                                  : "CarePlanChecklist__Items__Item__Description"
+                              }
+                            >
                               {item.meal.toString()}
                               {item.dateRange ? (
                                 <span>
@@ -149,7 +234,13 @@ export const CarePlanChecklist = () => {
                             </div>
                           ) : null}
                           {item.details ? (
-                            <div className="CarePlanChecklist__Items__Item__Description">
+                            <div
+                              className={
+                                item?.checked
+                                  ? "CarePlanChecklist__Items__Item__Description Checked__Item__Label"
+                                  : "CarePlanChecklist__Items__Item__Description"
+                              }
+                            >
                               {item.details}
                             </div>
                           ) : null}
@@ -171,11 +262,11 @@ export const CarePlanChecklist = () => {
           <div className="Utils__Label CarePlanChecklist__TodayLabel">
             {"OTHERS"}
           </div>
-          {carePlan?.others.map((item) => {
+          {carePlan?.others.map((item, index) => {
             const icon = icons.get("others") || "";
             return (
               <label
-                key={item.recommendation}
+                key={item.recommendation + "_" + index}
                 className="CarePlanChecklist__Items__Item"
               >
                 <div>
@@ -197,32 +288,42 @@ export const CarePlanChecklist = () => {
       {carePlan?.suggestedContent &&
       carePlan?.suggestedContent?.length !== 0 ? (
         <div className="CarePlanChecklist__Container_Margin">
-          <div className="Utils__Label CarePlanChecklist__TodayLabel">
-            {"SUGGESTED CONTENT"}
-          </div>
-          {carePlan?.suggestedContent.map((item) => (
+          <div className="Prescription__Title">{"Referred content"}</div>
+          {carePlan?.suggestedContent.map((item, index) => (
             <div
-              key={item.recommendation}
+              key={item.recommendation + "_" + index}
               className="CarePlanChecklist__Items CarePlanChecklist__Items_Margin"
             >
               <label className="CarePlanChecklist__Items__Item">
                 <div>
-                  <div className="CarePlanChecklist__Items__Item__Name">
-                    {item.recommendation}
-                  </div>
                   {item.link ? (
-                    <div className="CarePlanChecklist__Items__Item__Description">
+                    <div className="CarePlanChecklist__Items__Suggested__Content">
                       {item.link.indexOf("youtube") !== -1 ? (
-                        <iframe
-                          title="Loop health video"
-                          src={convertToEmbedUrl(item.link)}
-                          width={window.innerWidth}
-                          height={0.57 * window.innerWidth}
-                          loading="eager"
-                          seamless={true}
-                        />
+                        <>
+                          <VideoIcon className="CarePlanChecklist__Items__Item__Icon" />
+                          <div
+                            className="CarePlanChecklist__Items__Item__Name"
+                            onClick={() =>
+                              openLink(item?.link, "referredContent")
+                            }
+                          >
+                            {item.recommendation}
+                          </div>
+                          <RightArrowIcon />
+                        </>
                       ) : (
-                        <a href={item.link}>{"Open Link"}</a>
+                        <>
+                          <BlogIcon className="CarePlanChecklist__Items__Item__Icon" />
+                          <div
+                            className="CarePlanChecklist__Items__Item__Name"
+                            onClick={() =>
+                              openLink(item?.link, "referredContent")
+                            }
+                          >
+                            {item.recommendation}
+                          </div>
+                          <RightArrowIcon />
+                        </>
                       )}
                     </div>
                   ) : null}

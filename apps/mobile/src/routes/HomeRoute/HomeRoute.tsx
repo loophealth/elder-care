@@ -29,6 +29,7 @@ export const HomeRoute = () => {
         suggestedContent,
         others,
         prescription,
+        physioPrescription,
       } = patient?.carePlan;
 
       return !(
@@ -37,7 +38,8 @@ export const HomeRoute = () => {
         medication?.length > 0 ||
         suggestedContent?.length > 0 ||
         others?.length > 0 ||
-        prescription?.length > 0
+        prescription?.length > 0 ||
+        physioPrescription?.length > 0
       );
     }
   }, [patient]);

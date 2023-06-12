@@ -1,4 +1,5 @@
 .WeeklySummary {
+  padding: 0 0 var(--space-l) 0;
 }
 
 .WeeklySummary__Title {
@@ -67,4 +68,20 @@
 
 .Summary__Container {
   margin: 0 10px;
+}
+
+.Weekly__Summary__No__Data__Container {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-l);
+  margin-bottom: var(--space-2xs);
+}
+
+.Weekly__Summary__No__Data__Label {
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  margin: var(--space-s);
 }

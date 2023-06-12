@@ -40,7 +40,7 @@ export const WeeklyProgress = () => {
 
   useEffect(() => {
     const tasks = carePlan?.tasks || [];
-    if (tasks && tasks.length > 0) {
+    if (tasks && tasks?.length > 0) {
       getWeeklyTask(tasks);
     } else {
       setProgressData([]);
@@ -77,7 +77,7 @@ export const WeeklyProgress = () => {
     }
     setProgressData(newTasks);
   };
-  if (progressData && progressData.length > 0) {
+  if (progressData && progressData?.length > 0) {
     return (
       <main className="WeeklyProgress">
         <div className="WeeklyProgress__Title">Weekly Progress</div>

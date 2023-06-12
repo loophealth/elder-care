@@ -103,6 +103,7 @@ export interface UserProfile {
 export interface CarePlanItem {
   id: string;
   recommendation: string;
+  createdOn: Date;
   details?: string;
   reminder?: string;
   link?: string;
