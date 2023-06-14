@@ -14,17 +14,17 @@
   background-image: url(images/tick-horizontal.svg);
 }
 
-.HomeRoute__Content {
-  margin-top: var(--space-2xl);
+.HomeRoute__Content__Container {
+  margin-top: var(--space-xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
   padding-left: var(--timeline-gap);
 }
 
-.HomeRoute__CarePlan {
+.HomeRoute__Content {
   position: relative;
-  min-height: 60vh;
+  min-height: 62vh;
 }
 
 .HomeRoute__Logout {
@@ -94,4 +94,8 @@
   height: 80vh;
   justify-content: center;
   align-items: center;
+}
+
+.Upcoming__Title {
+  margin-bottom: 0;
 }

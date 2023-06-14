@@ -2,12 +2,13 @@
   font-size: var(--step-1);
   font-weight: 600;
   color: var(--color-black);
-  margin-bottom: var(--space-xs);
+  margin: var(--space-l) 0;
 }
 
 .CarePlanChecklist__TodayLabel {
-  margin-top: var(--space-xs);
-  margin-bottom: var(--space-xs);
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  color: rgba(0, 0, 0, 0.48);
 }
 
 .CarePlanChecklist__Items {
@@ -87,7 +88,14 @@
 }
 .Prescription__Title {
   color: #383838;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: var(--step-0);
+  line-height: var(--step-1);
   margin-bottom: var(--space-xs);
+}
+
+.Suggested__Content__Container {
+  margin-top: var(--space-l);
+}
+.Suggested__Content__Label {
+  color: rgba(56, 56, 56, 1);
 }

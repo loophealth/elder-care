@@ -186,6 +186,6 @@ export const WeeklySummary = () => {
       </main>
     );
   } else {
-    return renderNoSummary();
+    return null;
   }
 };

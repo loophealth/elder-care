@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 import { Patient, UserProfile, usePatient } from "@loophealth/api";
-import { ReactComponent as UserIcon } from "images/user_circle.svg";
+import { ReactComponent as UserIcon } from "images/user-circle.svg";
 
 export const Sidebar = () => {
   const { patient, setPatient, foundPatient } = usePatient();

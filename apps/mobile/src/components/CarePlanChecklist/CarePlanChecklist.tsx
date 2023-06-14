@@ -133,7 +133,7 @@ export const CarePlanChecklist = () => {
       </label>
     );
   };
-  console.log("getGroupedChecklistItem => ", getGroupedChecklistItem);
+
   return (
     <div className="CarePlanChecklist">
       <div className="CarePlanChecklist__Title">Care plan</div>
@@ -287,7 +287,7 @@ export const CarePlanChecklist = () => {
       ) : null}
       {carePlan?.suggestedContent &&
       carePlan?.suggestedContent?.length !== 0 ? (
-        <div className="CarePlanChecklist__Container_Margin">
+        <div className="CarePlanChecklist__Container_Margin Suggested__Content__Container">
           <div className="Prescription__Title">{"Referred content"}</div>
           {carePlan?.suggestedContent.map((item, index) => (
             <div
@@ -297,16 +297,14 @@ export const CarePlanChecklist = () => {
               <label className="CarePlanChecklist__Items__Item">
                 <div>
                   {item.link ? (
-                    <div className="CarePlanChecklist__Items__Suggested__Content">
+                    <div
+                      className="CarePlanChecklist__Items__Suggested__Content"
+                      onClick={() => openLink(item?.link, "referredContent")}
+                    >
                       {item.link.indexOf("youtube") !== -1 ? (
                         <>
                           <VideoIcon className="CarePlanChecklist__Items__Item__Icon" />
-                          <div
-                            className="CarePlanChecklist__Items__Item__Name"
-                            onClick={() =>
-                              openLink(item?.link, "referredContent")
-                            }
-                          >
+                          <div className="CarePlanChecklist__Items__Item__Name Suggested__Content__Label">
                             {item.recommendation}
                           </div>
                           <RightArrowIcon />
@@ -314,12 +312,7 @@ export const CarePlanChecklist = () => {
                       ) : (
                         <>
                           <BlogIcon className="CarePlanChecklist__Items__Item__Icon" />
-                          <div
-                            className="CarePlanChecklist__Items__Item__Name"
-                            onClick={() =>
-                              openLink(item?.link, "referredContent")
-                            }
-                          >
+                          <div className="CarePlanChecklist__Items__Item__Name Suggested__Content__Label">
                             {item.recommendation}
                           </div>
                           <RightArrowIcon />

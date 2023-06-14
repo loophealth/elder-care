@@ -47,9 +47,9 @@ const OpenReportTile = () => {
   const [, setValue] = useLocalStorage(PATIENT_PHONE_NUMBER_KEY, "");
   useEffect(() => {
     // When shouldRedirect transitions to true, and we have a healthReport,
-    // redirect to the report page.
+    // redirect to the timeline page.
     if (shouldRedirect && patient) {
-      navigate("/report");
+      navigate("/timeline");
     }
   }, [shouldRedirect, patient, navigate]);
 

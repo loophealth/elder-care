@@ -1,7 +1,7 @@
 import { LinkList } from "components/LinkList";
 import { PageHeader } from "components/PageHeader";
 
-import { ReactComponent as UserIcon } from "images/user_circle.svg";
+import { ReactComponent as UserIcon } from "images/user-circle.svg";
 
 import "./CareRoute.css";
 import { logCustomEvent } from "@loophealth/api";
