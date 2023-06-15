@@ -56,3 +56,11 @@
 .ValuePill--Light .ValuePill__Arrow {
   border-top: var(--space-xs) solid var(--color-sepia);
 }
+
+.Image__Value__Container {
+  border-radius: var(--border-radius-2xl);
+}
+
+.Image__Value {
+  border-radius: var(--border-radius-m);
+}
