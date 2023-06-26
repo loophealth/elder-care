@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 
-import { findMeasurementsByCategorySlug, logCustomEvent, usePatient } from "@loophealth/api";
+import {
+  findMeasurementsByCategorySlug,
+  logCustomEvent,
+  usePatient,
+} from "@loophealth/api";
 import {
   ColorTheme,
   ColumnsReportLayout,
@@ -19,7 +23,12 @@ export const ReportDetailsRoute = () => {
     findMeasurementsByCategorySlug(patient?.report.measurements || [], slug) ||
     [];
   const categoryName = measurements[0]?.category || "";
-  logCustomEvent("click_event", { name: slug, category: "Report" });
+  logCustomEvent("ClickedOn_Report_" + slug, {
+    name: slug,
+    category: "Report",
+    user_name: patient?.profile?.fullName,
+    platform: "Elder_Care",
+  });
 
   let layoutElt = null;
   if (slug === "urine-routine") {

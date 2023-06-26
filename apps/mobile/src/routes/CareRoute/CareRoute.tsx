@@ -4,11 +4,17 @@ import { PageHeader } from "components/PageHeader";
 import { ReactComponent as UserIcon } from "images/user-circle.svg";
 
 import "./CareRoute.css";
-import { logCustomEvent } from "@loophealth/api";
+import { logCustomEvent, usePatient } from "@loophealth/api";
 
 export const CareRoute = () => {
+  const { patient } = usePatient();
   const onCareClick = (title: string) => {
-    logCustomEvent("click_event", { name: title, category: "Care" });
+    logCustomEvent("ClickedOn_Care_"+title, {
+      name: title,
+      category: "Care",
+      user_name: patient?.profile?.fullName,
+      platform: "Elder_Care"
+    });
   };
   return (
     <main className="CareRoute">

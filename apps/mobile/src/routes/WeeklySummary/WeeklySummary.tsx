@@ -25,10 +25,12 @@ export const WeeklySummary = () => {
     setLoading(true);
     const unsub = onSnapshot(patient.carePlanRef, (snapshot) => {
       const summary = (snapshot.data()?.summary ?? []) as CarePlanSummary[];
-      summary.sort(
-        (a, b) =>
-          a?.createdOn.toDate().valueOf() - b?.createdOn.toDate().valueOf()
-      );
+      if (summary.length > 1) {
+        summary.sort(
+          (a, b) =>
+            a?.createdOn.toDate().valueOf() - b?.createdOn.toDate().valueOf()
+        );
+      }
       setWeeklySummary(summary);
       if (summary.length === 0) {
         setLoading(false);
@@ -116,10 +118,12 @@ export const WeeklySummary = () => {
           >
             {"<"}
           </div>
-          <div className="WeeklySummaryDateLabel">{`${format(
-            dateRange?.from,
-            "dd MMM"
-          )}  to  ${format(dateRange?.to, "dd MMM")}`}</div>
+          {dateRange?.from && dateRange?.to ? (
+            <div className="WeeklySummaryDateLabel">{`${format(
+              dateRange?.from,
+              "dd MMM"
+            )}  to  ${format(dateRange?.to, "dd MMM")}`}</div>
+          ) : null}
           <div
             onClick={() => {
               if (disableNextWeek()) {

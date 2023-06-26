@@ -31,7 +31,8 @@ import {
 import { firebaseConfig, notificationKeys } from "./firebaseConfig";
 
 export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+export const firebaseAnalytics = getAnalytics(app);
+export const segmentAnalytics = (window as any)?.analytics;
 
 let messaging: Messaging;
 
@@ -133,7 +134,13 @@ export const logCustomEvent = (
   }
 ) => {
   if (eventName) {
-    logEvent(analytics, eventName, eventParams);
+    logEvent(firebaseAnalytics, formatEventName(eventName), eventParams);
+    if (segmentAnalytics) {
+      segmentAnalytics.track(formatEventName(eventName), {
+        ...eventParams,
+        platform: "Elder_Care",
+      });
+    }
   }
 };
 
@@ -144,15 +151,29 @@ export const logCurrentScreen = (
   }
 ) => {
   if (screenName) {
-    logEvent(analytics, "screen_view" as string, {
+    logEvent(firebaseAnalytics, formatEventName("Viewed_" + screenName), {
       screen_name: screenName,
       ...eventParams,
     });
+    if (segmentAnalytics) {
+      segmentAnalytics.track(formatEventName("Viewed_" + screenName), {
+        ...eventParams,
+        screen_name: screenName,
+        platform: "Elder_Care",
+      });
+    }
   }
 };
 
 export const logUser = (userData: { [key: string]: any }) => {
-  setUserProperties(analytics, userData, { global: true });
+  setUserProperties(firebaseAnalytics, userData, { global: true });
+
+  if (segmentAnalytics) {
+    segmentAnalytics.identify(userData?.user_name, {
+      name: userData?.user_name,
+      platform: "Elder_Care",
+    });
+  }
 };
 
 // Upload file to Firebase storage
@@ -204,3 +225,14 @@ export const deleteFileFromUrl = (urlStr: string) => {
   });
 };
 
+const formatEventName = (str: string) => {
+  str = str.replace(/[- ]/g, "_");
+  const arr = str.split("_");
+
+  for (var i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+  }
+
+  const str2 = arr.join("_");
+  return str2;
+};

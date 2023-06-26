@@ -28,7 +28,11 @@ export const ReportOverviewRoute = () => {
         to="/summary"
         className="ReportOverviewRoute__Link"
         onClick={() => {
-          logCustomEvent("click_event", { name: "View last report summary" });
+          logCustomEvent("ClickedOn_View_Report_Summary", {
+            name: "View last report summary",
+            user_name: patient?.profile?.fullName,
+            platform: "Elder_Care",
+          });
         }}
       >
         View last report summary

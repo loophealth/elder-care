@@ -9,6 +9,7 @@ import { Input } from "components/Input/Input";
 import { useFirstRun } from "lib/useFirstRun";
 
 import "./LoginRoute.css";
+import { LoadingSpinner } from "@loophealth/ui";
 
 enum LoginStep {
   PhoneNumber,
@@ -24,6 +25,7 @@ export const LoginRoute = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationId, setVerificationId] = useState<string>("");
   const [verificationCode, setVerificationCode] = useState("");
+  const [loginError, setError] = useState("");
 
   let loginStep = LoginStep.PhoneNumber;
   if (requestStatus === IRequestStatus.Loaded && user !== null) {
@@ -64,6 +66,7 @@ export const LoginRoute = () => {
       await signIn(verificationId, verificationCode);
     } catch (e) {
       console.error(e);
+      setError("Invalid Verification Code");
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +111,9 @@ export const LoginRoute = () => {
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
           />
-
+          {loginError ? (
+            <label className="errorLabel">{loginError}</label>
+          ) : null}
           <Button type="submit" disabled={isLoading}>
             Log in
           </Button>
@@ -116,6 +121,11 @@ export const LoginRoute = () => {
       )}
 
       <div id="loginRecaptchaContainer" />
+      {isLoading ? (
+        <div className="LoginLoaderContainer">
+          <LoadingSpinner />
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -12,3 +12,19 @@
   flex-direction: column;
   gap: var(--space-xs);
 }
+
+.errorLabel {
+  color: var(--color-danger);
+}
+
+.LoginLoaderContainer {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+}

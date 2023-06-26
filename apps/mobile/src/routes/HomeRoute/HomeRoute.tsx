@@ -49,7 +49,12 @@ export const HomeRoute = () => {
   }
 
   const onLogOut = async () => {
-    logCustomEvent("click_event", { name: "logout", category: "Home" });
+    logCustomEvent("ClickedOn_Logout", {
+      name: "logout",
+      category: "Home",
+      user_name: patient?.profile?.fullName,
+      platform: "Elder_Care",
+    });
     setUser(null);
     setPatient(null);
     resetLocalStorageOnLogout();

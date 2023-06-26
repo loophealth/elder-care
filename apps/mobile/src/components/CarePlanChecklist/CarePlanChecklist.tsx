@@ -89,9 +89,11 @@ export const CarePlanChecklist = () => {
   };
 
   const onDownloadPrescription = (data: any, type: string) => {
-    logCustomEvent("click_event", {
+    logCustomEvent("ClickedOn_Download_" + type + "_Prescription", {
       name: "Download " + type + " prescription",
       category: "Home",
+      user_name: patient?.profile?.fullName,
+      platform: "Elder_Care",
     });
     if (data) {
       const lastPrescription =
@@ -101,9 +103,11 @@ export const CarePlanChecklist = () => {
   };
 
   const openLink = (link?: string, eventName?: string) => {
-    logCustomEvent("click_event", {
+    logCustomEvent("ClickedOn_" + eventName, {
       name: eventName,
       category: "Home",
+      user_name: patient?.profile?.fullName,
+      platform: "Elder_Care",
     });
     if (link) {
       window.open(link, "_blank");
@@ -299,7 +303,7 @@ export const CarePlanChecklist = () => {
                   {item.link ? (
                     <div
                       className="CarePlanChecklist__Items__Suggested__Content"
-                      onClick={() => openLink(item?.link, "referredContent")}
+                      onClick={() => openLink(item?.link, "Referred_Content")}
                     >
                       {item.link.indexOf("youtube") !== -1 ? (
                         <>
