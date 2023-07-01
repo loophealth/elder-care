@@ -7,6 +7,7 @@ import { ValuePill } from "../ValuePill";
 import { ColorTheme } from "../../types";
 
 import "./RangedMeasurementTile.css";
+import { isNull } from "lodash";
 
 interface RangedMeasurementTileProps {
   measurement: Measurement;
@@ -207,7 +208,7 @@ const getLinearGradient = (measurement: Measurement): string => {
   let previousOffsetPercent = 0;
   const linearGradientStops = [];
 
-  if (measurement.range.lowerDanger) {
+  if (!isNull(measurement.range.lowerDanger)) {
     // If we have a lower danger value.
     const lowerDangerOffsetPercent = getOffsetPercent(
       measurement.range.lower,
@@ -222,7 +223,7 @@ const getLinearGradient = (measurement: Measurement): string => {
     previousOffsetPercent = lowerDangerOffsetPercent;
   }
 
-  if (measurement.range.lowerWarning) {
+  if (!isNull(measurement.range.lowerWarning)) {
     // If we have a lower warning value.
     const lowerWarningOffsetPercent = getOffsetPercent(
       measurement.range.lower,

@@ -14,7 +14,7 @@ export const RANGED_TILE_CATEGORIES = new Set([
 ]);
 
 export const isRangedMeasurement = (measurement: Measurement) => {
-  return RANGED_TILE_CATEGORIES.has(measurement.category);
+  return RANGED_TILE_CATEGORIES.has(measurement.category.trim());
 };
 
 export const findMeasurementByName = (

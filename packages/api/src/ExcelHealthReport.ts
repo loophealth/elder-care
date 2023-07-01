@@ -73,21 +73,24 @@ export const parseExcelHealthReport = async (
       continue;
     }
 
-    const lowerRange = detailedReportWorksheet[`E${i}`]?.v ?? null;
-    const upperRange = detailedReportWorksheet[`J${i}`]?.v ?? null;
+    const lowerDangerRange = detailedReportWorksheet[`E${i}`]?.v ?? null;
+    const upperDangerRange = detailedReportWorksheet[`H${i}`]?.v ?? null;
     let range = null;
 
     // If both the upper and lower range is present, then we have a range
     // override in the report. Otherwise, we use the default ranges defined in
     // the domain constants.
-    if (!isNull(lowerRange) && !isNull(upperRange)) {
+    if (!isNull(lowerDangerRange) && !isNull(upperDangerRange)) {
+      const diff = upperDangerRange ?? 0 - lowerDangerRange ?? 0;
+      const lowerRange = lowerDangerRange - (diff / 2);
+      const upperRange = upperDangerRange + (diff / 2);
       range = {
-        lower: lowerRange,
-        lowerDanger: detailedReportWorksheet[`F${i}`]?.v ?? null,
-        lowerWarning: detailedReportWorksheet[`G${i}`]?.v ?? null,
-        upperWarning: detailedReportWorksheet[`H${i}`]?.v ?? null,
-        upperDanger: detailedReportWorksheet[`I${i}`]?.v ?? null,
-        upper: upperRange,
+        lower: value > lowerRange ? lowerRange : (value - (diff / 2)),
+        lowerDanger: lowerDangerRange,
+        lowerWarning: detailedReportWorksheet[`F${i}`]?.v ?? null,
+        upperWarning: detailedReportWorksheet[`G${i}`]?.v ?? null,
+        upperDanger: upperDangerRange,
+        upper: value < upperRange ? upperRange : (value + (diff / 2)),
       };
     }
 

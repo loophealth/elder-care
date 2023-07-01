@@ -42,15 +42,14 @@ export const createTask = (task: any) => {
     dateRange,
   } = task;
 
-  const fromDate = new Date(dateRange?.from)
-  const toDate = new Date(dateRange?.to)
+  const fromDate = new Date(dateRange?.from);
+  const toDate = new Date(dateRange?.to);
 
-  const dates = getDaysBetweenDates(
-    fromDate,
+  const dates = getDaysBetweenDates(fromDate, toDate, days);
+  const dateRangeStr = `${format(fromDate, "dd MMM")} - ${format(
     toDate,
-    days
-  );
-  const dateRangeStr = `${format(fromDate, "dd MMM")} - ${format(toDate, "dd MMM")}`;
+    "dd MMM"
+  )}`;
   let tasksArr = [];
 
   for (let d in dates) {
@@ -61,19 +60,20 @@ export const createTask = (task: any) => {
       let careDate = new Date(dates[d]);
       careDate.setHours(careTime[0]);
       careDate.setMinutes(careTime[1]);
-
-      tasksArr.push({
-        refId,
-        recommendation,
-        meal: meal,
-        category,
-        details,
-        date: dates[d],
-        dateRange: dateRangeStr,
-        scheduledTime: Timestamp.fromDate(careDate),
-        checked: false,
-        time: time[t],
-      });
+      if (careDate > new Date()) {
+        tasksArr.push({
+          refId,
+          recommendation,
+          meal: meal,
+          category,
+          details,
+          date: dates[d],
+          dateRange: dateRangeStr,
+          scheduledTime: Timestamp.fromDate(careDate),
+          checked: false,
+          time: time[t],
+        });
+      }
     }
   }
   return tasksArr as CarePlanTask[];
