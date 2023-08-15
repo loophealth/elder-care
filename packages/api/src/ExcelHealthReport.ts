@@ -75,26 +75,43 @@ export const parseExcelHealthReport = async (
 
     const lowerDangerRange = detailedReportWorksheet[`E${i}`]?.v ?? null;
     const upperDangerRange = detailedReportWorksheet[`H${i}`]?.v ?? null;
-    let range = null;
+    const lowerWarning = detailedReportWorksheet[`F${i}`]?.v ?? null;
+    const upperWarning = detailedReportWorksheet[`G${i}`]?.v ?? null;
+    let range = null,
+      measurementStatus = null;
 
     // If both the upper and lower range is present, then we have a range
     // override in the report. Otherwise, we use the default ranges defined in
     // the domain constants.
     if (!isNull(lowerDangerRange) && !isNull(upperDangerRange)) {
       const diff = upperDangerRange ?? 0 - lowerDangerRange ?? 0;
-      const lowerRange = lowerDangerRange - (diff / 2);
-      const upperRange = upperDangerRange + (diff / 2);
+      const lowerRange = lowerDangerRange - diff / 2;
+      const upperRange = upperDangerRange + diff / 2;
       range = {
-        lower: value > lowerRange ? lowerRange : (value - (diff / 2)),
+        lower: value > lowerRange ? lowerRange : value - diff / 2,
         lowerDanger: lowerDangerRange,
-        lowerWarning: detailedReportWorksheet[`F${i}`]?.v ?? null,
-        upperWarning: detailedReportWorksheet[`G${i}`]?.v ?? null,
+        lowerWarning,
+        upperWarning,
         upperDanger: upperDangerRange,
-        upper: value < upperRange ? upperRange : (value + (diff / 2)),
+        upper: value < upperRange ? upperRange : value + diff / 2,
       };
+      if (value < lowerDangerRange || (lowerWarning && value < lowerWarning)) {
+        measurementStatus = "L";
+      } else if (value > upperDangerRange || (upperWarning && value > upperWarning)) {
+        measurementStatus = "A";
+      } else {
+        measurementStatus = "N";
+      }
     }
 
-    measurements.push({ category, name, value, unit, range });
+    measurements.push({
+      category,
+      name,
+      value,
+      unit,
+      range,
+      measurementStatus,
+    });
   }
 
   // Parse report summary.
@@ -176,6 +193,12 @@ const ExcelHealthReportSchema = z.object({
           upperDanger: z.union([z.number(), z.null()]),
           upper: z.number(),
         }),
+      ]),
+      measurementStatus: z.union([
+        z.null(),
+        z.literal("L"), // Low
+        z.literal("N"), // Neutral
+        z.literal("A"), // Above
       ]),
     })
   ),

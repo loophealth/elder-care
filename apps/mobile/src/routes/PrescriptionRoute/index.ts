@@ -1,0 +1,1 @@
+export { PrescriptionRoute } from "./PrescriptionRoute";

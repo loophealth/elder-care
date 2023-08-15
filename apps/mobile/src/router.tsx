@@ -9,6 +9,7 @@ import { HomeRoute } from "routes/HomeRoute";
 import { CareRoute } from "routes/CareRoute";
 import { ReportOverviewRoute } from "routes/ReportOverviewRoute";
 import { ReportDetailsRoute } from "routes/ReportDetailsRoute";
+import { PrescriptionRoute } from "routes/PrescriptionRoute";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
         path: "/summary",
         element: <ProtectedRoute component={<SummaryRoute />} />,
       },
+      {
+        path: "/prescriptions",
+        element: <ProtectedRoute component={<PrescriptionRoute />} />,
+      },
     ],
   },
   {
@@ -34,10 +39,6 @@ export const router = createBrowserRouter([
       {
         path: "/care",
         element: <ProtectedRoute component={<CareRoute />} />,
-      },
-      {
-        path: "/insurance",
-        element: <ProtectedRoute component={<h1>Insurance</h1>} />,
       },
       {
         path: "/report",

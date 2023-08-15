@@ -24,10 +24,16 @@ import { ReactComponent as PhysioPresIcon } from "images/physio-prescription.svg
 import { groupBy } from "lodash";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 import { Button, ButtonVariant } from "components/Button";
+import { LinkThatLooksLikeAButton } from "components/LinkThatLooksLikeAButton";
+import { Link } from "react-router-dom";
 
 export const CarePlanChecklist = () => {
   const { patient } = usePatient();
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
+  const [groupedPrescription, setGroupedPrescription] = useState<any>(null);
+  const [prescriptionType, setPrescriptionType] = useState<string[] | null>(
+    null
+  );
 
   const [carePlanChecklistItems] = useCarePlanChecklistItems(
     carePlan || undefined
@@ -48,6 +54,29 @@ export const CarePlanChecklist = () => {
       unsub();
     };
   }, [patient]);
+
+  useEffect(() => {
+    if (carePlan?.prescription) {
+      let groupPres = groupBy(carePlan?.prescription, "prescriptionType");
+      let presKeys = Object.keys(groupPres);
+      let filteredPres: any;
+      for (let i = 0; i < presKeys.length; i++) {
+        const pKey = presKeys[i];
+        if (pKey != "undefined") {
+          filteredPres = { ...filteredPres, [pKey]: (groupPres as any)[pKey] };
+        }
+      }
+      if (filteredPres) {
+        // New Prescription data with prescriptionType
+        setGroupedPrescription(filteredPres);
+        setPrescriptionType(presKeys.filter((data) => data != "undefined"));
+      } else {
+        // Old Prescription data with prescriptionType
+        setGroupedPrescription(null);
+        setPrescriptionType(null);
+      }
+    }
+  }, [carePlan?.prescription]);
 
   const onCheck = async (task: CarePlanTask) => {
     if (!patient || !carePlan) {
@@ -83,7 +112,8 @@ export const CarePlanChecklist = () => {
   const getLatestPres = (data: CarePlanItem[]) => {
     const filteredData = data.sort(
       (a: CarePlanItem, b: CarePlanItem) =>
-        (b?.createdOn?.valueOf() || 0) - (a?.createdOn?.valueOf() || 0)
+        (b?.createdOn?.toDate()?.valueOf() || 0) -
+        (a?.createdOn?.toDate()?.valueOf() || 0)
     )[0];
     return filteredData;
   };
@@ -140,29 +170,53 @@ export const CarePlanChecklist = () => {
 
   return (
     <div className="CarePlanChecklist">
-      <div className="CarePlanChecklist__Title">Care plan</div>
-      {(carePlan?.prescription && carePlan?.prescription.length > 0) ||
-      (carePlan?.physioPrescription &&
-        carePlan?.physioPrescription.length > 0) ? (
+      {carePlan?.prescription && carePlan?.prescription.length > 0 ? (
         <div className="Prescription__Title">{"Latest Prescriptions"}</div>
       ) : null}
-      {carePlan?.prescription && carePlan?.prescription.length > 0 ? (
+      {groupedPrescription && prescriptionType
+        ? prescriptionType?.map((data, index) => {
+            if (data !== "other") {
+              let formattedPresc = data.charAt(0).toUpperCase() + data.slice(1);
+              return (
+                <PrescriptionButton
+                  key={index.toString()}
+                  title={formattedPresc}
+                  icon={
+                    <MedPresIcon className="Prescription__Items__Icon" />
+                  }
+                  onClicked={() =>
+                    onDownloadPrescription(
+                      groupedPrescription[data],
+                      formattedPresc
+                    )
+                  }
+                />
+              );
+            }
+            return null;
+          })
+        : null}
+      {/*TODO: Remove below code added for backward compatiblity*/}
+      {!groupedPrescription &&
+      carePlan?.prescription &&
+      carePlan?.prescription.length > 0 ? (
         <PrescriptionButton
           title="Physician"
           icon={
-            <MedPresIcon className="CarePlanChecklist__Items__Item__Icon" />
+            <MedPresIcon className="Prescription__Items__Icon" />
           }
           onClicked={() =>
             onDownloadPrescription(carePlan?.prescription, "Physician")
           }
         />
       ) : null}
-      {carePlan?.physioPrescription &&
+      {!groupedPrescription &&
+      carePlan?.physioPrescription &&
       carePlan?.physioPrescription.length > 0 ? (
         <PrescriptionButton
           title="Physiotherapy"
           icon={
-            <PhysioPresIcon className="CarePlanChecklist__Items__Item__Icon" />
+            <PhysioPresIcon className="Prescription__Items__Icon" />
           }
           onClicked={() =>
             onDownloadPrescription(
@@ -172,8 +226,29 @@ export const CarePlanChecklist = () => {
           }
         />
       ) : null}
+      {carePlan?.prescription && carePlan?.prescription.length > 1 ? (
+        <div className="Past__Prescription__Container">
+          <Link
+            to="/prescriptions"
+            className="PrescriptionRoute__Link"
+            onClick={() => {
+              logCustomEvent("ClickedOn_View_All_Prescription", {
+                name: "View All Prescription",
+                user_name: patient?.profile?.fullName,
+                platform: "Elder_Care",
+              });
+            }}
+          >
+            {"View past prescriptions >"}
+          </Link>
+        </div>
+      ) : null}
+
       {Object.keys(getGroupedChecklistItem)?.length > 0 ? (
-        <div className="Prescription__Title">{"Today’s tasks"}</div>
+        <div>
+          <div className="CarePlanChecklist__Title">{"Weekly Action Plan"}</div>
+          <div className="Prescription__Title">{"Today’s tasks"}</div>
+        </div>
       ) : null}
       {Object.keys(getGroupedChecklistItem).map((data: string) => {
         if (

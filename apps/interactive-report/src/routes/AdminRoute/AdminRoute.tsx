@@ -43,7 +43,7 @@ export const AdminRoute = () => {
           >
             Follow ups
           </LinkThatLooksLikeButton>
-          {patient?.profile?.parentId ? (
+          {patient?.profile?.parentId || patient?.profile?.plan === "Diabetes Care"? (
             <LinkThatLooksLikeButton
               to="/admin/weekly-summary"
               icon="/img/chevron-right.svg"

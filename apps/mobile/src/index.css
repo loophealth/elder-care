@@ -48,7 +48,7 @@ body {
 }
 
 body {
-  font-family: "Apercu Pro", system-ui;
+  font-family: sans-serif,"Apercu Pro", system-ui;
   font-size: 87.5%;
   color: var(--color-gray);
   user-select: none;

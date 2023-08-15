@@ -10,6 +10,7 @@ import {
   deleteFileFromUrl,
   getUrlFromFile,
   CarePlanTask,
+  CarePlanPrescriptionType,
 } from "@loophealth/api";
 
 import {
@@ -26,12 +27,18 @@ import { CATEGORY_ICONS } from "lib/carePlan";
 
 import "./EditCarePlanRoute.css";
 import { createTask, formatDateRange, generateId, getTodayDate } from "utils";
+import { format } from "date-fns";
 
 export const EditCarePlanRoute = () => {
   const { patient } = usePatient();
 
   const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
   const [category, setCategory] = useState<CarePlanCategory | "">("");
+  const [prescriptionType, setPrescriptionType] = useState<
+    CarePlanPrescriptionType | ""
+  >("");
+  const [prescriptionWeek, setPrescriptionWeek] = useState<string | "">("");
+  const [prescriptionDate, setPrescriptionDate] = useState<string | "">("");
   const [recommendation, setRecommendation] = useState("");
   const [details, setDetails] = useState("");
   const [link, setLink] = useState("");
@@ -103,6 +110,7 @@ export const EditCarePlanRoute = () => {
           const metadata = {
             id: newCarePlanId,
             category: category,
+            prescriptionType: prescriptionType,
             phoneNumber: patient.profile.phoneNumber,
             createdOn: currentDate,
           };
@@ -120,6 +128,14 @@ export const EditCarePlanRoute = () => {
           details,
           createdOn: currentDate,
         };
+        if (category === "prescription") {
+          careData = {
+            ...careData,
+            prescriptionType,
+            prescriptionWeek,
+            createdOn: new Date(prescriptionDate),
+          };
+        }
         // Below data are required for creating tasks.
         let newTask = carePlan?.tasks || [];
         if (isVisible("task")) {
@@ -173,6 +189,9 @@ export const EditCarePlanRoute = () => {
   // Reset form.
   const onReset = () => {
     setCategory("");
+    setPrescriptionType("");
+    setPrescriptionWeek("");
+    setPrescriptionDate("");
     setRecommendation("");
     setDetails("");
     setLink("");
@@ -252,6 +271,15 @@ export const EditCarePlanRoute = () => {
     if (item?.meal) {
       setMeal([...item.meal]);
     }
+    if (item?.prescriptionType) {
+      setPrescriptionType(item?.prescriptionType as CarePlanPrescriptionType);
+    }
+    if (category === "prescription" && item?.createdOn) {
+      setPrescriptionDate(format(item?.createdOn.toDate(), "yyyy-MM-dd"));
+    }
+    if (item?.prescriptionWeek) {
+      setPrescriptionWeek(item?.prescriptionWeek);
+    }
   };
 
   // Update item.
@@ -287,6 +315,10 @@ export const EditCarePlanRoute = () => {
           if (item.dateRange) {
             item.dateRange.from = startDate;
             item.dateRange.to = endDate;
+          }
+          if (category === "prescription") {
+            item.prescriptionType = prescriptionType;
+            item.prescriptionWeek = prescriptionWeek;
           }
         }
         return item;
@@ -350,13 +382,9 @@ export const EditCarePlanRoute = () => {
           category === "physicalActivity"
         );
       case "link":
-        return (
-          category === "suggestedContent" ||
-          category === "prescription" ||
-          category === "physioPrescription"
-        );
+        return category === "suggestedContent" || category === "prescription";
       case "prescription":
-        return category === "prescription" || category === "physioPrescription";
+        return category === "prescription";
       case "details":
         return (
           category === "diet" ||
@@ -365,6 +393,8 @@ export const EditCarePlanRoute = () => {
         );
       case "medication":
         return category === "medication";
+      case "isDiabetes":
+        return patient?.profile?.plan === "Diabetes Care";
       default:
         return;
     }
@@ -394,31 +424,105 @@ export const EditCarePlanRoute = () => {
               <option value="diet">Diet</option>
               <option value="physicalActivity">Physical Activity</option>
               <option value="medication">Medication</option>
-              <option value="prescription">Medical Prescription</option>
-              <option value="physioPrescription">Physio Prescription</option>
+              <option value="prescription">Prescription</option>
               <option value="suggestedContent">Suggested content</option>
               <option value="others">Others</option>
             </Select>
           </div>
-
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="recommendation">
-              {isVisible("medication") ? "Medicine" : "Heading"}
-            </label>
-            <Input
-              id="recommendation"
-              type="text"
-              value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
-              placeholder={
-                isVisible("medication")
-                  ? "Medicine Name"
-                  : "Enter the main text"
-              }
-              required
-              disabled={isLoading}
-            />
-          </div>
+          {isVisible("prescription") ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="prescriptionType">
+                Prescription Type
+              </label>
+              <Select
+                name="prescriptionType"
+                id="prescriptionType"
+                value={prescriptionType}
+                onChange={(e) =>
+                  setPrescriptionType(
+                    e.target.value as CarePlanPrescriptionType
+                  )
+                }
+                required
+                disabled={isLoading}
+              >
+                <option value="">Select prescription type</option>
+                <option value="physician">Physician</option>
+                {!isVisible("isDiabetes") ? (
+                  <option value="physiotherapy">Physiotherapy</option>
+                ) : null}
+                {isVisible("isDiabetes") ? (
+                  <option value="coach">Coach</option>
+                ) : null}
+                <option value="other">Other</option>
+              </Select>
+            </div>
+          ) : null}
+          {isVisible("prescription") && isVisible("isDiabetes") ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="prescriptionWeek">
+                Week
+              </label>
+              <Select
+                name="prescriptionWeek"
+                id="prescriptionWeek"
+                value={prescriptionWeek}
+                onChange={(e) => setPrescriptionWeek(e.target.value)}
+                required
+                disabled={isLoading}
+              >
+                <option value="">Select Week</option>
+                <option value="Week 1">Week 1</option>
+                <option value="Week 2">Week 2</option>
+                <option value="Week 3">Week 3</option>
+                <option value="Week 4">Week 4</option>
+                <option value="Week 5">Week 5</option>
+                <option value="Week 6">Week 6</option>
+                <option value="Week 7">Week 7</option>
+                <option value="Week 8">Week 8</option>
+                <option value="Week 9">Week 9</option>
+                <option value="Week 10">Week 10</option>
+                <option value="Week 11">Week 11</option>
+                <option value="Week 12">Week 12</option>
+              </Select>
+            </div>
+          ) : null}
+          {isVisible("prescription") ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="prescriptionDate">
+                Date
+              </label>
+              <Input
+                id="prescriptionDate"
+                type="date"
+                placeholder="Enter date"
+                value={prescriptionDate}
+                onChange={(event) => setPrescriptionDate(event.target.value)}
+                required
+                disabled={isLoading}
+              />
+            </div>
+          ) : null}
+          {!isVisible("prescription") ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="recommendation">
+                {isVisible("medication") ? "Medicine" : "Heading"}
+              </label>
+              <Input
+                id="recommendation"
+                type="text"
+                value={recommendation}
+                onChange={(e) => setRecommendation(e.target.value)}
+                placeholder={
+                  isVisible("medication")
+                    ? "Medicine Name"
+                    : "Enter the main text"
+                }
+                required
+                disabled={isLoading}
+              />
+            </div>
+          ) : null}
           {isVisible("link") ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="link">
@@ -559,14 +663,20 @@ export const EditCarePlanRoute = () => {
               {carePlan.prescription?.map((item) => (
                 <IconTextTile
                   key={item.id}
-                  title={item.recommendation}
+                  title={
+                    item?.prescriptionType
+                      ? item?.prescriptionType + " prescription"
+                      : ""
+                  }
+                  details={format(item?.createdOn.toDate(), "dd-MM-yyyy")}
+                  description_line_1={item?.prescriptionWeek?.toString() || ""}
                   icon={CATEGORY_ICONS.prescription}
                   link={item?.link}
                   onDelete={() => onDelete("prescription", item)}
                   onUpdate={() => updateData("prescription", item)}
                 />
               ))}
-              {carePlan.physioPrescription?.map((item) => (
+              {/* {carePlan.physioPrescription?.map((item) => (
                 <IconTextTile
                   key={item.id}
                   title={item.recommendation}
@@ -575,7 +685,7 @@ export const EditCarePlanRoute = () => {
                   onDelete={() => onDelete("physioPrescription", item)}
                   onUpdate={() => updateData("physioPrescription", item)}
                 />
-              ))}
+              ))} */}
               {carePlan.medication?.map((item) => (
                 <IconTextTile
                   key={item.id}

@@ -1,8 +1,8 @@
 .CarePlanChecklist__Title {
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-black);
-  margin: var(--space-l) 0;
+  margin: var(--space-s) 0;
 }
 
 .CarePlanChecklist__TodayLabel {
@@ -72,6 +72,12 @@
   min-height: var(--space-xl);
 }
 
+.Prescription__Items__Icon {
+  margin-right: auto;
+  min-width: var(--space-xl);
+  min-height: var(--space-xl);
+}
+
 .CarePlanChecklist__Items_Margin {
   margin-top: var(--space-xs);
 }
@@ -98,4 +104,16 @@
 }
 .Suggested__Content__Label {
   color: rgba(56, 56, 56, 1);
+}
+.PrescriptionRoute__Link {
+  color: #e06900;
+  font-size: var(--step-0);
+  line-height: var(--step-1);
+  text-decoration: none;
+}
+.Past__Prescription__Container {
+  margin-bottom: var(--space-m);
+}
+.CarePlanChecklist {
+    margin-top: var(--space-s);
 }

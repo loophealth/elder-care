@@ -2,14 +2,16 @@
   padding: 0 var(--space-s) 0 var(--space-2xs);
 
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* grid-template-columns: auto 1fr; */
 
   --timeline-gap: 1rem;
 }
 
 .HomeRoute__Timeline__TimelineTicks {
   width: var(--space-2xs);
-  height: 100%;
+  height: 85%;
+  position: absolute;
+  top: 25%;
   color: red;
   background-image: url(images/tick-horizontal.svg);
 }
@@ -19,7 +21,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  padding-left: var(--timeline-gap);
+  padding-left: var(--space-2xs);
 }
 
 .HomeRoute__Content {
@@ -37,7 +39,7 @@
 }
 
 .HomeRoute__RiskFactors {
-  margin-top: var(--space-2xl);
+  margin-top: var(--space-xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
@@ -47,6 +49,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-l);
+  position: relative;
 }
 
 .HomeRoute__FollowUps__FollowUp {
@@ -54,10 +57,14 @@
 }
 
 .HomeRoute__FollowUps__FollowUp__Reason {
-  font-weight: 600;
+  font-weight: 500;
   margin-top: var(--space-2xs);
   color: var(--color-black);
   font-size: var(--step-0);
+  margin-left: var(--space-m);
+}
+.HomeRoute__FollowUps__FollowUp__Date {
+  margin-left: var(--space-m);
 }
 
 .HomeRoute__Dot {
@@ -68,7 +75,7 @@
   border: solid 1px var(--color-gray-light);
   background: var(--gradient-bg);
   position: absolute;
-  left: calc(0.15rem - var(--dot-size) - var(--timeline-gap));
+  left: calc(1.6rem - var(--dot-size) - var(--timeline-gap));
 }
 
 .HomeRoute__Dot--Active {
@@ -98,4 +105,27 @@
 
 .Upcoming__Title {
   margin-bottom: 0;
+}
+.EmptyCarePlan__Image {
+  margin: 4vh auto 6vh;
+}
+
+.EmptyCarePlan__Container {
+  margin-bottom: 8vh;
+}
+.HomeRoute__Empty__Content__Container {
+  width: 96vw;
+  padding-right: var(--timeline-gap);
+}
+.HomeRoute__Empty__Content {
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Empty__Content__Line__2 {
+  font-weight: bold;
+  margin-top: 1rem;
 }

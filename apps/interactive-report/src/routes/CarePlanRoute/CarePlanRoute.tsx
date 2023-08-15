@@ -95,9 +95,7 @@ const TileList = ({
           details={item.details}
           link={item?.link}
           icon={
-            category !== "suggestedContent" &&
-            category !== "prescription" &&
-            category !== "physioPrescription"
+            category !== "suggestedContent" && category !== "prescription"
               ? CATEGORY_ICONS[category]
               : ""
           }

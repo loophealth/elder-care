@@ -103,7 +103,7 @@ export interface UserProfile {
 export interface CarePlanItem {
   id: string;
   recommendation: string;
-  createdOn: Date;
+  createdOn: Timestamp;
   details?: string;
   reminder?: string;
   link?: string;
@@ -115,6 +115,8 @@ export interface CarePlanItem {
     from: string;
     to: string;
   };
+  prescriptionType?: string;
+  prescriptionWeek?: string;
 }
 
 /**
@@ -164,9 +166,14 @@ export type CarePlanCategory =
   | "physicalActivity"
   | "medication"
   | "prescription"
-  | "physioPrescription"
   | "suggestedContent"
   | "others";
+
+export type CarePlanPrescriptionType =
+  | "physician"
+  | "physiotherapy"
+  | "coach"
+  | "other";
 
 export type CarePlanReminder = "morning" | "afternoon" | "evening" | "night";
 
