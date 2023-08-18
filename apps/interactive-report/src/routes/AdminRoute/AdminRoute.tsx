@@ -59,6 +59,12 @@ export const AdminRoute = () => {
               Notification
             </LinkThatLooksLikeButton>
           ) : null}
+           <LinkThatLooksLikeButton
+            to="/admin/user-profile"
+            icon="/img/chevron-right.svg"
+          >
+            User Profile
+          </LinkThatLooksLikeButton>
         </div>
       </main>
     </>

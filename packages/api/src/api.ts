@@ -15,6 +15,7 @@ import { customAlphabet } from "nanoid";
 import { db } from "./firebaseEntities";
 import {
   CarePlan,
+  DoctorsProfile,
   HealthReport,
   PatientNotification,
   UserProfile,
@@ -279,6 +280,9 @@ export const createUserProfile = async (
     phoneNumber,
     role: "patient",
     healthTimeline: [],
+    doctorId: "",
+    physioId: "",
+    coachId: "",
   };
 
   if (plan) {
@@ -569,4 +573,16 @@ const filteredDoc = (
     })
     .filter((data: any) => data) as { data: any; index: number }[];
   return filteredData;
+};
+
+export const getDoctors = async (id?: string) => {
+  let q;
+  if (id) {
+    q = query(collection(db, "doctorsProfile"), where("id", "==", id));
+  } else {
+    q = query(collection(db, "doctorsProfile"));
+  }
+  const snapshot = await getDocs(q);
+  const profiles = snapshot.docs.map((doc) => doc.data() as DoctorsProfile);
+  return profiles;
 };

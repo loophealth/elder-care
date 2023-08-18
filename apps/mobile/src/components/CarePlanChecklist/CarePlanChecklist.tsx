@@ -24,7 +24,6 @@ import { ReactComponent as PhysioPresIcon } from "images/physio-prescription.svg
 import { groupBy } from "lodash";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 import { Button, ButtonVariant } from "components/Button";
-import { LinkThatLooksLikeAButton } from "components/LinkThatLooksLikeAButton";
 import { Link } from "react-router-dom";
 
 export const CarePlanChecklist = () => {
@@ -162,7 +161,7 @@ export const CarePlanChecklist = () => {
           </div>
         </div>
         <Button variant={ButtonVariant.Primary} onClick={onClicked}>
-          Download
+          View
         </Button>
       </label>
     );
@@ -181,9 +180,7 @@ export const CarePlanChecklist = () => {
                 <PrescriptionButton
                   key={index.toString()}
                   title={formattedPresc}
-                  icon={
-                    <MedPresIcon className="Prescription__Items__Icon" />
-                  }
+                  icon={<MedPresIcon className="Prescription__Items__Icon" />}
                   onClicked={() =>
                     onDownloadPrescription(
                       groupedPrescription[data],
@@ -202,9 +199,7 @@ export const CarePlanChecklist = () => {
       carePlan?.prescription.length > 0 ? (
         <PrescriptionButton
           title="Physician"
-          icon={
-            <MedPresIcon className="Prescription__Items__Icon" />
-          }
+          icon={<MedPresIcon className="Prescription__Items__Icon" />}
           onClicked={() =>
             onDownloadPrescription(carePlan?.prescription, "Physician")
           }
@@ -215,9 +210,7 @@ export const CarePlanChecklist = () => {
       carePlan?.physioPrescription.length > 0 ? (
         <PrescriptionButton
           title="Physiotherapy"
-          icon={
-            <PhysioPresIcon className="Prescription__Items__Icon" />
-          }
+          icon={<PhysioPresIcon className="Prescription__Items__Icon" />}
           onClicked={() =>
             onDownloadPrescription(
               carePlan?.physioPrescription,
@@ -230,6 +223,7 @@ export const CarePlanChecklist = () => {
         <div className="Past__Prescription__Container">
           <Link
             to="/prescriptions"
+            state={{ prescriptionData: groupedPrescription, prescriptionType }}
             className="PrescriptionRoute__Link"
             onClick={() => {
               logCustomEvent("ClickedOn_View_All_Prescription", {

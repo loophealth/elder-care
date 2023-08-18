@@ -95,6 +95,9 @@ export interface UserProfile {
   parentId?: string;
   id?: string;
   plan?: string;
+  doctorId?: string;
+  physioId?: string;
+  coachId?: string;
 }
 
 /**
@@ -217,6 +220,16 @@ export interface PatientNotification {
   relation?: string;
   parentId?: string;
   userId?: string;
+}
+
+export interface DoctorsProfile {
+  id: string;
+  name: string;
+  practiceStartYear: string;
+  profilePic?: string;
+  qualification: string;
+  speciality: string;
+  title: string;
 }
 
 export type NotificationCategory = "immediate" | "scheduled" | "recurring";

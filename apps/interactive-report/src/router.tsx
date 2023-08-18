@@ -19,6 +19,7 @@ import { RequirePatientRoute } from "components/RequirePatientRoute";
 import { NotificationRoute } from "routes/NotificationRoute";
 import { TodayPlanRoute } from "routes/TodayPlanRoute";
 import { EditWeeklySummaryRoute } from "routes/EditWeeklySummaryRoute";
+import { EditUserProfile } from "routes/EditUserProfile";
 
 export const router = createBrowserRouter([
   {
@@ -151,6 +152,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             component={<RequirePatientRoute component={<EditWeeklySummaryRoute />} />}
+          />
+        ),
+      },
+      {
+        path: "/admin/user-profile",
+        element: (
+          <ProtectedRoute
+            component={<RequirePatientRoute component={<EditUserProfile />} />}
           />
         ),
       },
