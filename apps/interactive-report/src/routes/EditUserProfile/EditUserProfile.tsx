@@ -8,7 +8,7 @@ import {
   UserProfile,
 } from "@loophealth/api";
 
-import { AdminEditorLayout, Button, Input, Select } from "components";
+import { AdminEditorLayout, Input, Select } from "components";
 
 import "./EditUserProfile.css";
 import { groupBy } from "lodash";

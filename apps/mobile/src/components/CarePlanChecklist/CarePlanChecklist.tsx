@@ -61,14 +61,14 @@ export const CarePlanChecklist = () => {
       let filteredPres: any;
       for (let i = 0; i < presKeys.length; i++) {
         const pKey = presKeys[i];
-        if (pKey != "undefined") {
+        if (pKey !== "undefined") {
           filteredPres = { ...filteredPres, [pKey]: (groupPres as any)[pKey] };
         }
       }
       if (filteredPres) {
         // New Prescription data with prescriptionType
         setGroupedPrescription(filteredPres);
-        setPrescriptionType(presKeys.filter((data) => data != "undefined"));
+        setPrescriptionType(presKeys.filter((data) => data !== "undefined"));
       } else {
         // Old Prescription data with prescriptionType
         setGroupedPrescription(null);

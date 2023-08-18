@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import {
-  CarePlan,
   CarePlanItem,
   DoctorsProfile,
   getDoctors,
@@ -11,36 +10,18 @@ import {
 import { ReactComponent as BackIcon } from "images/back.svg";
 
 import "./PrescriptionRoute.css";
-import { onSnapshot } from "firebase/firestore";
-import { differenceInYears, format, subYears } from "date-fns";
+import { format } from "date-fns";
 
 export const PrescriptionRoute = () => {
-  // const navigate = useNavigate();
   const { patient } = usePatient();
   const location = useLocation();
   const { prescriptionData, prescriptionType } = location.state;
-  // const [carePlan, setCarePlan] = useState<CarePlan | null>(null);
   const [selected, setSelected] = useState(0);
   const [doctorDetails, setDoctorDetails] = useState<DoctorsProfile[] | []>([]);
   const [filteredData, setFilteredData] = useState<CarePlanItem[] | []>(
     prescriptionData[prescriptionType[0]] || []
   );
 
-  // Subscribe to care plan updates.
-  // useEffect(() => {
-  //   if (!patient) {
-  //     return;
-  //   }
-
-  //   const unsub = onSnapshot(patient.carePlanRef, (snapshot) => {
-  //     const carePlan = (snapshot.data() ?? []) as CarePlan;
-  //     setCarePlan(carePlan);
-  //   });
-
-  //   return () => {
-  //     unsub();
-  //   };
-  // }, [patient]);
   useEffect(() => {
     const presType = prescriptionType[selected];
     const getDocData = async (presType: string) => {
@@ -64,8 +45,9 @@ export const PrescriptionRoute = () => {
       }
     };
     getDocData(presType);
+    // eslint-disable-next-line
   }, [selected]);
-  console.log("doctorDetails =>", doctorDetails);
+
   return (
     <main className="PrescriptionRoute">
       <div className="headerContainer">
@@ -78,7 +60,7 @@ export const PrescriptionRoute = () => {
         {prescriptionType.map((data: any, index: any) => (
           <div
             className={
-              selected == index ? "filterButton selected" : "filterButton"
+              selected === index ? "filterButton selected" : "filterButton"
             }
             key={index.toString()}
             onClick={() => {
@@ -90,15 +72,21 @@ export const PrescriptionRoute = () => {
           </div>
         ))}
       </div>
-      {doctorDetails && doctorDetails.length == 1 ? (
+      {doctorDetails && doctorDetails.length === 1 ? (
         <div className="Doctor__Container">
           <div className="Doctor__Image__Container">
-            <img src={doctorDetails[0]?.profilePic || ""} alt="Doctor Pic" className="Doctor__Image" />
+            <img
+              src={doctorDetails[0]?.profilePic || ""}
+              alt="Doctor Pic"
+              className="Doctor__Image"
+            />
           </div>
           <div className="Doctor__Info__Container">
             <label className="Doctor__Name">{doctorDetails[0]?.name}</label>
             <label className="Doctor__Title">{doctorDetails[0]?.title}</label>
-            <label className="Doctor__Title">{doctorDetails[0]?.qualification}</label>
+            <label className="Doctor__Title">
+              {doctorDetails[0]?.qualification}
+            </label>
             <label className="Doctor__Title">
               {new Date().getFullYear() -
                 parseInt(doctorDetails[0]?.practiceStartYear)}{" "}
