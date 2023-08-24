@@ -19,7 +19,6 @@
 .IconTextTile__Tile__TextContent__Title {
   margin-bottom: var(--space-3xs);
   line-height: 1.25;
-  text-transform:capitalize;
 }
 
 .IconTextTile__Tile__TextContent__Details {
@@ -27,7 +26,6 @@
   color: var(--color-gray-light);
   line-height: 1.5;
   overflow-wrap: anywhere;
-  text-transform:capitalize;
 }
 
 .IconTextTile__ButtonContainer {

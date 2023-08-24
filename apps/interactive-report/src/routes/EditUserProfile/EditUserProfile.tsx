@@ -16,7 +16,6 @@ import { groupBy } from "lodash";
 export const EditUserProfile = () => {
   const { patient } = usePatient();
 
-  // const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [name, setName] = useState("");
   const [age, setAge] = useState<number | null>(null);
   const [doctors, setDoctors] = useState<any>([]);
@@ -174,46 +173,50 @@ export const EditUserProfile = () => {
               ))}
             </Select>
           </div>
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="coach">
-              Coach
-            </label>
-            <Select
-              name="coach"
-              id="coach"
-              value={selCoach}
-              onChange={(e) => setSelCoach(e.target.value)}
-              required
-              disabled={!editEnabled}
-            >
-              <option value="">Select Coach</option>
-              {doctors?.["coach"]?.map((data: DoctorsProfile) => (
-                <option value={data.id} key={data.id.toString()}>
-                  {data?.name}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className="Utils__VerticalForm__Group">
-            <label className="Utils__Label" htmlFor="physiotherapist">
-              Physiotherapist
-            </label>
-            <Select
-              name="physiotherapist"
-              id="physiotherapist"
-              value={selPhysio}
-              onChange={(e) => setSelPhysio(e.target.value)}
-              required
-              disabled={!editEnabled}
-            >
-              <option value="">Select Physiotherapist</option>
-              {doctors?.["physiotherapist"]?.map((data: DoctorsProfile) => (
-                <option value={data.id} key={data.id.toString()}>
-                  {data?.name}
-                </option>
-              ))}
-            </Select>
-          </div>
+          {patient?.profile?.plan === "Diabetes Care" ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="coach">
+                Coach
+              </label>
+              <Select
+                name="coach"
+                id="coach"
+                value={selCoach}
+                onChange={(e) => setSelCoach(e.target.value)}
+                required
+                disabled={!editEnabled}
+              >
+                <option value="">Select Coach</option>
+                {doctors?.["coach"]?.map((data: DoctorsProfile) => (
+                  <option value={data.id} key={data.id.toString()}>
+                    {data?.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          ) : null}
+          {patient?.profile?.plan !== "Diabetes Care" ? (
+            <div className="Utils__VerticalForm__Group">
+              <label className="Utils__Label" htmlFor="physiotherapist">
+                Physiotherapist
+              </label>
+              <Select
+                name="physiotherapist"
+                id="physiotherapist"
+                value={selPhysio}
+                onChange={(e) => setSelPhysio(e.target.value)}
+                required
+                disabled={!editEnabled}
+              >
+                <option value="">Select Physiotherapist</option>
+                {doctors?.["physiotherapist"]?.map((data: DoctorsProfile) => (
+                  <option value={data.id} key={data.id.toString()}>
+                    {data?.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          ) : null}
         </div>
       )}
     />

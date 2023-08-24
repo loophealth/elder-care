@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { onSnapshot, updateDoc } from "firebase/firestore";
+import { Timestamp, onSnapshot, updateDoc } from "firebase/firestore";
 
 import {
   usePatient,
@@ -128,6 +128,7 @@ export const EditCarePlanRoute = () => {
           details,
           createdOn: currentDate,
         };
+        let filteredPres; //For filtering out prescription of same date and type.
         if (category === "prescription") {
           careData = {
             ...careData,
@@ -135,6 +136,15 @@ export const EditCarePlanRoute = () => {
             prescriptionWeek,
             createdOn: new Date(prescriptionDate),
           };
+
+          filteredPres = carePlan[category].filter(
+            (item) =>
+              !(
+                format(item?.createdOn?.toDate(), "dd-MM-yyyy") ===
+                  format(careData.createdOn, "dd-MM-yyyy") &&
+                item?.prescriptionType === careData?.prescriptionType
+              )
+          );
         }
         // Below data are required for creating tasks.
         let newTask = carePlan?.tasks || [];
@@ -167,8 +177,10 @@ export const EditCarePlanRoute = () => {
         //     ? [newCarePlanItem]
         //     : [...(carePlan[category] || []), newCarePlanItem];
 
-        const newCarePlan = [...(carePlan[category] || []), newCarePlanItem];
-
+        const newCarePlan = [
+          ...(filteredPres || carePlan[category] || []),
+          newCarePlanItem,
+        ];
         await updateDoc(patient.carePlanRef, {
           [category]: newCarePlan,
           tasks: newTask,
@@ -319,6 +331,7 @@ export const EditCarePlanRoute = () => {
           if (category === "prescription") {
             item.prescriptionType = prescriptionType;
             item.prescriptionWeek = prescriptionWeek;
+            item.createdOn = Timestamp.fromDate(new Date(prescriptionDate));
           }
         }
         return item;
@@ -454,7 +467,6 @@ export const EditCarePlanRoute = () => {
                 {isVisible("isDiabetes") ? (
                   <option value="coach">Coach</option>
                 ) : null}
-                <option value="other">Other</option>
               </Select>
             </div>
           ) : null}
@@ -660,32 +672,30 @@ export const EditCarePlanRoute = () => {
         <IconTextTileList>
           {carePlan ? (
             <>
-              {carePlan.prescription?.map((item) => (
-                <IconTextTile
-                  key={item.id}
-                  title={
-                    item?.prescriptionType
-                      ? item?.prescriptionType + " prescription"
-                      : ""
-                  }
-                  details={format(item?.createdOn.toDate(), "dd-MM-yyyy")}
-                  description_line_1={item?.prescriptionWeek?.toString() || ""}
-                  icon={CATEGORY_ICONS.prescription}
-                  link={item?.link}
-                  onDelete={() => onDelete("prescription", item)}
-                  onUpdate={() => updateData("prescription", item)}
-                />
-              ))}
-              {/* {carePlan.physioPrescription?.map((item) => (
-                <IconTextTile
-                  key={item.id}
-                  title={item.recommendation}
-                  icon={CATEGORY_ICONS.prescription}
-                  link={item?.link}
-                  onDelete={() => onDelete("physioPrescription", item)}
-                  onUpdate={() => updateData("physioPrescription", item)}
-                />
-              ))} */}
+              {carePlan.prescription
+                ?.sort(
+                  (a, b) =>
+                    a.createdOn.toDate().valueOf() -
+                    b.createdOn.toDate().valueOf()
+                )
+                .map((item) => (
+                  <IconTextTile
+                    key={item.id}
+                    title={
+                      item?.prescriptionType
+                        ? item?.prescriptionType + " prescription"
+                        : ""
+                    }
+                    details={format(item?.createdOn.toDate(), "dd-MM-yyyy")}
+                    description_line_1={
+                      item?.prescriptionWeek?.toString() || ""
+                    }
+                    icon={CATEGORY_ICONS.prescription}
+                    link={item?.link}
+                    onDelete={() => onDelete("prescription", item)}
+                    onUpdate={() => updateData("prescription", item)}
+                  />
+                ))}
               {carePlan.medication?.map((item) => (
                 <IconTextTile
                   key={item.id}

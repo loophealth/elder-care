@@ -239,21 +239,21 @@ export const EditWeeklySummaryRoute = () => {
               disabled={isLoading}
             >
               <option value="">Select a category</option>
-              <option value="MA Summary">MA Summary</option>
+              <option value="MA Summary">Summary</option>
               <option value="Advice">Advice</option>
             </Select>
           </div>
           {category === "Advice" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="summaryName">
-                Heading
+                Doctor's Name
               </label>
               <Input
                 id="summaryName"
                 type="text"
                 value={summaryName}
                 onChange={(e) => setSummaryName(e.target.value)}
-                placeholder="Enter Heading"
+                placeholder="Enter doctor name"
                 disabled={isLoading}
               />
             </div>

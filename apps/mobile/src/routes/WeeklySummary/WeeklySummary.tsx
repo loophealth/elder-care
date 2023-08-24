@@ -150,7 +150,7 @@ export const WeeklySummary = () => {
             {filteredData["MA Summary"]?.length > 0 ? (
               <div className="Summary__Content__Container">
                 <label className="Utils__Label Summary__Heading">
-                  MA Summary
+                  Summary
                 </label>
 
                 {filteredData["MA Summary"]?.map(
