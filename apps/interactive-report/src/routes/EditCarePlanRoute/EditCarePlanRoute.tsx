@@ -470,7 +470,7 @@ export const EditCarePlanRoute = () => {
               </Select>
             </div>
           ) : null}
-          {isVisible("prescription") && isVisible("isDiabetes") ? (
+          {isVisible("prescription") && prescriptionType === "coach" ? (
             <div className="Utils__VerticalForm__Group">
               <label className="Utils__Label" htmlFor="prescriptionWeek">
                 Week

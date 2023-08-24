@@ -1,17 +1,15 @@
 .HomeRoute {
   padding: 0 var(--space-s) 0 var(--space-2xs);
-
   display: grid;
   /* grid-template-columns: auto 1fr; */
-
   --timeline-gap: 1rem;
 }
 
 .HomeRoute__Timeline__TimelineTicks {
   width: var(--space-2xs);
-  height: 85%;
+  height: 75%;
   position: absolute;
-  top: 25%;
+  top: 3.5rem;
   color: red;
   background-image: url(images/tick-horizontal.svg);
 }
@@ -48,7 +46,7 @@
 .HomeRoute__FollowUps {
   display: flex;
   flex-direction: column;
-  gap: var(--space-l);
+  gap: var(--space-m);
   position: relative;
 }
 

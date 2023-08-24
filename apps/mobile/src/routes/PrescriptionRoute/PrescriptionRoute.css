@@ -42,8 +42,8 @@
   margin-left: 0;
 }
 .PrescriptionRoute .HomeRoute__Timeline__TimelineTicks {
-  top: 0%;
-  height: 95%;
+  top: 0;
+  height: 90%;
   width: var(--space-xs);
 }
 .Prescription__Link {

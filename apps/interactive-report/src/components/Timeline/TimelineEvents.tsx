@@ -5,7 +5,7 @@ import { usePatient, HealthTimelineEvent } from "@loophealth/api";
 
 import { TimelineEvent } from "./TimelineEvent";
 
-export const TimelineEvents = () => {
+export const TimelineEvents = ({ updateEvent }: { updateEvent: any }) => {
   const { patient } = usePatient();
   const [timeline, setTimeline] = useState<HealthTimelineEvent[]>([]);
 
@@ -18,11 +18,13 @@ export const TimelineEvents = () => {
       const timelineEvents: HealthTimelineEvent[] =
         snapshot.data()?.healthTimeline ?? [];
       setTimeline(timelineEvents);
+      updateEvent(timelineEvents.length);
     });
 
     return () => {
       unsub();
     };
+    // eslint-disable-next-line
   }, [patient]);
 
   return (

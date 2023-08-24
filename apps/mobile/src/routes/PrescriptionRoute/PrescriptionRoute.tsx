@@ -8,6 +8,7 @@ import {
   usePatient,
 } from "@loophealth/api";
 import { ReactComponent as BackIcon } from "images/back.svg";
+import { ReactComponent as DoctorIcon } from "images/doctor-default.svg";
 
 import "./PrescriptionRoute.css";
 import { format } from "date-fns";
@@ -25,28 +26,42 @@ export const PrescriptionRoute = () => {
   useEffect(() => {
     const presType = prescriptionType[selected];
     const getDocData = async (presType: string) => {
-      let data;
+      let data: DoctorsProfile[] = [];
       switch (presType) {
         case "physician": {
           data = await getDoctors(patient?.profile?.doctorId);
-          setDoctorDetails(data);
           break;
         }
         case "physiotherapist": {
           data = await getDoctors(patient?.profile?.physioId);
-          setDoctorDetails(data);
           break;
         }
         case "coach": {
           data = await getDoctors(patient?.profile?.coachId);
-          setDoctorDetails(data);
           break;
         }
       }
+
+      checkImage(data?.[0]?.profilePic || "")
+        .then((imgdata) => {
+          setDoctorDetails(data);
+        })
+        .catch((e) => {
+          console.log(e);
+          setDoctorDetails(data);
+        });
     };
     getDocData(presType);
     // eslint-disable-next-line
   }, [selected]);
+
+  const checkImage = (path: string) =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(path);
+      img.onerror = () => reject();
+      img.src = path;
+    });
 
   return (
     <main className="PrescriptionRoute">
@@ -75,11 +90,15 @@ export const PrescriptionRoute = () => {
       {doctorDetails && doctorDetails.length === 1 ? (
         <div className="Doctor__Container">
           <div className="Doctor__Image__Container">
-            <img
-              src={doctorDetails[0]?.profilePic || ""}
-              alt="Doctor Pic"
-              className="Doctor__Image"
-            />
+            {doctorDetails[0]?.profilePic ? (
+              <img
+                src={doctorDetails[0]?.profilePic}
+                alt="Doctor Pic"
+                className="Doctor__Image"
+              />
+            ) : (
+              <DoctorIcon />
+            )}
           </div>
           <div className="Doctor__Info__Container">
             <label className="Doctor__Name">{doctorDetails[0]?.name}</label>
@@ -97,9 +116,11 @@ export const PrescriptionRoute = () => {
       ) : null}
       <div className="Prescription__Container">
         <div className="HomeRoute__Timeline__TimelineTicks" />
-        {filteredData?.map((data: any, index: number) => (
-          <PrescriptionList key={index.toString()} data={data} />
-        ))}
+        {filteredData
+          ?.sort((a: any, b: any) => b.createdOn - a.createdOn)
+          ?.map((data: any, index: number) => (
+            <PrescriptionList key={index.toString()} data={data} />
+          ))}
       </div>
     </main>
   );
@@ -114,7 +135,7 @@ const PrescriptionList = ({ data }: { data: CarePlanItem }) => {
       <div className="HomeRoute__Dot HomeRoute__Dot--Inactive" />
       <div className="Prescription__Data">
         <label className="Prescription__Data__Title">
-          <b>{data?.prescriptionWeek ? data?.prescriptionWeek + "," : ""}</b>{" "}
+          <b>{data?.prescriptionWeek ? data?.prescriptionWeek + ", " : " "}</b>
           {format(prescDate, "dd MMM yyyy")}
         </label>
         <div>
