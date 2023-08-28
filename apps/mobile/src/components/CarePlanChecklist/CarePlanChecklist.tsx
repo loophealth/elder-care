@@ -21,6 +21,7 @@ import { ReactComponent as BlogIcon } from "images/blog-logo.svg";
 import { ReactComponent as RightArrowIcon } from "images/right-arrow.svg";
 import { ReactComponent as MedPresIcon } from "images/medical-prescription.svg";
 import { ReactComponent as PhysioPresIcon } from "images/physio-prescription.svg";
+import { ReactComponent as CoachPresIcon } from "images/coach-prescription.svg";
 import { groupBy } from "lodash";
 import { onSnapshot, updateDoc } from "firebase/firestore";
 import { Button, ButtonVariant } from "components/Button";
@@ -155,12 +156,14 @@ export const CarePlanChecklist = () => {
     return (
       <label className="CarePlanChecklist__Items__Item Prescription_Button_Container">
         {icon}
-        <div>
-          <div className="CarePlanChecklist__Items__Item__Name Prescription_Label">
-            {title}
-          </div>
+        <div className="CarePlanChecklist__Items__Item__Name Prescription_Label">
+          {title}
         </div>
-        <Button variant={ButtonVariant.Primary} onClick={onClicked}>
+        <Button
+          className="Prescription__Button"
+          variant={ButtonVariant.Primary}
+          onClick={onClicked}
+        >
           View
         </Button>
       </label>
@@ -180,7 +183,15 @@ export const CarePlanChecklist = () => {
                 <PrescriptionButton
                   key={index.toString()}
                   title={formattedPresc}
-                  icon={<MedPresIcon className="Prescription__Items__Icon" />}
+                  icon={
+                    data === "physiotherapy" ? (
+                      <PhysioPresIcon className="Prescription__Items__Icon" />
+                    ) : data === "coach" ? (
+                      <CoachPresIcon className="Prescription__Items__Icon" />
+                    ) : (
+                      <MedPresIcon className="Prescription__Items__Icon" />
+                    )
+                  }
                   onClicked={() =>
                     onDownloadPrescription(
                       groupedPrescription[data],
@@ -241,7 +252,9 @@ export const CarePlanChecklist = () => {
       {Object.keys(getGroupedChecklistItem)?.length > 0 ? (
         <div>
           <div className="CarePlanChecklist__Title">{"Weekly Action Plan"}</div>
-          <div className="Prescription__Title">{"Today’s tasks"}</div>
+          <div className="CarePlanChecklist__Sub__Heading">
+            {"Today’s tasks"}
+          </div>
         </div>
       ) : null}
       {Object.keys(getGroupedChecklistItem).map((data: string) => {

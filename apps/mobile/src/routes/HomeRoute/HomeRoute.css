@@ -1,17 +1,17 @@
 .HomeRoute {
-  padding: 0 var(--space-s) 0 var(--space-2xs);
-  display: grid;
+  padding: 0 var(--space-s);
+  /* display: grid; */
   /* grid-template-columns: auto 1fr; */
   --timeline-gap: 1rem;
 }
 
 .HomeRoute__Timeline__TimelineTicks {
   width: var(--space-2xs);
-  height: 75%;
   position: absolute;
-  top: 3.5rem;
   color: red;
   background-image: url(images/tick-horizontal.svg);
+  height: calc(100% - 5rem);
+  top: 5rem;
 }
 
 .HomeRoute__Content__Container {
@@ -55,14 +55,18 @@
 }
 
 .HomeRoute__FollowUps__FollowUp__Reason {
-  font-weight: 500;
-  margin-top: var(--space-2xs);
-  color: var(--color-black);
-  font-size: var(--step-0);
+  color: #595959;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.25rem;
   margin-left: var(--space-m);
+  margin-top: var(--space-2xs);
 }
 .HomeRoute__FollowUps__FollowUp__Date {
   margin-left: var(--space-m);
+  color: #7F8785;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .HomeRoute__Dot {
@@ -103,6 +107,7 @@
 
 .Upcoming__Title {
   margin-bottom: 0;
+  margin-top: 2.125rem;
 }
 .EmptyCarePlan__Image {
   margin: 4vh auto 6vh;

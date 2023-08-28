@@ -65,62 +65,66 @@ export const PrescriptionRoute = () => {
 
   return (
     <main className="PrescriptionRoute">
-      <div className="headerContainer">
-        <Link to={"/"} className="PageHeader__Icon">
-          {<BackIcon />}
-        </Link>
-        <div className="headerLabel">{"Prescription History"}</div>
-      </div>
-      <div className="filterButtonContainer">
-        {prescriptionType.map((data: any, index: any) => (
-          <div
-            className={
-              selected === index ? "filterButton selected" : "filterButton"
-            }
-            key={index.toString()}
-            onClick={() => {
-              setSelected(index);
-              setFilteredData(prescriptionData[prescriptionType[index]]);
-            }}
-          >
-            <div>{data}</div>
-          </div>
-        ))}
-      </div>
-      {doctorDetails && doctorDetails.length === 1 ? (
-        <div className="Doctor__Container">
-          <div className="Doctor__Image__Container">
-            {doctorDetails[0]?.profilePic ? (
-              <img
-                src={doctorDetails[0]?.profilePic}
-                alt="Doctor Pic"
-                className="Doctor__Image"
-              />
-            ) : (
-              <DoctorIcon />
-            )}
-          </div>
-          <div className="Doctor__Info__Container">
-            <label className="Doctor__Name">{doctorDetails[0]?.name}</label>
-            <label className="Doctor__Title">{doctorDetails[0]?.title}</label>
-            <label className="Doctor__Title">
-              {doctorDetails[0]?.qualification}
-            </label>
-            <label className="Doctor__Title">
-              {new Date().getFullYear() -
-                parseInt(doctorDetails[0]?.practiceStartYear)}{" "}
-              years of experience
-            </label>
-          </div>
+      <div className="navHeaderContainer">
+        <div className="headerContainer">
+          <Link to={"/"} className="PageHeader__Icon">
+            {<BackIcon />}
+          </Link>
+          <div className="headerLabel">Prescription History</div>
         </div>
-      ) : null}
-      <div className="Prescription__Container">
-        <div className="HomeRoute__Timeline__TimelineTicks" />
-        {filteredData
-          ?.sort((a: any, b: any) => b.createdOn - a.createdOn)
-          ?.map((data: any, index: number) => (
-            <PrescriptionList key={index.toString()} data={data} />
+        <div className="filterButtonContainer">
+          {prescriptionType.map((data: any, index: any) => (
+            <div
+              className={
+                selected === index ? "filterButton selected" : "filterButton"
+              }
+              key={index.toString()}
+              onClick={() => {
+                setSelected(index);
+                setFilteredData(prescriptionData[prescriptionType[index]]);
+              }}
+            >
+              <div>{data}</div>
+            </div>
           ))}
+        </div>
+      </div>
+      <div className="Prescription__Content__Container">
+        {doctorDetails && doctorDetails.length === 1 ? (
+          <div className="Doctor__Container">
+            <div className="Doctor__Image__Container">
+              {doctorDetails[0]?.profilePic ? (
+                <img
+                  src={doctorDetails[0]?.profilePic}
+                  alt="Doctor Pic"
+                  className="Doctor__Image"
+                />
+              ) : (
+                <DoctorIcon />
+              )}
+            </div>
+            <div className="Doctor__Info__Container">
+              <label className="Doctor__Name">{doctorDetails[0]?.name}</label>
+              <label className="Doctor__Title">{doctorDetails[0]?.title}</label>
+              <label className="Doctor__Title">
+                {doctorDetails[0]?.qualification}
+              </label>
+              <label className="Doctor__Title">
+                {new Date().getFullYear() -
+                  parseInt(doctorDetails[0]?.practiceStartYear)}{" "}
+                years of experience
+              </label>
+            </div>
+          </div>
+        ) : null}
+        <div className="Prescription__Container">
+          <div className="HomeRoute__Timeline__TimelineTicks" />
+          {filteredData
+            ?.sort((a: any, b: any) => b.createdOn - a.createdOn)
+            ?.map((data: any, index: number) => (
+              <PrescriptionList key={index.toString()} data={data} />
+            ))}
+        </div>
       </div>
     </main>
   );

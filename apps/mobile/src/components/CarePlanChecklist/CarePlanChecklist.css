@@ -1,14 +1,15 @@
 .CarePlanChecklist__Title {
-  font-size: var(--step-1);
+  font-size: 1.125rem;
+  line-height: 1.5rem;
   font-weight: 500;
-  color: var(--color-black);
-  margin: var(--space-s) 0;
+  color: #595959;
+  margin: var(--space-s) 0 0.625rem 0;
 }
 
 .CarePlanChecklist__TodayLabel {
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
-  color: rgba(0, 0, 0, 0.48);
+  padding-top: var(--space-s);
+  padding-bottom: var(--space-2xs);
+  color: #7f8785;
 }
 
 .CarePlanChecklist__Items {
@@ -37,8 +38,11 @@
 }
 
 .CarePlanChecklist__Items__Item__Name {
-  color: var(--color-black);
+  color: #595959;
   font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.5rem;
+  letter-spacing: 0.2px;
 }
 
 .CarePlanChecklist__Items__Suggested__Content
@@ -73,7 +77,6 @@
 }
 
 .Prescription__Items__Icon {
-  margin-right: auto;
   min-width: var(--space-xl);
   min-height: var(--space-xl);
 }
@@ -87,16 +90,18 @@
 }
 
 .Prescription_Button_Container {
-  margin-bottom: var(--space-xs);
+  margin-bottom: 0.625rem;
+  gap: var(--space-xs);
 }
 .Prescription_Label {
-  width: 34vw;
+  width: 44vw;
 }
 .Prescription__Title {
-  color: #383838;
-  font-size: var(--step-0);
-  line-height: var(--step-1);
-  margin-bottom: var(--space-xs);
+  color: #595959;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.125rem;
 }
 
 .Suggested__Content__Container {
@@ -115,8 +120,31 @@
   border-bottom-style: dashed;
 }
 .Past__Prescription__Container {
-  margin-bottom: var(--space-m);
+  padding-bottom: 1.25rem;
+  padding-top: 1.125rem;
 }
 .CarePlanChecklist {
-    margin-top: var(--space-s);
+  margin-top: var(--space-s);
+}
+
+.CarePlanChecklist__Sub__Heading {
+  color: #595959;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.125rem;
+  letter-spacing: 0.2px;
+}
+
+.Prescription__Button {
+  all: unset;
+  color: var(--color-white);
+  background-color: var(--color-black);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+  padding: var(--space-xs) var(--space-m);
+  text-align: center;
+  letter-spacing: 0.2px;
+  border-radius: var(--border-radius-l);
 }

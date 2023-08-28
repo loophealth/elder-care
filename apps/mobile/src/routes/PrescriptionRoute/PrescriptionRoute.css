@@ -1,12 +1,10 @@
-.PrescriptionRoute {
-  padding: 0 var(--space-s);
-}
 .headerLabel {
-  width: 85%;
-  justify-content: center;
   display: flex;
-  font-weight: 600;
-  font-size: var(--step-1);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  justify-content: center;
+  width: 87%;
 }
 .headerContainer {
   flex-direction: row;
@@ -18,14 +16,15 @@
   display: flex;
   justify-content: center;
   text-transform: capitalize;
-  margin-bottom: var(--space-m);
+  padding: 0.625rem 0;
 }
 .filterButton {
   padding: 0.75rem 1rem;
-  margin: 0 0.5rem;
-  font-size: var(--step-0);
-  line-height: var(--step-1);
+  margin: 0 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.25rem;
   font-weight: 500;
+  color: #595959;
 }
 .filterButton.selected {
   background-color: #ffeade;
@@ -38,7 +37,7 @@
   margin-left: var(--space-m);
 }
 .Prescription__List__Container {
-  padding-bottom: 1.5rem;
+  padding-bottom: 2.5rem;
   margin-left: 0;
 }
 .PrescriptionRoute .HomeRoute__Timeline__TimelineTicks {
@@ -78,29 +77,55 @@
 }
 
 img.Doctor__Image {
-  width: 4.5rem;
-  max-height: 5rem;
+  /* width: 4.5rem;
+  max-height: 5rem; */
   border-radius: 4.5rem;
 }
 
 .Doctor__Image__Container {
-  margin-right: 0.5rem;
+  margin-right: 1.25rem;
+  width: 72px;
+  height: 72px;
 }
 
 .Doctor__Info__Container {
-  flex-direction: column;
-  display: flex;
+  display: grid;
+  gap: 0.25rem;
 }
 
 .Doctor__Name {
-  font-size: 1.2rem;
-  line-height: 2rem;
-  font-weight: 500;
+  font-size: 1rem;
+  color: #595959;
+  line-height: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.2px;
 }
 
 .Doctor__Title {
   font-size: 0.9rem;
   line-height: 1.25rem;
   font-weight: 400;
-  color: #8c8c8c;
+  color: #7f8785;
+  letter-spacing: 0.2px;
+}
+
+.navHeaderContainer {
+  border: 2px solid var(--yellow-border, #faf1e9);
+  background: radial-gradient(
+      151.92% 127.02% at 15.32% 21.04%,
+      rgba(255, 218, 198, 0.05) 0%,
+      rgba(251, 183, 145, 0.08) 44.79%,
+      rgba(179, 113, 245, 0.02) 75.52%,
+      rgba(167, 70, 212, 0) 100%
+    ),
+    rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 0 var(--space-xs);
+}
+
+.Prescription__Content__Container {
+  padding: 1.5rem var(--space-s);
+}
+.PrescriptionRoute .PageHeader__Icon{
+  padding: 0;
 }
