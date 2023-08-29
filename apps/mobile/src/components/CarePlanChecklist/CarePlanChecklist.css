@@ -92,6 +92,7 @@
 .Prescription_Button_Container {
   margin-bottom: 0.625rem;
   gap: var(--space-xs);
+  padding: var(--space-s);
 }
 .Prescription_Label {
   width: 44vw;

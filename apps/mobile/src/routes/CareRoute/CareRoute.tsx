@@ -1,8 +1,6 @@
 import { LinkList } from "components/LinkList";
 import { PageHeader } from "components/PageHeader";
 
-import { ReactComponent as UserIcon } from "images/user-circle.svg";
-
 import "./CareRoute.css";
 import { logCustomEvent, usePatient } from "@loophealth/api";
 
@@ -33,7 +31,7 @@ export const CareRoute = () => {
             href: "https://www.consult.loophealth.com/app/conversation",
             title: "Contact us",
             description: "Ask any questions or queries about Loop and the app",
-            icon: <UserIcon />,
+            icon: <img src="/img/contact-us.png" alt="A doctor" />,
             onClick: onCareClick,
           },
         ]}

@@ -15,7 +15,7 @@
 }
 
 .HomeRoute__Content__Container {
-  margin-top: var(--space-xl);
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);

@@ -39,7 +39,7 @@
   --shadow-sepia-m: 0px 2px 2px var(--color-sepia);
 
   --padding-top-safe: calc(var(--space-2xs) + env(safe-area-inset-top));
-  --padding-top-content-start: calc(var(--padding-top-safe) + var(--space-2xl));
+  --padding-top-content-start: calc(var(--padding-top-safe) + var(--space-3xl));
 }
 
 html,

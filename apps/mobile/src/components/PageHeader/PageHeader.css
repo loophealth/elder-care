@@ -4,19 +4,25 @@
   right: 0;
   top: 0;
   text-align: center;
-  background: #fefaf7;
-  border-bottom: 2px solid #faf1e9;
-  padding-top: var(--padding-top-safe);
-  padding-bottom: var(--space-3xs);
-  font-weight: bold;
-  color: var(--color-black);
-  font-size: var(--step-0);
+  padding: 1.25rem 0;
+  font-weight: 500;
+  color: #595959;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
   z-index: var(--z-index-navigation);
-
   display: grid;
   grid-template-columns: 2em 1fr;
   grid-template-rows: 1fr;
   align-items: center;
+  border: 2px solid var(--yellow-border, #faf1e9);
+  background: radial-gradient(
+      151.92% 127.02% at 15.32% 21.04%,
+      rgba(255, 218, 198, 0.05) 0%,
+      rgba(251, 183, 145, 0.08) 44.79%,
+      rgba(179, 113, 245, 0.02) 75.52%,
+      rgba(167, 70, 212, 0) 100%
+    ),
+    rgba(255, 255, 255, 1);
 }
 
 .PageHeader__Label {
