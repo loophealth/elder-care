@@ -3,6 +3,9 @@
   /* display: grid; */
   /* grid-template-columns: auto 1fr; */
   --timeline-gap: 1rem;
+  background: var(--gradient-bg);
+  min-height: 100%;
+  padding-bottom: 8rem;
 }
 
 .HomeRoute__Timeline__TimelineTicks {

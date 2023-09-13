@@ -1,3 +1,7 @@
+.PrescriptionRoute {
+  min-height: 100%;
+  background: var(--gradient-bg);
+}
 .headerLabel {
   display: flex;
   font-size: 1.125rem;

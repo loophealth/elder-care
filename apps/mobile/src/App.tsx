@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { RouterProvider } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
+import { BrowserRouter, Route, RouterProvider, Routes } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
 import {
@@ -10,6 +10,7 @@ import {
   Patient,
   logUser,
   findLinkedUserProfile,
+  ProtectedRoute,
 } from "@loophealth/api";
 import "@loophealth/ui/src/styles/reset.css";
 import "@loophealth/ui/src/styles/utopia.css";
@@ -23,6 +24,16 @@ import "utils.css";
 import "index.css";
 import { NotificationView } from "./components/NotificationView";
 import { InstallPWADialog } from "components/InstallDialog";
+
+import { RootLayout } from "components/RootLayout";
+import { LoginRoute } from "routes/LoginRoute";
+import { SummaryRoute } from "routes/SummaryRoute";
+import { HomeRoute } from "routes/HomeRoute";
+import { CareRoute } from "routes/CareRoute";
+import { ReportOverviewRoute } from "routes/ReportOverviewRoute";
+import { ReportDetailsRoute } from "routes/ReportDetailsRoute";
+import { PrescriptionRoute } from "routes/PrescriptionRoute";
+import { Wrapper } from "components/Wrapper/Wrapper";
 
 export const App = () => {
   const { user, setUser, setRequestStatus } = useAuth();
@@ -73,7 +84,76 @@ export const App = () => {
 
   return (
     <>
-      <RouterProvider router={router} />
+      {/* <RouterProvider router={router} /> */}
+      <BrowserRouter>
+        <Wrapper>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <Fragment>
+                  <RootLayout />
+                  <LoginRoute />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/summary"
+              element={
+                <Fragment>
+                  <RootLayout />
+                  <ProtectedRoute component={<SummaryRoute />} />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/prescriptions"
+              element={
+                <Fragment>
+                  <RootLayout />
+                  <ProtectedRoute component={<PrescriptionRoute />} />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <Fragment>
+                  <RootLayout shouldShowNavbar={true} />
+                  <ProtectedRoute component={<HomeRoute />} />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/care"
+              element={
+                <Fragment>
+                  <RootLayout shouldShowNavbar={true} />
+                  <ProtectedRoute component={<CareRoute />} />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <Fragment>
+                  <RootLayout shouldShowNavbar={true} />
+                  <ProtectedRoute component={<ReportOverviewRoute />} />
+                </Fragment>
+              }
+            />
+            <Route
+              path="/report/:slug"
+              element={
+                <Fragment>
+                  <RootLayout shouldShowNavbar={true} />
+                  <ProtectedRoute component={<ReportDetailsRoute />} />
+                </Fragment>
+              }
+            />
+          </Routes>
+        </Wrapper>
+      </BrowserRouter>
       <NotificationView />
       {isOpen && <InstallPWADialog setIsOpen={setIsOpen} />}
     </>

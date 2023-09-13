@@ -1,5 +1,7 @@
 .CareRoute {
   padding: var(--padding-top-content-start) var(--space-s) 0 var(--space-s);
+  background: var(--gradient-bg);
+  min-height: 100%;
 }
 
 .CareRoute__Label {
